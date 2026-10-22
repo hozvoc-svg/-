@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About — Muse</title>
+  <meta name="description" content="Muse is on a mission to give every creator a world-class creative team. Meet the people behind it.">
+  <meta name="theme-color" content="#0b0d14">
+  <meta property="og:title" content="About — Muse">
+  <meta property="og:description" content="Muse is on a mission to give every creator a world-class creative team. Meet the people behind it.">
+  <meta property="og:image" content="assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    document.documentElement.classList.add('js');
+    // Apply saved theme before paint to avoid a flash.
+    try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="nav" id="nav">
+    <div class="container nav__inner">
+      <a href="index.html" class="logo" aria-label="Muse home">
+        <img src="assets/favicon.svg" alt="" width="28" height="28">
+        <span>Muse</span>
+      </a>
+      <nav class="nav__links" id="navLinks" aria-label="Primary">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#demo">Try it</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="about.html" aria-current="page">About</a>
+        <a href="login.html" class="nav__login">Log in</a>
+      </nav>
+      <div class="nav__actions">
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle color theme">
+          <svg class="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+        <a href="login.html?mode=signup" class="btn btn--primary btn--sm nav__cta">Start creating</a>
+        <button class="icon-btn burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="container">
+        <span class="eyebrow reveal">About us</span>
+        <h1 class="reveal">Everyone deserves a <span class="gradient-text">world-class creative team</span></h1>
+        <p class="reveal">We started Muse because great content shouldn't depend on big budgets. Today 120,000+ creators and teams use it to bring their ideas to life.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container split">
+        <div class="art art--5 reveal" role="img" aria-label="Abstract aurora artwork"></div>
+        <div class="reveal">
+          <span class="eyebrow">Our story</span>
+          <h2>From a side project to 85 million creations</h2>
+          <p>Muse began in 2023 as a weekend tool for writing product descriptions. Friends asked for images, then video, then team features. Two years later, Muse powers marketing for startups, agencies and solo creators in more than 140 countries.</p>
+          <p>We're a remote team of 38 designers, engineers and storytellers who believe AI should amplify human creativity — not replace it.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt">
+      <div class="container">
+        <div class="section__head reveal">
+          <span class="eyebrow">Our values</span>
+          <h2>What we believe in</h2>
+        </div>
+        <div class="values">
+          <article class="card reveal"><div class="card__icon">🎯</div><h3>Craft over volume</h3><p>Every feature has to make your content better, not just faster.</p></article>
+          <article class="card reveal"><div class="card__icon">🔐</div><h3>Your work is yours</h3><p>You own what you create. Your data is never used to train models.</p></article>
+          <article class="card reveal"><div class="card__icon">🌱</div><h3>Ship, learn, repeat</h3><p>We release improvements every week, shaped by what our community asks for.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section__head reveal">
+          <span class="eyebrow">Team</span>
+          <h2>The people behind Muse</h2>
+        </div>
+        <div class="team">
+          <div class="member reveal"><span class="avatar" style="--h:260">AR</span><b>Alex Rivera</b><small>Co-founder &amp; CEO</small></div>
+          <div class="member reveal"><span class="avatar" style="--h:190">JN</span><b>Jamie Nguyen</b><small>Co-founder &amp; CTO</small></div>
+          <div class="member reveal"><span class="avatar" style="--h:330">PS</span><b>Priya Shah</b><small>Head of Design</small></div>
+          <div class="member reveal"><span class="avatar" style="--h:40">TM</span><b>Tom Müller</b><small>Head of AI Research</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt" id="careers">
+      <div class="container">
+        <div class="section__head reveal">
+          <span class="eyebrow">Careers</span>
+          <h2>Build the future of creativity with us</h2>
+          <p>Remote-first, with a generous learning budget and four team retreats a year.</p>
+        </div>
+        <div class="jobs">
+          <a class="job reveal" href="mailto:jobs@example.com?subject=Senior%20Frontend%20Engineer"><div><b>Senior Frontend Engineer</b><br><small>Engineering · Remote (EU)</small></div><span class="tag">Apply →</span></a>
+          <a class="job reveal" href="mailto:jobs@example.com?subject=ML%20Engineer%2C%20Video"><div><b>ML Engineer, Video</b><br><small>AI Research · Remote</small></div><span class="tag">Apply →</span></a>
+          <a class="job reveal" href="mailto:jobs@example.com?subject=Product%20Designer"><div><b>Product Designer</b><br><small>Design · Remote (Americas)</small></div><span class="tag">Apply →</span></a>
+          <a class="job reveal" href="mailto:jobs@example.com?subject=Community%20Manager"><div><b>Community Manager</b><br><small>Marketing · Remote</small></div><span class="tag">Apply →</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <a href="index.html" class="logo"><img src="assets/favicon.svg" alt="" width="24" height="24"><span>Muse</span></a>
+        <p>Create anything. Just describe it.</p>
+      </div>
+      <div class="footer__cols">
+        <div><h4>Product</h4><a href="index.html#features">Features</a><a href="index.html#gallery">Gallery</a><a href="index.html#pricing">Pricing</a><a href="index.html#faq">FAQ</a></div>
+        <div><h4>Company</h4><a href="about.html">About</a><a href="about.html#careers">Careers</a><a href="blog.html">Blog</a></div>
+        <div><h4>Legal</h4><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
+      </div>
+    </div>
+    <div class="container footer__bottom">
+      <p>© <span id="year"></span> Muse AI Inc. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>

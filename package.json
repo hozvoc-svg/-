@@ -1,0 +1,13 @@
+{
+  "name": "muse-ai-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Muse — AI content generator landing page with a live Claude-powered demo",
+  "type": "module",
+  "scripts": {
+    "check": "node --check js/main.js && node --check api/generate.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.1.0"
+  }
+}
