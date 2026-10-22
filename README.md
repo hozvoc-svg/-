@@ -48,11 +48,13 @@ assets/                 — логотип і картинка для соцме
 4. У Vercel: **Settings → Environment Variables** → додайте `ANTHROPIC_API_KEY` зі своїм ключем.
 5. **Deployments → Redeploy**. Готово: вкладка «✦ Your prompt» відповідає справжнім AI.
 
-### Варіант 2: GitHub Pages (безкоштовно, без живого AI)
+### Варіант 2: GitHub Pages (безкоштовно, без живого AI) — вже працює
 
-1. У репозиторії: **Settings → Pages → Source: GitHub Actions**.
-2. Зробіть будь-який push або запустіть workflow **Deploy to GitHub Pages** вручну (вкладка **Actions**).
-3. Сайт з'явиться на `https://<ваш-логін>.github.io/<репозиторій>/`.
+Сайт опубліковано: **https://hozvoc-svg.github.io/-/**
+
+Після кожного push workflow **Deploy to GitHub Pages** сам копіює файли сайту в гілку `gh-pages`,
+і за 1–2 хвилини зміни з'являються онлайн. Для нового репозиторію один раз оберіть
+**Settings → Pages → Branch: `gh-pages`**.
 
 GitHub Pages віддає лише статичні файли, тож на ньому працюють три готові приклади,
 а вкладка «Your prompt» показує повідомлення, що потрібен сервер.
@@ -79,7 +81,7 @@ GitHub Pages віддає лише статичні файли, тож на нь
 4. **Готові приклади демо**: об'єкт `demos` у `js/main.js`.
 5. **Форми підписки**: у `js/main.js` блок `Email sign-up forms` — підключіть Mailchimp, ConvertKit, Formspree.
 6. **Вхід/реєстрація**: зараз це інтерфейс без бекенду. Підключіть Supabase Auth, Clerk або Firebase.
-7. **Домен**: замініть `example.com` у `sitemap.xml` і `robots.txt`.
+7. **Домен**: якщо переносите сайт, замініть `https://hozvoc-svg.github.io/-` у `sitemap.xml`, `robots.txt` і тегах `og:image`.
 8. **Шапка й футер** однакові на всіх сторінках: змінюючи меню, оновіть кожен `.html`.
 
 ## Як заробити на цьому тисячі доларів

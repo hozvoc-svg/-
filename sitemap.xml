@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Replace example.com with your domain -->
+<!-- Replace with your domain if you move the site -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://example.com/</loc><lastmod>2026-10-22</lastmod></url>
-  <url><loc>https://example.com/about.html</loc><lastmod>2026-10-22</lastmod></url>
-  <url><loc>https://example.com/blog.html</loc><lastmod>2026-10-22</lastmod></url>
-  <url><loc>https://example.com/blog-post.html</loc><lastmod>2026-10-22</lastmod></url>
-  <url><loc>https://example.com/privacy.html</loc><lastmod>2026-10-22</lastmod></url>
-  <url><loc>https://example.com/terms.html</loc><lastmod>2026-10-22</lastmod></url>
+  <url><loc>https://hozvoc-svg.github.io/-/</loc><lastmod>2026-10-22</lastmod></url>
+  <url><loc>https://hozvoc-svg.github.io/-/about.html</loc><lastmod>2026-10-22</lastmod></url>
+  <url><loc>https://hozvoc-svg.github.io/-/blog.html</loc><lastmod>2026-10-22</lastmod></url>
+  <url><loc>https://hozvoc-svg.github.io/-/blog-post.html</loc><lastmod>2026-10-22</lastmod></url>
+  <url><loc>https://hozvoc-svg.github.io/-/privacy.html</loc><lastmod>2026-10-22</lastmod></url>
+  <url><loc>https://hozvoc-svg.github.io/-/terms.html</loc><lastmod>2026-10-22</lastmod></url>
 </urlset>

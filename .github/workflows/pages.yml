@@ -1,5 +1,5 @@
-# Publishes the static site to GitHub Pages on every push to the default branch.
-# One-time setup: repo Settings → Pages → Source: "GitHub Actions".
+# Publishes the static site on every push: copies the site files to the
+# gh-pages branch, which GitHub Pages serves at https://<owner>.github.io/<repo>/.
 # Note: GitHub Pages is static hosting, so the live AI demo (api/) needs Vercel.
 name: Deploy to GitHub Pages
 
@@ -9,9 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
@@ -20,18 +18,18 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - name: Collect site files
         run: |
           mkdir _site
           cp -r *.html css js assets robots.txt sitemap.xml site.webmanifest .nojekyll _site/
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Push to gh-pages
+        run: |
+          cd _site
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898299+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -qm "Deploy ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" gh-pages

@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /login.html
-Disallow: /api/
+Disallow: /-/login.html
+Disallow: /-/api/
 
-# Replace example.com with your domain
-Sitemap: https://example.com/sitemap.xml
+# Replace with your domain if you move the site
+Sitemap: https://hozvoc-svg.github.io/-/sitemap.xml
