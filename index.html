@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lumen — AI Analytics Platform</title>
-  <meta name="description" content="Lumen turns your raw product data into clear, actionable insights in seconds. Built for modern teams.">
+  <title>Muse — AI Content Studio</title>
+  <meta name="description" content="Muse generates on-brand copy, images and video in seconds. One AI studio for creators, marketers and teams.">
   <meta name="theme-color" content="#0b0d14">
-  <meta property="og:title" content="Lumen — AI Analytics Platform">
-  <meta property="og:description" content="Turn raw data into clear, actionable insights in seconds.">
+  <meta property="og:title" content="Muse — AI Content Studio">
+  <meta property="og:description" content="Generate on-brand copy, images and video in seconds.">
   <meta property="og:type" content="website">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,15 +25,15 @@
 
   <header class="nav" id="nav">
     <div class="container nav__inner">
-      <a href="#" class="logo" aria-label="Lumen home">
+      <a href="#" class="logo" aria-label="Muse home">
         <img src="assets/favicon.svg" alt="" width="28" height="28">
-        <span>Lumen</span>
+        <span>Muse</span>
       </a>
       <nav class="nav__links" id="navLinks" aria-label="Primary">
         <a href="#features">Features</a>
-        <a href="#how">How it works</a>
+        <a href="#demo">Try it</a>
+        <a href="#gallery">Gallery</a>
         <a href="#pricing">Pricing</a>
-        <a href="#testimonials">Customers</a>
         <a href="#faq">FAQ</a>
       </nav>
       <div class="nav__actions">
@@ -41,7 +41,7 @@
           <svg class="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
           <svg class="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
         </button>
-        <a href="#pricing" class="btn btn--primary btn--sm nav__cta">Get started</a>
+        <a href="#pricing" class="btn btn--primary btn--sm nav__cta">Start creating</a>
         <button class="icon-btn burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
           <span></span><span></span>
         </button>
@@ -54,48 +54,34 @@
     <section class="hero">
       <div class="hero__glow" aria-hidden="true"></div>
       <div class="container hero__inner">
-        <a href="#features" class="pill reveal">
-          <span class="pill__tag">New</span> AI Copilot 2.0 is live <span aria-hidden="true">→</span>
+        <a href="#demo" class="pill reveal">
+          <span class="pill__tag">New</span> Text-to-video is here <span aria-hidden="true">→</span>
         </a>
-        <h1 class="hero__title reveal">Insights that move<br><span class="gradient-text">at the speed of thought</span></h1>
-        <p class="hero__sub reveal">Lumen connects to your stack, understands your data, and answers any question in plain English — no SQL, no dashboards to maintain.</p>
+        <h1 class="hero__title reveal">Create anything.<br><span class="gradient-text">Just describe it.</span></h1>
+        <p class="hero__sub reveal">Muse turns a single sentence into scroll-stopping copy, stunning images and short videos — all in your brand's voice, in seconds.</p>
         <div class="hero__cta reveal">
-          <a href="#pricing" class="btn btn--primary btn--lg">Start free trial</a>
-          <a href="#how" class="btn btn--ghost btn--lg">
+          <a href="#pricing" class="btn btn--primary btn--lg">Start creating free</a>
+          <a href="#demo" class="btn btn--ghost btn--lg">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-            Watch demo
+            Try the demo
           </a>
         </div>
-        <p class="hero__note reveal">14-day free trial · No credit card required</p>
+        <p class="hero__note reveal">50 free credits · No credit card required</p>
 
         <div class="mockup reveal" aria-hidden="true">
-          <div class="mockup__bar"><i></i><i></i><i></i><span>app.lumen.io/dashboard</span></div>
-          <div class="mockup__body">
-            <aside class="mockup__side">
-              <b></b><b></b><b></b><b></b><b></b>
-            </aside>
-            <div class="mockup__main">
-              <div class="mockup__stats">
-                <div class="stat-card"><small>Revenue</small><strong data-count="128400" data-prefix="$">$0</strong><em class="up">+18.2%</em></div>
-                <div class="stat-card"><small>Active users</small><strong data-count="24931">0</strong><em class="up">+9.4%</em></div>
-                <div class="stat-card"><small>Churn</small><strong data-count="2.1" data-suffix="%" data-decimals="1">0%</strong><em class="down">−0.6%</em></div>
-              </div>
-              <div class="mockup__chart">
-                <svg viewBox="0 0 600 180" preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0" stop-color="var(--accent)" stop-opacity=".35"/>
-                      <stop offset="1" stop-color="var(--accent)" stop-opacity="0"/>
-                    </linearGradient>
-                  </defs>
-                  <path class="chart-area" d="M0,150 C60,140 90,110 150,115 C210,120 240,70 300,75 C360,80 390,40 450,45 C510,50 540,20 600,15 L600,180 L0,180 Z" fill="url(#area)"/>
-                  <path class="chart-line" d="M0,150 C60,140 90,110 150,115 C210,120 240,70 300,75 C360,80 390,40 450,45 C510,50 540,20 600,15" fill="none" stroke="var(--accent)" stroke-width="3"/>
-                </svg>
-              </div>
-              <div class="mockup__ask">
-                <span class="spark">✦</span>
-                <span class="typing" id="typing"></span>
-              </div>
+          <div class="mockup__bar"><i></i><i></i><i></i><span>studio.muse.ai</span></div>
+          <div class="studio">
+            <div class="studio__prompt">
+              <span class="spark">✦</span>
+              <span class="typing" id="typing"></span>
+              <span class="studio__go">Generate</span>
+            </div>
+            <div class="studio__chips">
+              <span class="chip is-active">Image</span><span class="chip">Text</span><span class="chip">Video</span>
+              <span class="chip chip--ghost">16:9</span><span class="chip chip--ghost">Cinematic</span>
+            </div>
+            <div class="studio__grid" id="studioGrid">
+              <div class="art art--1"></div><div class="art art--2"></div><div class="art art--3"></div><div class="art art--4"></div>
             </div>
           </div>
         </div>
@@ -105,7 +91,7 @@
     <!-- LOGOS -->
     <section class="logos">
       <div class="container">
-        <p class="logos__title">Trusted by 4,000+ fast-growing teams</p>
+        <p class="logos__title">Used by 120,000+ creators and teams at</p>
         <div class="marquee">
           <div class="marquee__track">
             <span>Northwind</span><span>Vertex</span><span>Acme Co</span><span>Globex</span><span>Initech</span><span>Umbrella</span><span>Hooli</span><span>Stark</span>
@@ -120,40 +106,84 @@
       <div class="container">
         <div class="section__head reveal">
           <span class="eyebrow">Features</span>
-          <h2>Everything you need to understand your business</h2>
-          <p>Powerful enough for data teams, simple enough for everyone else.</p>
+          <h2>One studio for every kind of content</h2>
+          <p>Stop juggling five AI tools. Muse writes, designs and animates — together.</p>
         </div>
         <div class="bento">
           <article class="card card--wide reveal">
-            <div class="card__icon">✦</div>
-            <h3>Ask in plain English</h3>
-            <p>“Why did signups drop last Tuesday?” Lumen's AI reads your data model and replies with charts and the reasoning behind them.</p>
+            <div class="card__icon">✍️</div>
+            <h3>Copy that converts</h3>
+            <p>Ads, blog posts, product descriptions and emails. 80+ templates trained on high-performing marketing copy.</p>
           </article>
           <article class="card reveal">
-            <div class="card__icon">⚡</div>
-            <h3>Real-time sync</h3>
-            <p>Sub-second updates from 150+ sources including Postgres, Stripe and Segment.</p>
+            <div class="card__icon">🎨</div>
+            <h3>Images in any style</h3>
+            <p>Photoreal, 3D, illustration or anime — up to 4K resolution.</p>
           </article>
           <article class="card reveal">
-            <div class="card__icon">🔒</div>
-            <h3>Enterprise-grade security</h3>
-            <p>SOC 2 Type II, SSO, row-level permissions and full audit logs.</p>
+            <div class="card__icon">🎬</div>
+            <h3>Text-to-video</h3>
+            <p>Generate 15-second clips for Reels, TikTok and Shorts.</p>
           </article>
           <article class="card reveal">
-            <div class="card__icon">🔔</div>
-            <h3>Smart alerts</h3>
-            <p>Anomaly detection pings Slack the moment a metric goes off course.</p>
+            <div class="card__icon">🧬</div>
+            <h3>Brand voice</h3>
+            <p>Upload your guidelines once. Every result matches your tone, colours and fonts.</p>
           </article>
           <article class="card reveal">
-            <div class="card__icon">🔌</div>
-            <h3>150+ integrations</h3>
-            <p>Postgres, BigQuery, Snowflake, Stripe, HubSpot and more — connected in minutes.</p>
+            <div class="card__icon">🌍</div>
+            <h3>30+ languages</h3>
+            <p>Write once, publish everywhere with native-quality translation.</p>
           </article>
           <article class="card card--full reveal">
             <div class="card__icon">🤝</div>
-            <h3>Built for collaboration</h3>
-            <p>Share live reports, comment on any chart, and keep every team aligned on a single source of truth.</p>
+            <h3>Built for teams</h3>
+            <p>Shared workspaces, approval flows and a content calendar that publishes straight to Instagram, LinkedIn and X.</p>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE DEMO -->
+    <section class="section section--alt" id="demo">
+      <div class="container">
+        <div class="section__head reveal">
+          <span class="eyebrow">Try it</span>
+          <h2>See Muse in action</h2>
+          <p>Pick a prompt and watch it come to life.</p>
+        </div>
+        <div class="demo reveal">
+          <div class="demo__tabs" role="tablist" aria-label="Demo prompts">
+            <button class="demo__tab is-active" role="tab" aria-selected="true" data-demo="ad">📣 Instagram ad</button>
+            <button class="demo__tab" role="tab" aria-selected="false" data-demo="product">🛍️ Product description</button>
+            <button class="demo__tab" role="tab" aria-selected="false" data-demo="email">✉️ Cold email</button>
+          </div>
+          <div class="demo__panel">
+            <div class="demo__prompt"><span class="demo__label">Prompt</span><p id="demoPrompt"></p></div>
+            <div class="demo__output">
+              <span class="demo__label">Muse <span class="demo__status" id="demoStatus">writing…</span></span>
+              <p id="demoOutput" aria-live="polite"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="section" id="gallery">
+      <div class="container">
+        <div class="section__head reveal">
+          <span class="eyebrow">Gallery</span>
+          <h2>Made with Muse</h2>
+          <p>Every image below started as one sentence.</p>
+        </div>
+        <div class="gallery">
+          <figure class="shot shot--tall reveal"><div class="art art--1"></div><figcaption>“Neon jellyfish drifting through a midnight city”</figcaption></figure>
+          <figure class="shot reveal"><div class="art art--2"></div><figcaption>“Desert sunrise, soft pastel, minimal”</figcaption></figure>
+          <figure class="shot reveal"><div class="art art--3"></div><figcaption>“Liquid chrome sculpture, studio light”</figcaption></figure>
+          <figure class="shot shot--wide reveal"><div class="art art--5"></div><figcaption>“Aurora over a frozen lake, cinematic 16:9”</figcaption></figure>
+          <figure class="shot reveal"><div class="art art--4"></div><figcaption>“Holographic product shot for a sneaker brand”</figcaption></figure>
+          <figure class="shot shot--wide reveal"><div class="art art--6"></div><figcaption>“Retro-futuristic poster, 80s synthwave”</figcaption></figure>
         </div>
       </div>
     </section>
@@ -163,17 +193,17 @@
       <div class="container">
         <div class="section__head reveal">
           <span class="eyebrow">How it works</span>
-          <h2>From zero to insight in three steps</h2>
+          <h2>From idea to published in minutes</h2>
         </div>
         <ol class="steps">
-          <li class="step reveal"><span class="step__num">1</span><h3>Connect</h3><p>Link your databases and tools in a couple of clicks. No engineering required.</p></li>
-          <li class="step reveal"><span class="step__num">2</span><h3>Ask</h3><p>Type any question. Lumen writes the query, runs it, and visualises the answer.</p></li>
-          <li class="step reveal"><span class="step__num">3</span><h3>Act</h3><p>Share findings, set alerts and automate weekly reports for your whole team.</p></li>
+          <li class="step reveal"><span class="step__num">1</span><h3>Describe</h3><p>Type what you need in plain words — or pick one of 80+ templates.</p></li>
+          <li class="step reveal"><span class="step__num">2</span><h3>Generate</h3><p>Get several variations in seconds. Remix, refine or upscale with one click.</p></li>
+          <li class="step reveal"><span class="step__num">3</span><h3>Publish</h3><p>Export in any format or schedule straight to your social channels.</p></li>
         </ol>
         <div class="metrics reveal">
-          <div><strong data-count="4000" data-suffix="+">0</strong><span>Teams</span></div>
-          <div><strong data-count="99.99" data-suffix="%" data-decimals="2">0</strong><span>Uptime</span></div>
-          <div><strong data-count="12" data-suffix="M">0</strong><span>Questions answered</span></div>
+          <div><strong data-count="120" data-suffix="K+">0</strong><span>Creators</span></div>
+          <div><strong data-count="85" data-suffix="M">0</strong><span>Assets generated</span></div>
+          <div><strong data-count="10" data-suffix="×">0</strong><span>Faster content</span></div>
           <div><strong data-count="4.9" data-suffix="/5" data-decimals="1">0</strong><span>Average rating</span></div>
         </div>
       </div>
@@ -184,7 +214,7 @@
       <div class="container">
         <div class="section__head reveal">
           <span class="eyebrow">Pricing</span>
-          <h2>Simple pricing that scales with you</h2>
+          <h2>Start free. Upgrade when you're hooked.</h2>
           <div class="billing" role="group" aria-label="Billing period">
             <span>Monthly</span>
             <button class="switch" id="billingSwitch" role="switch" aria-checked="false" aria-label="Annual billing"><span></span></button>
@@ -193,26 +223,26 @@
         </div>
         <div class="pricing">
           <article class="plan reveal">
-            <h3>Starter</h3>
-            <p class="plan__desc">For individuals and side projects.</p>
+            <h3>Free</h3>
+            <p class="plan__desc">Explore what Muse can do.</p>
             <p class="plan__price"><span class="price" data-month="0" data-year="0">$0</span><small>/mo</small></p>
             <a href="#contact" class="btn btn--ghost btn--block">Get started</a>
-            <ul class="plan__list"><li>1 data source</li><li>100 AI questions / mo</li><li>7-day history</li><li>Community support</li></ul>
+            <ul class="plan__list"><li>50 credits / month</li><li>Text &amp; image generation</li><li>Standard resolution</li><li>Personal use</li></ul>
           </article>
           <article class="plan plan--featured reveal">
             <span class="plan__badge">Most popular</span>
-            <h3>Pro</h3>
-            <p class="plan__desc">For growing teams that run on data.</p>
-            <p class="plan__price"><span class="price" data-month="49" data-year="39">$49</span><small>/mo</small></p>
-            <a href="#contact" class="btn btn--primary btn--block">Start free trial</a>
-            <ul class="plan__list"><li>Unlimited data sources</li><li>Unlimited AI questions</li><li>Smart alerts &amp; Slack</li><li>Unlimited history</li><li>Priority support</li></ul>
+            <h3>Creator</h3>
+            <p class="plan__desc">For creators and freelancers.</p>
+            <p class="plan__price"><span class="price" data-month="24" data-year="19">$24</span><small>/mo</small></p>
+            <a href="#contact" class="btn btn--primary btn--block">Start 7-day trial</a>
+            <ul class="plan__list"><li>2,000 credits / month</li><li>Text-to-video</li><li>4K images, no watermark</li><li>Brand voice</li><li>Commercial license</li></ul>
           </article>
           <article class="plan reveal">
-            <h3>Enterprise</h3>
-            <p class="plan__desc">For organisations with advanced needs.</p>
-            <p class="plan__price"><span class="price">Custom</span></p>
+            <h3>Team</h3>
+            <p class="plan__desc">For agencies and marketing teams.</p>
+            <p class="plan__price"><span class="price" data-month="79" data-year="63">$79</span><small>/mo</small></p>
             <a href="#contact" class="btn btn--ghost btn--block">Contact sales</a>
-            <ul class="plan__list"><li>Everything in Pro</li><li>SSO &amp; SCIM</li><li>Dedicated success manager</li><li>Custom SLA &amp; on-prem</li></ul>
+            <ul class="plan__list"><li>Unlimited credits</li><li>5 seats included</li><li>Shared brand kits</li><li>Approval flows &amp; calendar</li><li>API access</li></ul>
           </article>
         </div>
       </div>
@@ -222,21 +252,21 @@
     <section class="section section--alt" id="testimonials">
       <div class="container">
         <div class="section__head reveal">
-          <span class="eyebrow">Customers</span>
-          <h2>Loved by teams everywhere</h2>
+          <span class="eyebrow">Loved by creators</span>
+          <h2>Less busywork, more ideas</h2>
         </div>
         <div class="testimonials">
           <figure class="quote reveal">
-            <blockquote>“We replaced three BI tools with Lumen. Our PMs now answer their own questions in seconds instead of waiting days.”</blockquote>
-            <figcaption><span class="avatar" style="--h:250">SK</span><div><b>Sarah Kim</b><small>Head of Product, Northwind</small></div></figcaption>
+            <blockquote>“I produce a week of content for my clients in one afternoon. Muse basically doubled my agency's capacity.”</blockquote>
+            <figcaption><span class="avatar" style="--h:250">SK</span><div><b>Sarah Kim</b><small>Founder, Northwind Social</small></div></figcaption>
           </figure>
           <figure class="quote reveal">
-            <blockquote>“The anomaly alerts caught a billing bug before our customers did. It paid for itself in the first week.”</blockquote>
-            <figcaption><span class="avatar" style="--h:160">DO</span><div><b>David Okafor</b><small>CTO, Vertex</small></div></figcaption>
+            <blockquote>“The brand voice feature is unreal. Our ads finally sound like us — and our CTR went up 37%.”</blockquote>
+            <figcaption><span class="avatar" style="--h:160">DO</span><div><b>David Okafor</b><small>Growth Lead, Vertex</small></div></figcaption>
           </figure>
           <figure class="quote reveal">
-            <blockquote>“Onboarding took 20 minutes. The AI genuinely understands our schema — it feels like magic.”</blockquote>
-            <figcaption><span class="avatar" style="--h:20">ML</span><div><b>Maria López</b><small>Data Lead, Globex</small></div></figcaption>
+            <blockquote>“I replaced my stock photo subscription, my copywriter tool and my video editor. One app, one bill.”</blockquote>
+            <figcaption><span class="avatar" style="--h:20">ML</span><div><b>Maria López</b><small>YouTuber, 800K subscribers</small></div></figcaption>
           </figure>
         </div>
       </div>
@@ -250,10 +280,10 @@
           <h2>Frequently asked questions</h2>
         </div>
         <div class="faq">
-          <details class="reveal" open><summary>Do I need to know SQL?</summary><p>No. Ask questions in plain language and Lumen generates and runs the queries for you. Power users can still view and edit the SQL.</p></details>
-          <details class="reveal"><summary>Is my data secure?</summary><p>Yes. Data is encrypted in transit and at rest, we are SOC 2 Type II certified, and you control exactly which tables Lumen can read.</p></details>
-          <details class="reveal"><summary>Can I cancel anytime?</summary><p>Absolutely. There are no long-term contracts on the Starter and Pro plans — cancel from your settings with one click.</p></details>
-          <details class="reveal"><summary>Which integrations are supported?</summary><p>Over 150, including Postgres, MySQL, BigQuery, Snowflake, Stripe, HubSpot, Segment and Google Analytics.</p></details>
+          <details class="reveal" open><summary>Can I use the content commercially?</summary><p>Yes. On paid plans you own everything you generate and can use it in ads, products and client work.</p></details>
+          <details class="reveal"><summary>What is a credit?</summary><p>One text generation costs 1 credit, one image costs 4 credits and one video clip costs 20 credits. Unused credits roll over for one month.</p></details>
+          <details class="reveal"><summary>Is my data used to train models?</summary><p>No. Your prompts, uploads and brand kits stay private and are never used for training.</p></details>
+          <details class="reveal"><summary>Can I cancel anytime?</summary><p>Absolutely. No contracts — cancel from your settings with one click and keep access until the end of the billing period.</p></details>
         </div>
       </div>
     </section>
@@ -263,13 +293,13 @@
       <div class="container">
         <div class="cta reveal">
           <div>
-            <h2>Ready to see your data clearly?</h2>
-            <p>Join 4,000+ teams making faster decisions with Lumen.</p>
+            <h2>Your next idea is one sentence away.</h2>
+            <p>Join 120,000+ creators making more with less effort.</p>
           </div>
           <form class="cta__form" id="ctaForm" novalidate>
-            <label for="email" class="sr-only">Work email</label>
-            <input id="email" type="email" placeholder="you@company.com" required autocomplete="email">
-            <button class="btn btn--light" type="submit">Get early access</button>
+            <label for="email" class="sr-only">Email</label>
+            <input id="email" type="email" placeholder="you@email.com" required autocomplete="email">
+            <button class="btn btn--light" type="submit">Get 50 free credits</button>
             <p class="cta__msg" id="ctaMsg" role="status" aria-live="polite"></p>
           </form>
         </div>
@@ -280,17 +310,17 @@
   <footer class="footer">
     <div class="container footer__inner">
       <div class="footer__brand">
-        <a href="#" class="logo"><img src="assets/favicon.svg" alt="" width="24" height="24"><span>Lumen</span></a>
-        <p>Insights at the speed of thought.</p>
+        <a href="#" class="logo"><img src="assets/favicon.svg" alt="" width="24" height="24"><span>Muse</span></a>
+        <p>Create anything. Just describe it.</p>
       </div>
       <div class="footer__cols">
-        <div><h4>Product</h4><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
+        <div><h4>Product</h4><a href="#features">Features</a><a href="#gallery">Gallery</a><a href="#pricing">Pricing</a></div>
         <div><h4>Company</h4><a href="#">About</a><a href="#">Careers</a><a href="#">Blog</a></div>
         <div><h4>Legal</h4><a href="#">Privacy</a><a href="#">Terms</a></div>
       </div>
     </div>
     <div class="container footer__bottom">
-      <p>© <span id="year"></span> Lumen Inc. All rights reserved.</p>
+      <p>© <span id="year"></span> Muse AI Inc. All rights reserved.</p>
     </div>
   </footer>
 
