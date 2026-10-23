@@ -11,7 +11,34 @@ export const TEMPLATES = {
   email: "a short marketing or outreach email with a subject line, friendly tone and one clear call to action",
   blog: "a blog post outline with a catchy title, an intro paragraph and 5-7 section headings with one-line summaries",
   slogan: "10 distinct slogan or tagline options, one per line, each under 10 words",
+  tiktok: "a 30-45 second TikTok / Reels / Shorts video script: a hook for the first 3 seconds, 3-5 short scenes with what to show and what to say, and a closing call to action",
+  review: "a reply to a customer review: thank them by name if given, address their specific points, apologise and offer a fix if the review is negative, and keep it warm and short",
+  listing: "a marketplace listing (Etsy, Amazon, Shopify, Prom, Rozetka): a search-friendly title under 140 characters, 5 benefit bullet points and 13 comma-separated search tags",
+  hashtags: "30 relevant hashtags grouped under three labels: popular, niche and local/branded; hashtags only, separated by spaces within each group",
+  names: "15 creative brand or business name ideas, one per line, each followed by a dash and a one-line explanation",
 };
+
+// Refinements of a previous result (one credit each).
+export const REFINE = {
+  again: "Write a new, clearly different version of the same content.",
+  shorter: "Rewrite it to be about half as long, keeping the key message and call to action.",
+  longer: "Rewrite it to be more detailed and about 1.5 times longer, keeping the same tone.",
+};
+
+export const MAX_PROMPT_CHARS = 1000;
+export const MAX_BRAND_CHARS = 500;
+const MAX_PREVIOUS_CHARS = 6000;
+
+// Builds the conversation: the task (with the saved business profile, if any) and optionally a refinement.
+export function buildMessages({ prompt, brand, mode, previous }) {
+  const task = brand ? `About my business: ${brand}\n\nTask: ${prompt}` : prompt;
+  const messages = [{ role: "user", content: task }];
+  if (REFINE[mode] && previous) {
+    messages.push({ role: "assistant", content: previous.slice(0, MAX_PREVIOUS_CHARS) });
+    messages.push({ role: "user", content: REFINE[mode] });
+  }
+  return messages;
+}
 
 export const TONES = ["friendly", "professional", "playful", "bold", "luxury", "minimal"];
 

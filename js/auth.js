@@ -61,6 +61,31 @@ window.Muse = (() => {
     if (error) throw error;
   };
 
+  // Emails a password-reset link that opens reset.html.
+  const resetPassword = async (email) => {
+    const { sb } = await init();
+    const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: new URL('reset.html', location.href).href });
+    if (error) throw error;
+  };
+
+  // On reset.html the link signs the user in; then the new password is saved here.
+  const updatePassword = async (password) => {
+    const { sb } = await init();
+    const { error } = await sb.auth.updateUser({ password });
+    if (error) throw error;
+  };
+
+  // Saves the business description used in every generation (see api/profile.js).
+  const saveBrand = async (brand) => {
+    const s = await session();
+    const res = await fetch('/api/profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${s.access_token}` },
+      body: JSON.stringify({ brand }),
+    });
+    if (!res.ok) throw new Error((await res.json().catch(() => ({}))).code || 'server');
+  };
+
   const signOut = async () => {
     const { sb } = await init();
     await sb.auth.signOut();
@@ -96,5 +121,5 @@ window.Muse = (() => {
     return url.href;
   };
 
-  return { init, session, requireSession, signIn, signUp, signInWithGoogle, signOut, profile, history, checkoutUrl };
+  return { init, session, requireSession, signIn, signUp, signInWithGoogle, signOut, resetPassword, updatePassword, saveBrand, profile, history, checkoutUrl };
 })();

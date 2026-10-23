@@ -32,6 +32,14 @@
    "offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD"},{"@type":"Offer","name":"Creator","price":"19","priceCurrency":"USD"},{"@type":"Offer","name":"Pro","price":"49","priceCurrency":"USD"}]}
   </script>
   <script>
+    // First visit: open the page in the visitor's language (a choice made in the language menu wins).
+    try {
+      const pages = { zh: 'zh.html', hi: 'hi.html', es: 'es.html', fr: 'fr.html', ar: 'ar.html', uk: 'uk.html' };
+      const saved = localStorage.getItem('muse-lang');
+      const prefs = saved ? [saved] : (navigator.languages || [navigator.language || 'en']).map((l) => String(l).slice(0, 2).toLowerCase());
+      const match = prefs.find((l) => l === 'en' || pages[l]);
+      if (match && match !== 'en') location.replace(pages[match] + location.search + location.hash);
+    } catch (e) {}
     document.documentElement.classList.add('js');
     // Apply saved theme before paint to avoid a flash.
     try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
@@ -141,8 +149,8 @@
         <div class="bento">
           <article class="card card--wide reveal">
             <div class="card__icon">✍️</div>
-            <h3>6 ready-made formats</h3>
-            <p>Ads, social posts, product descriptions, emails, blog outlines and slogans — each tuned with copywriting best practices.</p>
+            <h3>9 ready-made formats</h3>
+            <p>Ads, social posts, product descriptions, emails, blog outlines, slogans, video scripts, review replies and marketplace listings — each tuned with copywriting best practices.</p>
           </article>
           <article class="card reveal">
             <div class="card__icon">🎚️</div>
@@ -212,12 +220,12 @@
           <h2>From idea to published in a minute</h2>
         </div>
         <ol class="steps">
-          <li class="step reveal"><span class="step__num">1</span><h3>Pick a format</h3><p>Ad, social post, product description, email, blog outline or slogans.</p></li>
+          <li class="step reveal"><span class="step__num">1</span><h3>Pick a format</h3><p>Ad, social post, product description, email, video script, review reply and more.</p></li>
           <li class="step reveal"><span class="step__num">2</span><h3>Describe it</h3><p>A sentence or two about your product, audience and offer is enough.</p></li>
           <li class="step reveal"><span class="step__num">3</span><h3>Copy &amp; publish</h3><p>Get the result in seconds, tweak if you like, and post it.</p></li>
         </ol>
         <div class="metrics reveal">
-          <div><strong data-count="6">0</strong><span>Content formats</span></div>
+          <div><strong data-count="9">0</strong><span>Content formats</span></div>
           <div><strong data-count="11">0</strong><span>Languages</span></div>
           <div><strong data-count="6">0</strong><span>Tones of voice</span></div>
           <div><strong data-count="10">0</strong><span>Free generations / month</span></div>
@@ -239,7 +247,7 @@
             <p class="plan__desc">Try Muse at no cost.</p>
             <p class="plan__price"><span class="price">$0</span><small>/mo</small></p>
             <a href="login.html?mode=signup" class="btn btn--ghost btn--block">Start free</a>
-            <ul class="plan__list"><li>10 generations / month</li><li>All 6 formats</li><li>All tones &amp; languages</li><li>Saved history</li></ul>
+            <ul class="plan__list"><li>10 generations / month</li><li>All 9 formats</li><li>All tones &amp; languages</li><li>Saved history</li></ul>
           </article>
           <article class="plan plan--featured reveal">
             <span class="plan__badge">Most popular</span>
@@ -272,7 +280,7 @@
           <details class="reveal"><summary>What is a credit?</summary><p>One generation uses one credit. Free accounts get 10 credits every month; paid plans refill on each billing date. If a generation fails, the credit is returned automatically.</p></details>
           <details class="reveal"><summary>Is my content private?</summary><p>Your prompts and results are visible only to you. Muse uses Anthropic's Claude API, and your content is not used to train AI models.</p></details>
           <details class="reveal"><summary>Can I cancel anytime?</summary><p>Yes. There are no contracts — cancel from “Manage billing” in your account and keep access until the end of the paid period.</p></details>
-          <details class="reveal"><summary>Does Muse create images or videos?</summary><p>Not yet. Muse focuses on writing great text: ads, posts, product descriptions, emails, blog outlines and slogans.</p></details>
+          <details class="reveal"><summary>Does Muse create images or videos?</summary><p>Not yet. Muse focuses on writing great text — including scripts for your videos and listings for your online store.</p></details>
         </div>
       </div>
     </section>

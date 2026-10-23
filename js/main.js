@@ -295,6 +295,26 @@
     });
   });
 
+  // Remember the language picked on the landing page, so login and the studio open in it too.
+  $$('.langs__menu a[lang]').forEach((a) => a.addEventListener('click', () => {
+    try { localStorage.setItem('muse-lang', a.lang); } catch (e) {}
+  }));
+
+  // Interface translations for login, reset and the studio (js/ui-i18n.js).
+  const UI = window.MuseUI;
+  UI?.apply();
+  const tr = (key) => (UI ? UI.t(key) : key);
+  // Supabase error codes → translated messages.
+  const authError = (err) => {
+    if (err.message === 'not-configured') return tr('not_ready');
+    const code = err.code || '';
+    if (code === 'invalid_credentials' || /invalid login/i.test(err.message)) return tr('err_invalid');
+    if (code === 'user_already_exists' || /already registered/i.test(err.message)) return tr('err_exists');
+    if (code === 'email_not_confirmed' || /not confirmed/i.test(err.message)) return tr('err_unconfirmed');
+    if (code === 'weak_password') return tr('err_pw');
+    return err.message || tr('err_server');
+  };
+
   // Auth page: log in / sign up through Supabase (see js/auth.js)
   const auth = $('#authCard');
   if (auth) {
@@ -312,20 +332,28 @@
       });
       $$('[data-only]', auth).forEach((el) => { el.hidden = el.dataset.only !== mode; });
       $('input[name="password"]', auth).autocomplete = mode === 'signup' ? 'new-password' : 'current-password';
-      submit.textContent = mode === 'signup' ? 'Create account' : 'Log in';
+      submit.textContent = tr(mode === 'signup' ? 'btn_signup' : 'btn_login');
       msg.textContent = '';
     };
     $$('[data-auth-tab]', auth).forEach((t) => t.addEventListener('click', () => setMode(t.dataset.authTab)));
     setMode(params.get('mode') === 'signup' || plan ? 'signup' : 'login');
 
-    const notReady = 'Accounts are not available yet: the site owner still needs to connect Supabase (see README).';
-    const friendly = (err) => err.message === 'not-configured' ? notReady : err.message || 'Something went wrong. Please try again.';
-
     // Already signed in? Go straight to the app.
     window.Muse?.session().then((s) => { if (s) location.replace(next); }).catch(() => {});
 
     $('#googleBtn').addEventListener('click', async () => {
-      try { await window.Muse.signInWithGoogle(next); } catch (err) { msg.textContent = friendly(err); }
+      try { await window.Muse.signInWithGoogle(next); } catch (err) { msg.textContent = authError(err); }
+    });
+
+    $('#forgotBtn').addEventListener('click', async () => {
+      const email = $('input[name="email"]', auth);
+      if (!email.value || !email.checkValidity()) { msg.textContent = tr('email_first'); email.focus(); return; }
+      try {
+        await window.Muse.resetPassword(email.value);
+        msg.textContent = tr('reset_sent');
+      } catch (err) {
+        msg.textContent = authError(err);
+      }
     });
 
     $('#authForm').addEventListener('submit', async (e) => {
@@ -334,7 +362,7 @@
       const visible = $$('input', formEl).filter((i) => !i.closest('[hidden]'));
       const invalid = visible.find((i) => !i.checkValidity());
       if (invalid) {
-        msg.textContent = invalid.name === 'password' ? 'Password must be at least 8 characters.' : 'Please fill in all fields correctly.';
+        msg.textContent = tr(invalid.name === 'password' ? 'err_pw' : 'err_fill');
         invalid.focus();
         return;
       }
@@ -344,15 +372,39 @@
       try {
         if (auth.dataset.mode === 'signup') {
           const { needsConfirmation } = await window.Muse.signUp(data.email, data.password, data.name);
-          if (needsConfirmation) { msg.textContent = '📬 Almost there! Check your email to confirm your account.'; return; }
+          if (needsConfirmation) { msg.textContent = tr('confirm_email'); return; }
         } else {
           await window.Muse.signIn(data.email, data.password);
         }
         location.href = next;
       } catch (err) {
-        msg.textContent = friendly(err);
+        msg.textContent = authError(err);
       } finally {
         submit.disabled = false;
+      }
+    });
+  }
+
+  // Reset page: the emailed link signs the user in, then they choose a new password.
+  const resetCard = $('#resetCard');
+  if (resetCard) {
+    const form = $('#resetForm');
+    const msg = $('#resetMsg');
+    window.Muse.session()
+      .then((s) => { if (s) form.hidden = false; else msg.textContent = tr('reset_invalid'); })
+      .catch((err) => { msg.textContent = authError(err); });
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const pw = $('input[name="password"]', form);
+      if (!pw.checkValidity()) { msg.textContent = tr('err_pw'); pw.focus(); return; }
+      $('#resetSubmit').disabled = true;
+      try {
+        await window.Muse.updatePassword(pw.value);
+        msg.textContent = tr('reset_ok');
+        setTimeout(() => { location.href = 'app.html'; }, 1200);
+      } catch (err) {
+        msg.textContent = authError(err);
+        $('#resetSubmit').disabled = false;
       }
     });
   }

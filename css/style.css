@@ -510,6 +510,30 @@ p { margin: 0 0 1em; }
 .modal__plans .plan .btn { margin-top: 22px; }
 .modal .form-msg { text-align: center; margin-top: 14px; }
 
+/* Studio: business profile, refinements, pickers */
+.tpl b { font-weight: 600; text-align: center; line-height: 1.25; }
+.brand { margin: 4px 0 14px; border: 1px dashed var(--border); border-radius: 12px; padding: 10px 14px; }
+.brand[open] { border-style: solid; }
+.brand summary { cursor: pointer; font-size: 14px; font-weight: 600; list-style: none; }
+.brand summary::-webkit-details-marker { display: none; }
+.brand summary::before { content: "+ "; color: var(--accent); }
+.brand[open] summary::before { content: "− "; }
+.brand summary small { color: var(--muted); font-weight: 500; }
+.brand textarea { width: 100%; margin-top: 10px; padding: 10px 12px; border-radius: 10px; font: 500 14px/1.5 var(--font); border: 1px solid var(--border); background: var(--bg); color: var(--text); resize: vertical; }
+.brand__row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.brand__row .form-msg { flex-basis: auto; }
+.refine { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+.refine[hidden] { display: none; }
+.refine small { color: var(--muted); }
+.lang-select { height: 40px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: 600 13px var(--font); max-width: 140px; }
+.account__lang { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+.account__lang .lang-select { max-width: none; width: 100%; }
+.link-btn { background: none; border: 0; padding: 0; font: 500 14px var(--font); color: var(--accent); cursor: pointer; }
+.link-btn:hover { text-decoration: underline; }
+.auth-forgot { margin: -4px 0 14px; text-align: end; }
+.auth-forgot[hidden] { display: none; }
+.auth-note a { color: var(--accent); }
+
 /* ---------- Languages ---------- */
 .langs { position: relative; }
 .langs summary { list-style: none; width: auto; padding: 0 10px; gap: 6px; display: inline-flex; align-items: center; font: 600 13px var(--font); }
@@ -578,7 +602,8 @@ html:lang(hi) .hero__title, html:lang(ar) .hero__title { line-height: 1.3; }
   .studio-app { grid-template-columns: 1fr; padding-top: 20px; }
   .panel--output { position: static; }
   .panel { padding: 18px; }
-  .templates { grid-template-columns: repeat(2, 1fr); }
+  .templates { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tpl { padding: 10px 4px; font-size: 12px; }
   .credits__label { display: none; }
   .modal { padding: 24px 18px; }
   .modal__plans { grid-template-columns: 1fr; }

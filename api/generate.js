@@ -1,14 +1,18 @@
 // Vercel serverless function: POST /api/generate
-// Body: { prompt, template?, tone?, language? }
-// Signed-in users (Authorization: Bearer <Supabase token>) spend one credit per generation.
-// Anonymous visitors get a few free tries on the landing page demo.
+// Body: { prompt, template?, tone?, language?, mode?: "again" | "shorter" | "longer", previous? }
+// Signed-in users (Authorization: Bearer <Supabase token>) spend one credit per generation;
+// their saved business profile is added to the task. Anonymous visitors get a few free tries
+// (landing page demo and free tools).
 // Streams Claude's reply back as plain text; remaining credits are sent in X-Credits-Remaining.
+// Errors are JSON: { error, code } — the browser translates them by `code`.
 import Anthropic from "@anthropic-ai/sdk";
-import { TEMPLATES, TONES, LANGUAGES, buildSystemPrompt, supabaseAdmin, getUser, clientIp } from "./_lib.js";
+import {
+  TEMPLATES, TONES, LANGUAGES, REFINE, MAX_PROMPT_CHARS,
+  buildSystemPrompt, buildMessages, supabaseAdmin, getUser, clientIp,
+} from "./_lib.js";
 
 const client = new Anthropic();
 
-const MAX_PROMPT_CHARS = 1000;
 const DEMO_LIMIT = 3; // anonymous generations per IP per window
 const DEMO_WINDOW_MS = 60 * 60 * 1000;
 const hits = new Map(); // best-effort, per warm instance
@@ -24,6 +28,8 @@ function demoLimited(ip) {
   return entry.count > DEMO_LIMIT;
 }
 
+const fail = (res, status, code, error) => res.status(status).json({ error, code });
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -35,35 +41,32 @@ export default async function handler(req, res) {
   const template = TEMPLATES[body.template] ? body.template : "ad";
   const tone = TONES.includes(body.tone) ? body.tone : "friendly";
   const language = LANGUAGES.includes(body.language) ? body.language : "English";
+  const mode = REFINE[body.mode] ? body.mode : null;
+  const previous = mode && typeof body.previous === "string" ? body.previous : "";
 
-  if (!prompt) return res.status(400).json({ error: "Please describe what you want to write." });
-  if (prompt.length > MAX_PROMPT_CHARS) {
-    return res.status(400).json({ error: `Prompt is too long (max ${MAX_PROMPT_CHARS} characters).` });
-  }
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return res.status(500).json({ error: "AI is not configured: set ANTHROPIC_API_KEY on the server." });
-  }
+  if (!prompt) return fail(res, 400, "empty", "Please describe what you want to write.");
+  if (prompt.length > MAX_PROMPT_CHARS) return fail(res, 400, "too_long", `Prompt is too long (max ${MAX_PROMPT_CHARS} characters).`);
+  if (!process.env.ANTHROPIC_API_KEY) return fail(res, 500, "not_configured", "AI is not configured: set ANTHROPIC_API_KEY on the server.");
 
   const user = await getUser(req.headers.authorization);
   const db = supabaseAdmin();
   let remaining = null;
+  let brand = "";
 
   if (user) {
     const { data, error } = await db.rpc("use_credit", { uid: user.id });
     if (error) {
       console.error("use_credit failed:", error);
-      return res.status(500).json({ error: "Could not check your credits. Please try again." });
+      return fail(res, 500, "server", "Could not check your credits. Please try again.");
     }
-    if (data < 0) {
-      return res.status(402).json({ error: "You're out of credits. Upgrade your plan to keep creating.", code: "no_credits" });
-    }
+    if (data < 0) return fail(res, 402, "no_credits", "You're out of credits. Upgrade your plan to keep creating.");
     remaining = data;
+    const { data: profile } = await db.from("profiles").select("brand").eq("id", user.id).maybeSingle();
+    brand = profile?.brand || "";
   } else {
-    if (req.headers.authorization) {
-      return res.status(401).json({ error: "Your session has expired. Please log in again.", code: "auth" });
-    }
+    if (req.headers.authorization) return fail(res, 401, "auth", "Your session has expired. Please log in again.");
     if (demoLimited(clientIp(req.headers))) {
-      return res.status(429).json({ error: "Free demo limit reached. Create a free account to get 10 generations a month.", code: "demo_limit" });
+      return fail(res, 429, "demo_limit", "Free demo limit reached. Create a free account to get 10 generations a month.");
     }
   }
 
@@ -82,7 +85,7 @@ export default async function handler(req, res) {
       max_tokens: 2048, // marketing copy is short; keeps cost per generation predictable
       output_config: { effort: "low" },
       system: buildSystemPrompt({ template, tone, language }),
-      messages: [{ role: "user", content: prompt }],
+      messages: buildMessages({ prompt, brand, mode, previous }),
       // If a request is declined, the API retries it on a fallback model automatically.
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
@@ -96,13 +99,12 @@ export default async function handler(req, res) {
         output += event.delta.text;
       }
     }
-    if (!res.headersSent) res.writeHead(200, headers);
 
     const message = await stream.finalMessage();
     if (message.stop_reason === "refusal" || !output) {
       await refund();
-      res.write("\n\nSorry, Muse can't help with that request. Try a different prompt. (No credit was used.)");
-      return res.end();
+      if (res.headersSent) return res.end("\n\n[…]"); // declined mid-answer: credit refunded, nothing saved
+      return fail(res, 422, "refused", "Muse can't help with that request. Try a different prompt. No credit was used.");
     }
     res.end();
 
@@ -113,16 +115,10 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error("generate failed:", error);
     if (!output) await refund();
-    if (res.headersSent) return res.end("\n\n[Generation interrupted. Please try again.]");
-    if (error instanceof Anthropic.RateLimitError) {
-      return res.status(429).json({ error: "Muse is busy right now. Try again in a moment." });
-    }
-    if (error instanceof Anthropic.AuthenticationError) {
-      return res.status(500).json({ error: "The server's ANTHROPIC_API_KEY is invalid." });
-    }
-    if (error instanceof Anthropic.APIError) {
-      return res.status(502).json({ error: "The AI service returned an error. Please try again." });
-    }
-    return res.status(500).json({ error: "Something went wrong. Please try again." });
+    if (res.headersSent) return res.end("\n\n[…]");
+    if (error instanceof Anthropic.RateLimitError) return fail(res, 429, "busy", "Muse is busy right now. Try again in a moment.");
+    if (error instanceof Anthropic.AuthenticationError) return fail(res, 500, "not_configured", "The server's ANTHROPIC_API_KEY is invalid.");
+    if (error instanceof Anthropic.APIError) return fail(res, 502, "server", "The AI service returned an error. Please try again.");
+    return fail(res, 500, "server", "Something went wrong. Please try again.");
   }
 }

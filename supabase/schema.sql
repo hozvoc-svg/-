@@ -26,6 +26,9 @@ create table if not exists public.generations (
 );
 create index if not exists generations_user_created_idx on public.generations (user_id, created_at desc);
 
+-- Added later: the user's saved business description (re-running this file is safe).
+alter table public.profiles add column if not exists brand text check (char_length(brand) <= 500);
+
 -- Row level security: users can read only their own rows.
 -- All writes go through the server (service role) or the functions below.
 alter table public.profiles enable row level security;
