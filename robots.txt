@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /-/login.html
+Disallow: /-/api/
+
+# Replace with your domain if you move the site
+Sitemap: https://hozvoc-svg.github.io/-/sitemap.xml
