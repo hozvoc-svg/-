@@ -9,10 +9,10 @@ import cairo
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-import scenes as S
 EPISODE = os.environ.get("EPISODE", "dyatlov")
 _ep = importlib.import_module("episodes." + EPISODE)
 LONG, SHORT, PRON = _ep.LONG, _ep.SHORT, _ep.PRON
+S = importlib.import_module(getattr(_ep, "SCENES_MODULE", "scenes"))
 
 OUT = os.path.join(HERE, "out")
 TMP = os.path.join(HERE, "tmp")
@@ -20,10 +20,13 @@ VOICE = os.path.join(HERE, "voice/lt/en-us-libritts-high.onnx")
 EL_KEY = os.environ.get("ELEVENLABS_API_KEY")
 EL_VOICE = os.environ.get("ELEVENLABS_VOICE_ID", "JBFqnCBsd6RMkjVDRZzb")
 EL_MODEL = os.environ.get("ELEVENLABS_MODEL", "eleven_multilingual_v2")
-SPEAKER = int(os.environ.get("SPEAKER", "186"))
+SPEAKER = int(os.environ.get("SPEAKER", getattr(_ep, "SPEAKER", 186)))
+LENGTH_SCALE = getattr(_ep, "LENGTH_SCALE", 1.07)
+AMBIENT = getattr(_ep, "AMBIENT", "drone")
+CAPTION_SIZE = getattr(_ep, "CAPTION_SIZE", 44)
 FPS = 24
 SR = 22050
-GAP, TAIL = 0.28, 0.45
+GAP, TAIL = getattr(_ep, "GAP", 0.28), getattr(_ep, "TAIL", 0.45)
 
 
 def say_text(s):
@@ -50,7 +53,7 @@ def tts(segs, tag):
     else:
         from piper import PiperVoice, SynthesisConfig
         v = PiperVoice.load(VOICE)
-        cfg = SynthesisConfig(speaker_id=SPEAKER, length_scale=1.07, noise_scale=0.6, noise_w_scale=0.7)
+        cfg = SynthesisConfig(speaker_id=SPEAKER, length_scale=LENGTH_SCALE, noise_scale=0.6, noise_w_scale=0.7)
 
         def synth(text):
             p = os.path.join(TMP, "_piper.wav")
@@ -149,9 +152,9 @@ def render_segment(job):
                 if vertical:
                     caption(c, s, cw, 1560, 62)
                 else:
-                    caption(c, s, cw, ch - 70, 44)
+                    caption(c, s, cw, ch - 70, CAPTION_SIZE)
                 break
-        fade = 1 - S.clamp(t / 0.25)
+        fade = 1 - S.clamp(t / getattr(_ep, "FADE", 0.25))
         if fade > 0:
             c.set_source_rgba(0, 0, 0, fade * 0.8)
             c.paint()
@@ -162,7 +165,89 @@ def render_segment(job):
     return path
 
 
-def mix(voice, video_list, out, total):
+def cozy_ambience(timeline, total):
+    """Soft procedural piano + pad (music.wav) and rain noise enveloped to rainy scenes (rain.wav)."""
+    sr = 44100
+    n = int(total * sr) + sr
+    rng = np.random.default_rng(3)
+    music = np.zeros(n, np.float32)
+    chords = [[53, 57, 60, 64], [50, 53, 57, 60], [46, 50, 53, 57], [48, 52, 55, 60]]  # Fmaj7 Dm7 Bbmaj7 C
+    hz = lambda m: 440 * 2 ** ((m - 69) / 12)
+    bar = 4.0
+    def note(m, start, dur, amp, decay):
+        i0 = int(start * sr)
+        L = min(int(dur * sr), n - i0)
+        if L <= 0:
+            return
+        tt = np.arange(L) / sr
+        f = hz(m)
+        env = np.exp(-tt * decay) * np.minimum(1, tt / 0.01)
+        w = np.sin(2 * np.pi * f * tt) + 0.3 * np.sin(4 * np.pi * f * tt) + 0.1 * np.sin(6 * np.pi * f * tt)
+        music[i0:i0 + L] += (amp * env * w).astype(np.float32)
+    k = 0
+    tpos = 0.0
+    while tpos < total:
+        ch = chords[k % 4]
+        for m in ch:  # soft pad
+            i0 = int(tpos * sr); L = min(int(bar * 1.1 * sr), n - i0)
+            if L > 0:
+                tt = np.arange(L) / sr
+                env = np.sin(np.pi * np.clip(tt / (bar * 1.1), 0, 1)) ** 2
+                music[i0:i0 + L] += (0.035 * env * np.sin(2 * np.pi * hz(m) * tt)).astype(np.float32)
+        for b in range(4):  # sparse piano melody
+            if rng.random() < 0.7:
+                m = rng.choice(ch) + 12 + (12 if rng.random() < 0.3 else 0)
+                note(m, tpos + b * 1.0 + rng.random() * 0.08, 3.5, 0.06, 1.3)
+        note(ch[0] - 12, tpos, 4.0, 0.07, 0.8)
+        tpos += bar
+        k += 1
+    for dl, g in [(0.23, 0.35), (0.37, 0.25), (0.53, 0.18), (0.79, 0.12)]:  # cheap reverb
+        dd = int(dl * sr)
+        music[dd:] += g * music[:-dd]
+    music *= 0.5 / max(1e-6, np.abs(music).max())
+    # rain: spectrally shaped noise in chunks, enveloped by scene
+    rain = np.zeros(n, np.float32)
+    ch = sr * 10
+    freqs = np.fft.rfftfreq(ch, 1 / sr)
+    shape = np.where(freqs > 200, 1 / np.sqrt(np.maximum(freqs, 1)), 0) * np.exp(-freqs / 9000)
+    for i in range(0, n, ch):
+        spec = np.fft.rfft(rng.standard_normal(ch)) * shape
+        seg = np.fft.irfft(spec, ch).astype(np.float32)
+        rain[i:i + ch] = seg[:len(rain[i:i + ch])]
+    rain *= 0.35 / max(1e-6, np.abs(rain).max())
+    env = np.zeros(n, np.float32)
+    for s in timeline:
+        rainy = s["scene"] in ("rain_window", "rain_room") or s["args"].get("rain")
+        if rainy:
+            a = int(s["start"] * sr); b = int((s["start"] + s["frames"] / FPS) * sr)
+            env[a:b] = 1.0
+    kern = np.ones(int(2.5 * sr), np.float32) / int(2.5 * sr)
+    env = np.convolve(env[::100], kern[::100] * 100, mode="same")[np.arange(n) // 100]
+    rain *= env
+    paths = []
+    for name, x in (("music", music), ("rain", rain)):
+        p = os.path.join(TMP, f"{EPISODE}_{name}.wav")
+        with wave.open(p, "wb") as w:
+            w.setnchannels(1); w.setsampwidth(2); w.setframerate(sr)
+            w.writeframes((np.clip(x, -1, 1) * 32767).astype(np.int16).tobytes())
+        paths.append(p)
+    return paths
+
+
+def mix(voice, video_list, out, total, timeline=None):
+    if AMBIENT == "cozy":
+        music, rain = cozy_ambience(timeline, total)
+        lst = os.path.join(TMP, os.path.basename(out) + ".txt")
+        with open(lst, "w") as fh:
+            fh.writelines(f"file '{p}'\n" for p in video_list)
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", lst,
+                        "-i", voice, "-i", music, "-i", rain, "-filter_complex",
+                        "[1:a]aresample=44100,highpass=f=70,loudnorm=I=-16:TP=-1.5[v];"
+                        "[2:a]volume=0.22,lowpass=f=5000[m];[3:a]volume=0.5[r];"
+                        "[v][m][r]amix=inputs=3:normalize=0:duration=first,alimiter=limit=0.95[a]",
+                        "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
+                        "-movflags", "+faststart", out], check=True)
+        return
     lst = os.path.join(TMP, os.path.basename(out) + ".txt")
     with open(lst, "w") as fh:
         fh.writelines(f"file '{p}'\n" for p in video_list)
@@ -195,7 +280,7 @@ def build(kind):
         pool.map(render_segment, jobs_sorted)
     total = sum(s["frames"] for s in timeline) / FPS
     out = os.path.join(OUT, f"{EPISODE}_{kind}.mp4")
-    mix(voice, [j[1] for j in jobs], out, total)
+    mix(voice, [j[1] for j in jobs], out, total, timeline)
     chap = [(s["start"], s["chapter"]) for s in timeline if s.get("chapter")]
     with open(os.path.join(TMP, f"{kind}_timeline.json"), "w") as fh:
         json.dump(dict(total=total, chapters=chap), fh)
@@ -208,6 +293,10 @@ def thumb():
     surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, 1280, 720)
     c = cairo.Context(surf)
     c.scale(1280 / S.W, 720 / S.H)
+    if hasattr(_ep, "thumb"):
+        _ep.thumb(S, c)
+        surf.write_to_png(os.path.join(OUT, f"{EPISODE}_thumbnail.png"))
+        return
     c.save()
     c.translate(-500, -250)
     c.scale(1.5, 1.5)
