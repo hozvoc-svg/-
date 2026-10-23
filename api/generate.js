@@ -5,6 +5,7 @@
 // (landing page demo and free tools).
 // Streams Claude's reply back as plain text; remaining credits are sent in X-Credits-Remaining.
 // Errors are JSON: { error, code } — the browser translates them by `code`.
+import crypto from "node:crypto";
 import Anthropic from "@anthropic-ai/sdk";
 import {
   TEMPLATES, TONES, LANGUAGES, REFINE, MAX_PROMPT_CHARS,
@@ -13,19 +14,42 @@ import {
 
 const client = new Anthropic();
 
-const DEMO_LIMIT = 3; // anonymous generations per IP per window
-const DEMO_WINDOW_MS = 60 * 60 * 1000;
-const hits = new Map(); // best-effort, per warm instance
+const DEMO_LIMIT = 3; // free tries per visitor per hour (landing demo and free tools)
+const DEMO_WINDOW_SECONDS = 60 * 60;
+// Free tries for everyone together per day: caps what anonymous visitors can cost you.
+// ~1–2 cents each, so 300/day ≈ $3–6/day at most. Override with the ANON_DAILY_LIMIT env variable.
+const ANON_DAILY_LIMIT = Number(process.env.ANON_DAILY_LIMIT) || 300;
+const hits = new Map(); // fallback when the database is not configured (per server instance only)
 
-function demoLimited(ip) {
+function memoryLimited(key, max, windowMs) {
   const now = Date.now();
-  const entry = hits.get(ip);
-  if (!entry || now - entry.start > DEMO_WINDOW_MS) {
-    hits.set(ip, { start: now, count: 1 });
+  const entry = hits.get(key);
+  if (!entry || now - entry.start > windowMs) {
+    hits.set(key, { start: now, count: 1 });
     return false;
   }
   entry.count += 1;
-  return entry.count > DEMO_LIMIT;
+  return entry.count > max;
+}
+
+// Returns "visitor" or "daily" when a free try is not allowed, otherwise null.
+async function anonLimit(db, ip) {
+  const salt = process.env.SUPABASE_SERVICE_ROLE_KEY || "muse";
+  const visitor = "ip:" + crypto.createHash("sha256").update(salt + ip).digest("hex").slice(0, 32);
+  const day = "day:" + new Date().toISOString().slice(0, 10);
+  if (!db) {
+    if (memoryLimited(visitor, DEMO_LIMIT, DEMO_WINDOW_SECONDS * 1000)) return "visitor";
+    return memoryLimited(day, ANON_DAILY_LIMIT, 24 * 3600 * 1000) ? "daily" : null;
+  }
+  const { data: visitorOk, error } = await db.rpc("anon_hit", { k: visitor, max_count: DEMO_LIMIT, window_seconds: DEMO_WINDOW_SECONDS });
+  if (error) {
+    console.error("anon_hit failed:", error);
+    return memoryLimited(visitor, DEMO_LIMIT, DEMO_WINDOW_SECONDS * 1000) ? "visitor" : null;
+  }
+  if (!visitorOk) return "visitor";
+  const { data: dayOk } = await db.rpc("anon_hit", { k: day, max_count: ANON_DAILY_LIMIT, window_seconds: 24 * 3600 });
+  if (Math.random() < 0.01) db.rpc("anon_cleanup").then(() => {}, () => {});
+  return dayOk === false ? "daily" : null;
 }
 
 const fail = (res, status, code, error) => res.status(status).json({ error, code });
@@ -65,7 +89,9 @@ export default async function handler(req, res) {
     brand = profile?.brand || "";
   } else {
     if (req.headers.authorization) return fail(res, 401, "auth", "Your session has expired. Please log in again.");
-    if (demoLimited(clientIp(req.headers))) {
+    if (mode) return fail(res, 401, "auth", "Log in to refine a result.");
+    const limited = await anonLimit(db, clientIp(req.headers));
+    if (limited) {
       return fail(res, 429, "demo_limit", "Free demo limit reached. Create a free account to get 10 generations a month.");
     }
   }

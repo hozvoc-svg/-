@@ -86,6 +86,37 @@ returns void language sql security definer set search_path = public as $$
   update profiles set credits = credits + 1 where id = uid;
 $$;
 
+-- Free tries without an account (landing demo and free tools), counted per hashed IP and per day overall.
+-- Only the server touches this table (no policies: row level security blocks everyone else).
+create table if not exists public.anon_usage (
+  key text primary key,
+  window_start timestamptz not null default now(),
+  count integer not null default 0
+);
+alter table public.anon_usage enable row level security;
+
+-- Atomically counts one try for `k`; returns false when `max_count` tries were already used in the window.
+create or replace function public.anon_hit(k text, max_count integer, window_seconds integer)
+returns boolean language plpgsql security definer set search_path = public as $$
+declare used integer;
+begin
+  insert into anon_usage as u (key, window_start, count) values (k, now(), 1)
+  on conflict (key) do update
+    set count = case when u.window_start < now() - make_interval(secs => window_seconds) then 1 else u.count + 1 end,
+        window_start = case when u.window_start < now() - make_interval(secs => window_seconds) then now() else u.window_start end
+  returning count into used;
+  return used <= max_count;
+end;
+$$;
+
+-- Old rows are useless after a day; the server calls this now and then.
+create or replace function public.anon_cleanup()
+returns void language sql security definer set search_path = public as $$
+  delete from anon_usage where window_start < now() - interval '2 days';
+$$;
+
 -- Only the server may call the credit functions.
 revoke execute on function public.use_credit(uuid) from public, anon, authenticated;
 revoke execute on function public.refund_credit(uuid) from public, anon, authenticated;
+revoke execute on function public.anon_hit(text, integer, integer) from public, anon, authenticated;
+revoke execute on function public.anon_cleanup() from public, anon, authenticated;
