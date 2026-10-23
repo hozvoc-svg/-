@@ -1,0 +1,15 @@
+const H = await import('./server.mjs'); await H.start();
+let fails = 0; const check = (n, c, x = '') => { console.log((c ? 'PASS ' : 'FAIL ') + n + (x ? '  ' + x : '')); if (!c) fails++; };
+const gen = (body, ip) => fetch(H.BASE + '/api/generate', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-forwarded-for': ip }, body: JSON.stringify(body) });
+let r = await gen({ prompt: 'x', mode: 'shorter', previous: 'y'.repeat(5000) }, '5.5.5.5');
+check('anonymous refine refused (401 auth)', r.status === 401 && (await r.json()).code === 'auth');
+for (let i = 0; i < 3; i++) await (await gen({ prompt: 'p' + i }, '6.6.6.6')).text();
+r = await gen({ prompt: 'p4' }, '6.6.6.6');
+check('4th try from same visitor blocked (DB limiter)', r.status === 429);
+const keys = Object.keys(H.db.anon);
+check('visitor key is hashed, no raw IP stored', keys.every((k) => !k.includes('6.6.6.6')) && keys.some((k) => /^ip:[0-9a-f]{32}$/.test(k)), keys.join(' '));
+const dayKey = keys.find((k) => k.startsWith('day:'));
+H.db.anon[dayKey].count = 10000;
+r = await gen({ prompt: 'new visitor' }, '8.8.8.8');
+check('daily cap blocks new visitors', r.status === 429);
+console.log(fails ? fails + ' FAILED' : 'ALL PASSED'); H.server.close(); process.exit(0);

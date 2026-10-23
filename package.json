@@ -5,7 +5,8 @@
   "description": "Muse \u2014 AI copywriting SaaS: landing page, studio app, Claude API, Supabase auth and Lemon Squeezy billing",
   "type": "module",
   "scripts": {
-    "check": "for f in js/*.js api/*.js; do node --check $f || exit 1; done"
+    "check": "for f in js/*.js api/*.js; do node --check $f || exit 1; done",
+    "test": "node tests/run.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.1.0",

@@ -1,0 +1,6 @@
+# Not part of the website: keep these out of the public deployment.
+tests/
+tools/
+supabase/
+.github/
+*.md
