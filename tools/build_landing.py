@@ -21,6 +21,7 @@ LANGS = [
 LANG = {}
 
 LANG["en"] = dict(
+    ft_tools="Free tools",
     title="Muse — AI Copywriter for Ads, Posts &amp; Emails",
     desc="Muse writes ads, social posts, product descriptions and emails in your tone, in 11 languages, in seconds. Start free.",
     og_title="Muse — AI Copywriter", og_desc="Ads, social posts, product descriptions and emails in seconds. Start free.", og_locale="en_US",
@@ -64,6 +65,7 @@ LANG["en"] = dict(
 )
 
 LANG["uk"] = dict(
+    ft_tools="Безкоштовні інструменти",
     title="Muse — AI-копірайтер для реклами, постів і розсилок",
     desc="Muse пише рекламу, пости, описи товарів і email-листи українською та ще 10 мовами за секунди. 10 генерацій щомісяця безкоштовно.",
     og_title="Muse — AI-копірайтер українською", og_desc="Реклама, пости, описи товарів і листи за секунди. Почніть безкоштовно.", og_locale="uk_UA",
@@ -107,6 +109,7 @@ LANG["uk"] = dict(
 )
 
 LANG["es"] = dict(
+    ft_tools="Herramientas gratis",
     title="Muse — Redactor con IA para anuncios, posts y emails",
     desc="Muse escribe anuncios, posts, descripciones de productos y emails en tu tono y en 11 idiomas, en segundos. Empieza gratis.",
     og_title="Muse — Redactor publicitario con IA", og_desc="Anuncios, posts, descripciones y emails en segundos. Empieza gratis.", og_locale="es_ES",
@@ -150,6 +153,7 @@ LANG["es"] = dict(
 )
 
 LANG["fr"] = dict(
+    ft_tools="Outils gratuits",
     title="Muse — Rédacteur IA pour pubs, posts et emails",
     desc="Muse rédige vos pubs, posts, fiches produits et emails dans votre ton et en 11 langues, en quelques secondes. Commencez gratuitement.",
     og_title="Muse — Rédacteur publicitaire IA", og_desc="Pubs, posts, fiches produits et emails en quelques secondes. Commencez gratuitement.", og_locale="fr_FR",
@@ -193,6 +197,7 @@ LANG["fr"] = dict(
 )
 
 LANG["zh"] = dict(
+    ft_tools="免费工具",
     title="Muse — AI 营销文案助手：广告、帖子与邮件",
     desc="Muse 用你想要的语气，以 11 种语言在几秒内写出广告、社交帖子、产品描述和邮件。免费开始。",
     og_title="Muse — AI 文案助手", og_desc="几秒钟写好广告、帖子、产品描述和邮件。免费开始。", og_locale="zh_CN",
@@ -236,6 +241,7 @@ LANG["zh"] = dict(
 )
 
 LANG["hi"] = dict(
+    ft_tools="मुफ़्त टूल",
     title="Muse — विज्ञापन, पोस्ट और ईमेल के लिए AI कॉपीराइटर",
     desc="Muse आपके चुने हुए टोन में, 11 भाषाओं में, सेकंडों में विज्ञापन, सोशल पोस्ट, प्रोडक्ट डिस्क्रिप्शन और ईमेल लिखता है। मुफ़्त शुरू करें।",
     og_title="Muse — AI कॉपीराइटर", og_desc="सेकंडों में विज्ञापन, पोस्ट, प्रोडक्ट डिस्क्रिप्शन और ईमेल। मुफ़्त शुरू करें।", og_locale="hi_IN",
@@ -279,6 +285,7 @@ LANG["hi"] = dict(
 )
 
 LANG["ar"] = dict(
+    ft_tools="أدوات مجانية",
     title="Muse — كاتب إعلانات بالذكاء الاصطناعي للإعلانات والمنشورات والبريد",
     desc="يكتب Muse الإعلانات والمنشورات وأوصاف المنتجات ورسائل البريد بالأسلوب الذي تختاره وبـ 11 لغة في ثوانٍ. ابدأ مجانًا.",
     og_title="Muse — كاتب محتوى بالذكاء الاصطناعي", og_desc="إعلانات ومنشورات وأوصاف منتجات ورسائل بريد في ثوانٍ. ابدأ مجانًا.", og_locale="ar_AR",
@@ -610,7 +617,7 @@ def build(code, fname, native, short, font):
         <p>{t["ft_tag"]}</p>
       </div>
       <div class="footer__cols">
-        <div><h4>{t["ft_product"]}</h4><a href="#features">{t["n_features"]}</a><a href="#pricing">{t["n_pricing"]}</a><a href="#faq">{t["n_faq"]}</a><a href="login.html">{t["login"]}</a></div>
+        <div><h4>{t["ft_product"]}</h4><a href="#features">{t["n_features"]}</a><a href="#pricing">{t["n_pricing"]}</a><a href="#faq">{t["n_faq"]}</a><a href="tools.html">{t["ft_tools"]}</a><a href="login.html">{t["login"]}</a></div>
         <div><h4>{t["ft_company"]}</h4><a href="about.html">{t["ft_about"]}</a><a href="{t["blog_href"]}">{t["ft_blog"]}</a><a href="about.html#contact">{t["ft_contact"]}</a></div>
         <div><h4>{t["ft_legal"]}</h4><a href="privacy.html">{t["ft_privacy"]}</a><a href="terms.html">{t["ft_terms"]}</a></div>
       </div>
