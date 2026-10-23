@@ -60,8 +60,8 @@ p { margin: 0 0 1em; }
 .container { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 24px; }
 .container--narrow { max-width: 780px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.skip-link { position: absolute; left: -999px; top: 8px; background: var(--accent); color: #fff; padding: 8px 14px; border-radius: 8px; z-index: 100; }
-.skip-link:focus { left: 8px; }
+.skip-link { position: absolute; inset-inline-start: 8px; top: 8px; transform: translateY(-200%); background: var(--accent); color: #fff; padding: 8px 14px; border-radius: 8px; z-index: 100; }
+.skip-link:focus { transform: none; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 
 .gradient-text {
@@ -482,6 +482,8 @@ p { margin: 0 0 1em; }
 }
 .field textarea:focus, .field select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field-row .field { min-width: 0; }
+.field select { width: 100%; min-width: 0; }
 #genBtn small { font-weight: 500; opacity: .8; }
 .output__head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .output__head .panel__title { margin: 0; }
@@ -507,6 +509,30 @@ p { margin: 0 0 1em; }
 .modal .plan--featured { transform: none; }
 .modal__plans .plan .btn { margin-top: 22px; }
 .modal .form-msg { text-align: center; margin-top: 14px; }
+
+/* ---------- Languages ---------- */
+.langs { position: relative; }
+.langs summary { list-style: none; width: auto; padding: 0 10px; gap: 6px; display: inline-flex; align-items: center; font: 600 13px var(--font); }
+.langs summary::-webkit-details-marker { display: none; }
+.langs__menu {
+  position: absolute; inset-inline-end: 0; top: calc(100% + 8px); z-index: 60; min-width: 170px; padding: 6px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); display: grid;
+}
+.langs__menu a { padding: 9px 12px; border-radius: 9px; font-size: 15px; }
+.langs__menu a:hover { background: var(--bg-alt); }
+.langs__menu a[aria-current] { color: var(--accent); font-weight: 600; }
+
+/* Scripts that Inter doesn't cover: keep Inter for Latin, fall back to a matching font. */
+html:lang(zh) { --font: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; }
+html:lang(hi) { --font: "Inter", "Noto Sans Devanagari", system-ui, sans-serif; }
+html:lang(ar) { --font: "IBM Plex Sans Arabic", "Inter", system-ui, sans-serif; }
+html:lang(zh) :is(h1, h2, h3), html:lang(hi) :is(h1, h2, h3), html:lang(ar) :is(h1, h2, h3, .eyebrow) { letter-spacing: 0; }
+html:lang(hi) .hero__title, html:lang(ar) .hero__title { line-height: 1.3; }
+
+/* Right-to-left (Arabic) */
+[dir="rtl"] .marquee { direction: ltr; }
+[dir="rtl"] .prose blockquote { border-left: 0; border-right: 3px solid var(--accent); padding: 4px 20px 4px 0; }
+[dir="rtl"] .hero__cta svg { transform: scaleX(-1); }
 
 /* Scroll reveal */
 .js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }

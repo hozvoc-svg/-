@@ -3,10 +3,20 @@
 > ⚠️ **Спочатку запуск, потім реклама.** Поки сайт не запущено на Vercel (див. `README.md`), реєстрація
 > і генерація не працюють. Якщо привести людей раніше, вони побачать помилку й не повернуться.
 
-## Українська версія сайту
+## Сайт 7 мовами: давайте людям посилання їхньою мовою
 
-Для українських клієнтів давайте посилання на **`uk.html`** (наприклад, `https://muse-ai.vercel.app/uk.html`):
-там уся головна сторінка й демо українською. Англійська версія — для іноземців і каталогів.
+| Аудиторія | Сторінка | Де шукати клієнтів |
+|---|---|---|
+| Україна | `uk.html` | Instagram, Facebook-групи, Telegram-чати підприємців |
+| США, Велика Британія, світ | `index.html` | Reddit, Product Hunt, LinkedIn, каталоги AI |
+| Іспанія, Латинська Америка | `es.html` | Instagram, TikTok, Facebook-групи emprendedores |
+| Франція, Канада, Африка | `fr.html` | LinkedIn, Facebook-групи entrepreneurs |
+| Індія | `hi.html` | Instagram, YouTube, WhatsApp-спільноти, LinkedIn |
+| Близький Схід | `ar.html` | Instagram, TikTok, Snapchat, X |
+| Китайськомовні продавці | `zh.html` | Китайськомовні спільноти продавців Amazon/Shopify |
+
+Наприклад: `https://muse-ai.vercel.app/es.html`. Перемикач мов 🌐 є вгорі кожної сторінки.
+Індія та Латинська Америка — величезні ринки малого бізнесу, і конкурентів, які пишуть їхньою мовою, там менше.
 
 ## 0. Красиве посилання (без «hozvoc»)
 
@@ -74,7 +84,7 @@
 **Опис для каталогів (англійською):**
 
 > **Muse — AI copywriter for small businesses.** Write ads, social media posts, product descriptions,
-> emails, blog outlines and slogans in seconds. 6 tones of voice, 8 languages (including Ukrainian,
+> emails, blog outlines and slogans in seconds. 6 tones of voice, 11 languages (including Chinese, Hindi, Arabic,
 > Spanish, German and French), saved history, commercial use. Powered by Claude. Free plan with
 > 10 generations a month; paid plans from $19/month.
 
@@ -116,7 +126,7 @@
 > Зробив(-ла) сервіс, який пише тексти для бізнесу за 10 секунд ✍️
 >
 > Реклама, пости, описи товарів, email-розсилки — просто опишіть, що продаєте, оберіть тон і мову.
-> Працює українською та ще 7 мовами.
+> Працює українською та ще 10 мовами.
 >
 > 10 генерацій щомісяця безкоштовно, без картки. Буду радий(-а) відгукам 🙏
 > 👉 [посилання]

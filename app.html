@@ -61,7 +61,7 @@
       </div>
       <form id="genForm" novalidate>
         <label class="field">Describe it
-          <textarea id="prompt" name="prompt" rows="5" maxlength="1000" required placeholder="e.g. Cold brew coffee brand for busy students. Key benefit: smooth taste, no bitterness. Offer: first can for $1."></textarea>
+          <textarea id="prompt" dir="auto" name="prompt" rows="5" maxlength="1000" required placeholder="e.g. Cold brew coffee brand for busy students. Key benefit: smooth taste, no bitterness. Offer: first can for $1."></textarea>
         </label>
         <div class="field-row">
           <label class="field">Tone
@@ -72,8 +72,10 @@
           </label>
           <label class="field">Language
             <select name="language" id="language">
-              <option>English</option><option>Ukrainian</option><option>Spanish</option><option>German</option>
-              <option>French</option><option>Polish</option><option>Portuguese</option><option>Italian</option>
+              <option value="English">English</option><option value="Chinese">中文 (Chinese)</option><option value="Hindi">हिन्दी (Hindi)</option>
+              <option value="Spanish">Español (Spanish)</option><option value="French">Français (French)</option><option value="Arabic">العربية (Arabic)</option>
+              <option value="Portuguese">Português (Portuguese)</option><option value="German">Deutsch (German)</option><option value="Italian">Italiano (Italian)</option>
+              <option value="Polish">Polski (Polish)</option><option value="Ukrainian">Українська (Ukrainian)</option>
             </select>
           </label>
         </div>
@@ -89,7 +91,7 @@
           <button type="button" class="btn btn--ghost btn--sm" id="copyBtn" disabled>Copy</button>
         </div>
       </div>
-      <div class="output" id="output" aria-live="polite"><p class="output__empty">Your content will appear here. Pick a type, describe what you need and hit Generate.</p></div>
+      <div class="output" id="output" dir="auto" aria-live="polite"><p class="output__empty">Your content will appear here. Pick a type, describe what you need and hit Generate.</p></div>
 
       <h2 class="panel__title panel__title--sm">Recent</h2>
       <ul class="history" id="history"><li class="output__empty">No generations yet.</li></ul>

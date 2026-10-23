@@ -64,6 +64,7 @@
       tag.textContent = TEMPLATE_NAMES[g.template] || g.template;
       const text = document.createElement('span');
       text.className = 'history__prompt';
+      text.dir = 'auto';
       text.textContent = g.prompt;
       const time = document.createElement('small');
       time.textContent = new Date(g.created_at).toLocaleString();

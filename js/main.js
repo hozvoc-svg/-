@@ -3,8 +3,41 @@
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const UK = root.lang === 'uk'; // Ukrainian landing page (uk.html)
-  const t = (en, uk) => (UK ? uk : en);
+  // Landing page copy for the hero animation and demo. Other languages live in js/i18n.js.
+  const EN = {
+    language: null, // output language requested from the live demo (null = English)
+    scenes: [
+      { chip: 0, prompt: 'Cold brew coffee for busy students, first can $1',
+        out: "☕ Deadlines don't wait. Neither should your coffee.\n\nDrift Cold Brew: smooth, zero bitterness, ready when you are. Your first can is just $1 👉 Tap to try it." },
+      { chip: 1, prompt: 'LinkedIn post: we just hit 1,000 customers',
+        out: "1,000 customers. 🎉\n\nTwo years ago we shipped our first order from a kitchen table. Today, a thousand businesses trust us every week. Thank you for every order, review and idea.\n\n#milestone #smallbusiness" },
+      { chip: 2, prompt: 'Email: 20% off winter collection, ends Sunday',
+        out: "Subject: Your winter favorites, now 20% off ❄️\n\nHi there, our coziest pieces are on sale until Sunday. Use code WARM20 at checkout and stay snug for less." },
+    ],
+    demos: {
+      ad: {
+        prompt: 'Write an Instagram ad for a cold-brew coffee brand. Playful tone, under 50 words, include a CTA.',
+        output: "☕ Mornings called. They want their spark back.\n\nMeet Drift Cold Brew — 18 hours steeped, zero bitterness, all good vibes. Smooth enough to sip slow, bold enough to get things done.\n\n👉 Tap to grab your first can for $1.",
+      },
+      product: {
+        prompt: 'Product description for minimalist wireless earbuds. Premium feel, 3 key benefits.',
+        output: "Sound, distilled.\n\nAura Buds strip away everything you don't need and perfect everything you do:\n\n• 40-hour battery that outlasts your busiest week\n• Adaptive noise cancelling that learns your world\n• A feather-light fit you'll forget you're wearing\n\nPure audio. Nothing in the way.",
+      },
+      email: {
+        prompt: 'Short cold email to a marketing director offering AI content services. Friendly, not salesy.',
+        output: "Subject: 30 posts, one afternoon?\n\nHi Jordan,\n\nI noticed Northwind posts daily on LinkedIn — impressive consistency. We help teams like yours cut content production time by 70% with AI, without losing your voice.\n\nWorth a 15-minute chat next week?\n\nBest,\nAlex",
+      },
+    },
+    done: 'done ✓',
+    writing: 'writing…',
+    live: 'live AI',
+    unavailable: 'unavailable',
+    customPrompt: 'Describe anything you want written — an ad, a post, an email, a slogan.',
+    customOutput: 'Your result will appear here, written live by AI.',
+    errorLater: 'The live demo is not available right now. Please try again later.',
+    errorSignup: 'The live demo is not available right now. Create a free account to start writing.',
+  };
+  const L = { ...EN, ...(window.MUSE_I18N || {})[root.lang] };
 
   // Endpoint of the live AI demo (see api/generate.js). Works when deployed on Vercel.
   const API_URL = '/api/generate';
@@ -88,21 +121,7 @@
   const studioOut = $('#studioOut');
   if (typing && studioOut) {
     const chips = $$('.chip:not(.chip--ghost)', $('#studioChips'));
-    const scenes = UK ? [
-      { chip: 0, prompt: 'Кава з собою для студентів, перша чашка 30 грн',
-        out: "☕ Дедлайни не чекають. Твоя кава теж не мусить.\n\nМ’яка, без гіркоти, готова за хвилину. Перша чашка — лише 30 грн 👉 Заходь по дорозі на пари!" },
-      { chip: 1, prompt: 'Пост: нам 1000 клієнтів',
-        out: "1000 клієнтів! 🎉\n\nДва роки тому ми відправили перше замовлення з кухні. Сьогодні нам довіряє тисяча людей. Дякуємо за кожне замовлення, відгук та ідею 💛" },
-      { chip: 2, prompt: 'Лист: −20% на зимову колекцію до неділі',
-        out: "Тема: Ваші зимові улюбленці — тепер −20% ❄️\n\nДо неділі наші найзатишніші речі зі знижкою. Промокод WARM20 — і тепло стає доступнішим." },
-    ] : [
-      { chip: 0, prompt: 'Cold brew coffee for busy students, first can $1',
-        out: "☕ Deadlines don't wait. Neither should your coffee.\n\nDrift Cold Brew: smooth, zero bitterness, ready when you are. Your first can is just $1 👉 Tap to try it." },
-      { chip: 1, prompt: 'LinkedIn post: we just hit 1,000 customers',
-        out: "1,000 customers. 🎉\n\nTwo years ago we shipped our first order from a kitchen table. Today, a thousand businesses trust us every week. Thank you for every order, review and idea.\n\n#milestone #smallbusiness" },
-      { chip: 2, prompt: 'Email: 20% off winter collection, ends Sunday',
-        out: "Subject: Your winter favorites, now 20% off ❄️\n\nHi there, our coziest pieces are on sale until Sunday. Use code WARM20 at checkout and stay snug for less." },
-    ];
+    const scenes = L.scenes;
     const show = (scene) => chips.forEach((c, i) => c.classList.toggle('is-active', i === scene.chip));
     if (reduceMotion) {
       show(scenes[0]); typing.textContent = scenes[0].prompt; studioOut.textContent = scenes[0].out;
@@ -138,35 +157,7 @@
   // Interactive demo: canned examples + a live tab that calls the AI endpoint
   const demo = $('.demo');
   if (demo) {
-    const demosUk = {
-      ad: {
-        prompt: 'Напиши рекламу в Instagram для кав’ярні з холодною кавою. Грайливий тон, до 50 слів, із закликом до дії.',
-        output: "☕ Ранок подзвонив — просить повернути йому іскру.\n\nХолодна кава Drift: 18 годин настоювання, нуль гіркоти, лише гарний настрій. Пий повільно або встигай усе — вибір за тобою.\n\n👉 Перша баночка всього за 30 грн!",
-      },
-      product: {
-        prompt: 'Опис товару для мінімалістичних бездротових навушників. Преміально, 3 ключові переваги.',
-        output: "Звук. Нічого зайвого.\n\nAura Buds прибирають усе непотрібне й досконало роблять головне:\n\n• 40 годин роботи — більше, ніж триває ваш найзавантаженіший тиждень\n• Адаптивне шумозаглушення, що підлаштовується під вас\n• Настільки легкі, що ви про них забудете\n\nЧистий звук. Нічого на заваді.",
-      },
-      email: {
-        prompt: 'Короткий лист маркетинг-директору з пропозицією AI-контенту. Дружньо, без нав’язливості.',
-        output: "Тема: 30 постів за один день?\n\nДобрий день, Олено!\n\nПомітив, що ви публікуєтеся в LinkedIn щодня — це вражає. Ми допомагаємо командам скоротити час на створення контенту на 70% без втрати власного стилю.\n\nЗнайдете 15 хвилин наступного тижня?\n\nЗ повагою,\nОлександр",
-      },
-    };
-    const demosEn = {
-      ad: {
-        prompt: 'Write an Instagram ad for a cold-brew coffee brand. Playful tone, under 50 words, include a CTA.',
-        output: "☕ Mornings called. They want their spark back.\n\nMeet Drift Cold Brew — 18 hours steeped, zero bitterness, all good vibes. Smooth enough to sip slow, bold enough to get things done.\n\n👉 Tap to grab your first can for $1.",
-      },
-      product: {
-        prompt: 'Product description for minimalist wireless earbuds. Premium feel, 3 key benefits.',
-        output: "Sound, distilled.\n\nAura Buds strip away everything you don't need and perfect everything you do:\n\n• 40-hour battery that outlasts your busiest week\n• Adaptive noise cancelling that learns your world\n• A feather-light fit you'll forget you're wearing\n\nPure audio. Nothing in the way.",
-      },
-      email: {
-        prompt: 'Short cold email to a marketing director offering AI content services. Friendly, not salesy.',
-        output: "Subject: 30 posts, one afternoon?\n\nHi Jordan,\n\nI noticed Northwind posts daily on LinkedIn — impressive consistency. We help teams like yours cut content production time by 70% with AI, without losing your voice.\n\nWorth a 15-minute chat next week?\n\nBest,\nAlex",
-      },
-    };
-    const demos = UK ? demosUk : demosEn;
+    const demos = L.demos;
     const demoPrompt = $('#demoPrompt');
     const demoOutput = $('#demoOutput');
     const demoStatus = $('#demoStatus');
@@ -195,8 +186,8 @@
       form.hidden = true;
       const { prompt, output } = demos[key];
       demoPrompt.textContent = prompt;
-      if (reduceMotion) { demoOutput.textContent = output; demoStatus.textContent = t('done ✓', 'готово ✓'); return; }
-      demoStatus.textContent = t('writing…', 'пишу…');
+      if (reduceMotion) { demoOutput.textContent = output; demoStatus.textContent = L.done; return; }
+      demoStatus.textContent = L.writing;
       demoOutput.classList.add('is-typing');
       let i = 0;
       const step = () => {
@@ -204,7 +195,7 @@
         demoOutput.textContent = output.slice(0, i);
         if (i < output.length) { demoTimer = setTimeout(step, 18); return; }
         demoOutput.classList.remove('is-typing');
-        demoStatus.textContent = t('done ✓', 'готово ✓');
+        demoStatus.textContent = L.done;
       };
       step();
     };
@@ -213,9 +204,9 @@
       stopAll();
       selectTab('custom');
       form.hidden = false;
-      demoPrompt.textContent = t('Describe anything you want written — an ad, a post, an email, a slogan.', 'Опишіть, що потрібно написати: рекламу, пост, лист чи слоган.');
-      demoOutput.textContent = t('Your result will appear here, written live by AI.', 'Тут з’явиться результат, написаний AI наживо.');
-      demoStatus.textContent = t('live AI', 'живий AI');
+      demoPrompt.textContent = L.customPrompt;
+      demoOutput.textContent = L.customOutput;
+      demoStatus.textContent = L.live;
       input.focus();
     };
 
@@ -225,17 +216,17 @@
       demoPrompt.textContent = prompt;
       demoOutput.textContent = '';
       demoOutput.classList.add('is-typing');
-      demoStatus.textContent = t('writing…', 'пишу…');
+      demoStatus.textContent = L.writing;
       submit.disabled = true;
       try {
         const res = await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(UK ? { prompt, language: 'Ukrainian' } : { prompt }),
+          body: JSON.stringify(L.language ? { prompt, language: L.language } : { prompt }),
           signal: controller.signal,
         });
         if (!res.ok) {
-          let message = t('The live demo is not available right now. Please try again later.', 'Демо зараз недоступне. Спробуйте пізніше.');
+          let message = L.errorLater;
           try { message = (await res.json()).error || message; } catch (e) {}
           throw new Error(message);
         }
@@ -246,13 +237,13 @@
           if (done) break;
           demoOutput.textContent += decoder.decode(value, { stream: true });
         }
-        demoStatus.textContent = t('done ✓', 'готово ✓');
+        demoStatus.textContent = L.done;
       } catch (err) {
         if (err.name === 'AbortError') return;
         demoOutput.textContent = err instanceof TypeError
-          ? t('The live demo is not available right now. Create a free account to start writing.', 'Демо зараз недоступне. Створіть безкоштовний акаунт, щоб почати.')
+          ? L.errorSignup
           : err.message;
-        demoStatus.textContent = t('unavailable', 'недоступно');
+        demoStatus.textContent = L.unavailable;
       } finally {
         demoOutput.classList.remove('is-typing');
         submit.disabled = false;

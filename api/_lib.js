@@ -15,7 +15,10 @@ export const TEMPLATES = {
 
 export const TONES = ["friendly", "professional", "playful", "bold", "luxury", "minimal"];
 
-export const LANGUAGES = ["English", "Ukrainian", "Spanish", "German", "French", "Polish", "Portuguese", "Italian"];
+export const LANGUAGES = [
+  "English", "Chinese", "Hindi", "Spanish", "French", "Arabic",
+  "Portuguese", "German", "Italian", "Polish", "Ukrainian",
+];
 
 export function buildSystemPrompt({ template, tone, language }) {
   return `You are Muse, an expert marketing copywriter.
