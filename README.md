@@ -51,8 +51,8 @@
    - `anon public` → `SUPABASE_ANON_KEY`
    - `service_role` → `SUPABASE_SERVICE_ROLE_KEY` (секретний, нікому не показуйте!)
 4. **Authentication → URL Configuration**: у `Site URL` вставте адресу сайту з Vercel (з'явиться в кроці 4),
-   а в `Redirect URLs` додайте дві адреси: `https://<ваш-сайт>/app.html` і `https://<ваш-сайт>/reset.html`
-   (друга потрібна для відновлення пароля).
+   а в `Redirect URLs` додайте одне правило: `https://<ваш-сайт>/**` (дві зірочки в кінці).
+   Воно дозволяє повертатися на будь-яку сторінку сайту після входу, підтвердження email і зміни пароля.
 5. (Необов'язково) **Authentication → Providers → Google**: щоб працювала кнопка «Continue with Google».
 
 ### Крок 3. Lemon Squeezy: приймання оплати
