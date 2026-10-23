@@ -72,12 +72,57 @@ def flicker(c, T, pos, size, col, a):
     c.fill()
 
 
+LEAVES = [(i * 0.137 % 1, i * 0.291 % 1, i * 0.53 % 1) for i in range(40)]
+
+
+def overlays(c, t, T, a, to_screen):
+    """Moving rain inside window boxes, drops on glass, falling leaves and rising sparks."""
+    for box in a.get("windows", ()):
+        x0, y0, x1, y1, kind = box
+        sx0, sy0, _ = to_screen(x0, y0)
+        sx1, sy1, _ = to_screen(x1, y1)
+        w, h = sx1 - sx0, sy1 - sy0
+        if w < 20 or h < 20:
+            continue
+        area = w * h / (W * H)
+        C.rain_lines(c, T, sx0, sy0, w, h, min(1.0, 0.35 + area), 0.30 if kind == "glass" else 0.40)
+        if kind == "glass":
+            C.glass_drops(c, T * 0.8, sx0, sy0, w, h, min(1.0, 0.25 + area))
+        if "leaves" in a.get("fx", ()):
+            c.save(); c.rectangle(sx0, sy0, w, h); c.clip()
+            for i, (rx, ry, ph) in enumerate(LEAVES[:14]):
+                fy = (ry + T * (0.025 + 0.02 * rx)) % 1.0
+                lx = sx0 + (rx + 0.08 * math.sin(T * 0.9 + ph * 6)) % 1.0 * w
+                ly = sy0 + fy * h
+                c.save(); c.translate(lx, ly); c.rotate(T * (1 + rx) + ph * 6); c.scale(1, 0.55)
+                rgba(c, (0.85, 0.42 + 0.2 * rx, 0.15), 0.85)
+                c.arc(0, 0, 7 + 5 * ry, 0, 2 * math.pi); c.fill(); c.restore()
+            c.restore()
+    for lx, ly, kind in a.get("lamps", ()):
+        if kind != "fire":
+            continue
+        x, y, s = to_screen(lx, ly)
+        for i in range(14):
+            ph = i * 1.37
+            f = (T * (0.35 + 0.05 * (i % 4)) + i / 14) % 1.0
+            px = x + (40 * math.sin(ph * 3) + 25 * math.sin(T * 2 + ph)) * f * s
+            py = y - 260 * f * s
+            rgba(c, (1.0, 0.65 + 0.25 * (i % 2), 0.25), 0.9 * (1 - f) * (0.6 + 0.4 * math.sin(T * 9 + ph)))
+            c.arc(px, py, (2.2 - 1.2 * f) * max(1, s), 0, 2 * math.pi)
+            c.fill()
+
+
 def sc_photo(c, t, d, T, a):
     f = t / d
     to_screen = draw_image(c, a, f)
     xf = a.get("xfade", 0.0)
     if a.get("prev") and t < xf:  # dissolve from the previous shot's last frame
         draw_image(c, a["prev"], 1.0, 1 - ease(t / xf))
+    alpha_in = ease(t / xf) if (a.get("prev") and t < xf) else 1.0
+    c.push_group()
+    overlays(c, t, T, a, to_screen)
+    c.pop_group_to_source()
+    c.paint_with_alpha(alpha_in)
     for lx, ly, kind in a.get("lamps", ()):
         col = (1.0, 0.55, 0.20) if kind == "fire" else (1.0, 0.78, 0.40)
         alpha = 1.0 if not (a.get("prev") and t < xf) else ease(t / xf)

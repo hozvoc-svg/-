@@ -64,7 +64,7 @@ def tts(segs, tag):
     timeline, audio, t0 = [], [], 0
     for si, seg in enumerate(segs):
         parts, sents, cur = [], [], 0
-        for s in seg["text"]:
+        for s in seg.get("text", ()):
             key = hashlib.md5(f"{EL_KEY and EL_VOICE}|{SPEAKER}|{LENGTH_SCALE}|{say_text(s)}".encode()).hexdigest()[:16]
             p = os.path.join(TMP, f"tts_{key}.wav")
             if os.path.exists(p):  # reuse paid/slow narration on re-runs
@@ -77,6 +77,8 @@ def tts(segs, tag):
             sents.append((cur / SR, (cur + len(x)) / SR, s))
             parts += [x, np.zeros(int(GAP * SR), np.int16)]
             cur += len(x) + int(GAP * SR)
+        if seg.get("duration"):  # wordless (ASMR) segment of fixed length
+            parts = [np.zeros(int(seg["duration"] * SR), np.int16)]
         seg_audio = np.concatenate(parts + [np.zeros(int(TAIL * SR), np.int16)])
         frames = math.ceil(len(seg_audio) / SR * FPS)
         seg_audio = np.pad(seg_audio, (0, int(round(frames / FPS * SR)) - len(seg_audio)))
@@ -237,7 +239,93 @@ def cozy_ambience(timeline, total):
     return paths
 
 
+def nature_ambience(timeline, total):
+    """Stereo rain bed with gusts and drips, fire crackle under fire shots, a few distant thunder rolls."""
+    sr = 44100
+    n = int(total * sr) + sr
+    rng = np.random.default_rng(11)
+    ch = sr * 10
+    freqs = np.fft.rfftfreq(ch, 1 / sr)
+
+    def shaped(shape):
+        out = np.zeros(n, np.float32)
+        for i in range(0, n, ch):
+            seg = np.fft.irfft(np.fft.rfft(rng.standard_normal(ch)) * shape, ch).astype(np.float32)
+            out[i:i + ch] = seg[:len(out[i:i + ch])]
+        return out / max(1e-6, np.abs(out).max())
+
+    def smooth_env(points, lo, hi):
+        """Slow random envelope from `points` control values per minute."""
+        k = max(2, int(total / 60 * points))
+        ctrl = lo + (hi - lo) * rng.random(k + 2)
+        x = np.linspace(0, k + 1, n)
+        return np.interp(x, np.arange(k + 2), ctrl).astype(np.float32)
+
+    hiss = np.where(freqs > 300, 1 / np.sqrt(np.maximum(freqs, 1)), 0) * np.exp(-freqs / 11000)
+    body = np.where(freqs > 60, 1 / np.maximum(freqs, 1) ** 0.8, 0) * np.exp(-freqs / 2500)
+    gust = smooth_env(3, 0.75, 1.0)
+    left = (0.55 * shaped(hiss) + 0.45 * shaped(body)) * gust
+    right = (0.55 * shaped(hiss) + 0.45 * shaped(body)) * gust
+    # drips: short bright ticks scattered in time, panned at random
+    t = np.arange(int(0.03 * sr)) / sr
+    for _ in range(int(total * 1.2)):
+        i = rng.integers(0, n - len(t))
+        tick = (np.sin(2 * np.pi * rng.uniform(1800, 3800) * t) * np.exp(-t * 180)).astype(np.float32) * rng.uniform(0.05, 0.16)
+        pan = rng.random()
+        left[i:i + len(t)] += tick * (1 - pan)
+        right[i:i + len(t)] += tick * pan
+    # fire: crackles + low roar, faded in and out with the shots that show a fire
+    fire_env = np.zeros(n, np.float32)
+    for sgm in timeline:
+        if any(k == "fire" for *_, k in sgm["args"].get("lamps", ())):
+            a = int(sgm["start"] * sr); b = int((sgm["start"] + sgm["frames"] / FPS) * sr)
+            fire_env[a:b] = 1.0
+    kern = np.ones(300, np.float32) / 300
+    fire_env = np.convolve(fire_env[::147], kern, mode="same")[np.minimum(np.arange(n) // 147, len(fire_env[::147]) - 1)]
+    roar = shaped(np.where(freqs > 40, 1 / np.maximum(freqs, 1), 0) * np.exp(-freqs / 600)) * 0.35
+    crack = np.zeros(n, np.float32)
+    tc = np.arange(int(0.02 * sr)) / sr
+    for _ in range(int(total * 6)):
+        i = rng.integers(0, n - len(tc))
+        burst = rng.standard_normal(len(tc)).astype(np.float32) * np.exp(-tc * rng.uniform(150, 400)).astype(np.float32)
+        crack[i:i + len(tc)] += burst * rng.uniform(0.1, 0.6) ** 2
+    crack = np.diff(crack, prepend=0) * 2.0  # brighter, snappier pops
+    fire = (roar + crack) * fire_env
+    left += fire * 0.9
+    right += fire * 0.9
+    # distant thunder: a few long low rumbles
+    for k in range(max(1, int(total / 420))):
+        start = rng.uniform(0.1, 0.9) * total
+        L = int(9 * sr)
+        i = int(start * sr)
+        if i + L >= n:
+            continue
+        tt = np.arange(L) / sr
+        env = (1 - np.exp(-tt * 1.5)) * np.exp(-tt * 0.45)
+        rum = np.fft.irfft(np.fft.rfft(rng.standard_normal(L)) * (np.fft.rfftfreq(L, 1 / sr) < 120), L).astype(np.float32)
+        rum = rum / max(1e-6, np.abs(rum).max()) * env.astype(np.float32) * 0.35
+        left[i:i + L] += rum
+        right[i:i + L] += rum * 0.85
+    st = np.stack([left, right], 1)
+    st *= 0.8 / max(1e-6, np.abs(st).max())
+    p = os.path.join(TMP, f"{EPISODE}_nature.wav")
+    with wave.open(p, "wb") as w:
+        w.setnchannels(2); w.setsampwidth(2); w.setframerate(sr)
+        w.writeframes((st * 32767).astype(np.int16).tobytes())
+    return p
+
+
 def mix(voice, video_list, out, total, timeline=None):
+    if AMBIENT == "nature":
+        amb = nature_ambience(timeline, total)
+        lst = os.path.join(TMP, os.path.basename(out) + ".txt")
+        with open(lst, "w") as fh:
+            fh.writelines(f"file '{p}'\n" for p in video_list)
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", lst, "-i", amb,
+                        "-filter_complex", "[1:a]loudnorm=I=-20:TP=-2,afade=t=in:d=4[a]",
+                        "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
+                        "-shortest", "-movflags", "+faststart", out], check=True)
+        return
     if AMBIENT == "cozy":
         music, rain = cozy_ambience(timeline, total)
         lst = os.path.join(TMP, os.path.basename(out) + ".txt")
