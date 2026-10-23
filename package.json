@@ -2,12 +2,13 @@
   "name": "muse-ai-landing",
   "version": "1.0.0",
   "private": true,
-  "description": "Muse — AI content generator landing page with a live Claude-powered demo",
+  "description": "Muse \u2014 AI copywriting SaaS: landing page, studio app, Claude API, Supabase auth and Lemon Squeezy billing",
   "type": "module",
   "scripts": {
-    "check": "node --check js/main.js && node --check api/generate.js"
+    "check": "for f in js/*.js api/*.js; do node --check $f || exit 1; done"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^1.1.0"
+    "@anthropic-ai/sdk": "^1.1.0",
+    "@supabase/supabase-js": "^2.117.0"
   }
 }

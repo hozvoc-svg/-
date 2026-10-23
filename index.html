@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Muse — AI Content Studio</title>
-  <meta name="description" content="Muse generates on-brand copy, images and video in seconds. One AI studio for creators, marketers and teams.">
+  <title>Muse — AI Copywriter for Ads, Posts &amp; Emails</title>
+  <meta name="description" content="Muse writes ads, social posts, product descriptions and emails in your tone, in 8 languages, in seconds. Start free.">
   <meta name="theme-color" content="#0b0d14">
-  <meta property="og:title" content="Muse — AI Content Studio">
-  <meta property="og:description" content="Generate on-brand copy, images and video in seconds.">
+  <meta property="og:title" content="Muse — AI Copywriter">
+  <meta property="og:description" content="Ads, social posts, product descriptions and emails in seconds. Start free.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://hozvoc-svg.github.io/-/assets/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
@@ -35,8 +35,8 @@
       <nav class="nav__links" id="navLinks" aria-label="Primary">
         <a href="#features">Features</a>
         <a href="#demo">Try it</a>
-        <a href="#gallery">Gallery</a>
         <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
         <a href="blog.html">Blog</a>
         <a href="login.html" class="nav__login">Log in</a>
       </nav>
@@ -45,7 +45,7 @@
           <svg class="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
           <svg class="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
         </button>
-        <a href="login.html?mode=signup" class="btn btn--primary btn--sm nav__cta">Start creating</a>
+        <a href="login.html?mode=signup" class="btn btn--primary btn--sm nav__cta">Start free</a>
         <button class="icon-btn burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
           <span></span><span></span>
         </button>
@@ -59,47 +59,45 @@
       <div class="hero__glow" aria-hidden="true"></div>
       <div class="container hero__inner">
         <a href="#demo" class="pill reveal">
-          <span class="pill__tag">New</span> Text-to-video is here <span aria-hidden="true">→</span>
+          <span class="pill__tag">Free</span> 10 generations every month <span aria-hidden="true">→</span>
         </a>
-        <h1 class="hero__title reveal">Create anything.<br><span class="gradient-text">Just describe it.</span></h1>
-        <p class="hero__sub reveal">Muse turns a single sentence into scroll-stopping copy, stunning images and short videos — all in your brand's voice, in seconds.</p>
+        <h1 class="hero__title reveal">Marketing copy in seconds.<br><span class="gradient-text">Just describe it.</span></h1>
+        <p class="hero__sub reveal">Muse writes ads, social posts, product descriptions and emails in the tone you choose — in 8 languages, ready to copy and publish.</p>
         <div class="hero__cta reveal">
-          <a href="#pricing" class="btn btn--primary btn--lg">Start creating free</a>
+          <a href="login.html?mode=signup" class="btn btn--primary btn--lg">Start writing free</a>
           <a href="#demo" class="btn btn--ghost btn--lg">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-            Try the demo
+            Try it now
           </a>
         </div>
-        <p class="hero__note reveal">50 free credits · No credit card required</p>
+        <p class="hero__note reveal">No credit card required · Cancel anytime</p>
 
         <div class="mockup reveal" aria-hidden="true">
-          <div class="mockup__bar"><i></i><i></i><i></i><span>studio.muse.ai</span></div>
+          <div class="mockup__bar"><i></i><i></i><i></i><span>muse · studio</span></div>
           <div class="studio">
             <div class="studio__prompt">
               <span class="spark">✦</span>
               <span class="typing" id="typing"></span>
               <span class="studio__go">Generate</span>
             </div>
-            <div class="studio__chips">
-              <span class="chip is-active">Image</span><span class="chip">Text</span><span class="chip">Video</span>
-              <span class="chip chip--ghost">16:9</span><span class="chip chip--ghost">Cinematic</span>
+            <div class="studio__chips" id="studioChips">
+              <span class="chip is-active">📣 Ad</span><span class="chip">💬 Social post</span><span class="chip">✉️ Email</span>
+              <span class="chip chip--ghost">Tone: playful</span><span class="chip chip--ghost">English</span>
             </div>
-            <div class="studio__grid" id="studioGrid">
-              <div class="art art--1"></div><div class="art art--2"></div><div class="art art--3"></div><div class="art art--4"></div>
-            </div>
+            <div class="studio__out" id="studioOut"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- LOGOS -->
+    <!-- USE CASES -->
     <section class="logos">
       <div class="container">
-        <p class="logos__title">Used by 120,000+ creators and teams at</p>
+        <p class="logos__title">Write for every channel</p>
         <div class="marquee">
           <div class="marquee__track">
-            <span>Northwind</span><span>Vertex</span><span>Acme Co</span><span>Globex</span><span>Initech</span><span>Umbrella</span><span>Hooli</span><span>Stark</span>
-            <span aria-hidden="true">Northwind</span><span aria-hidden="true">Vertex</span><span aria-hidden="true">Acme Co</span><span aria-hidden="true">Globex</span><span aria-hidden="true">Initech</span><span aria-hidden="true">Umbrella</span><span aria-hidden="true">Hooli</span><span aria-hidden="true">Stark</span>
+            <span>Instagram</span><span>LinkedIn</span><span>Facebook Ads</span><span>X / Twitter</span><span>Shopify</span><span>Etsy</span><span>Email</span><span>Blog</span>
+            <span aria-hidden="true">Instagram</span><span aria-hidden="true">LinkedIn</span><span aria-hidden="true">Facebook Ads</span><span aria-hidden="true">X / Twitter</span><span aria-hidden="true">Shopify</span><span aria-hidden="true">Etsy</span><span aria-hidden="true">Email</span><span aria-hidden="true">Blog</span>
           </div>
         </div>
       </div>
@@ -110,39 +108,39 @@
       <div class="container">
         <div class="section__head reveal">
           <span class="eyebrow">Features</span>
-          <h2>One studio for every kind of content</h2>
-          <p>Stop juggling five AI tools. Muse writes, designs and animates — together.</p>
+          <h2>Your always-on copywriter</h2>
+          <p>Stop staring at a blank page. Describe what you need and get publish-ready copy in seconds.</p>
         </div>
         <div class="bento">
           <article class="card card--wide reveal">
             <div class="card__icon">✍️</div>
-            <h3>Copy that converts</h3>
-            <p>Ads, blog posts, product descriptions and emails. 80+ templates trained on high-performing marketing copy.</p>
+            <h3>6 ready-made formats</h3>
+            <p>Ads, social posts, product descriptions, emails, blog outlines and slogans — each tuned with copywriting best practices.</p>
           </article>
           <article class="card reveal">
-            <div class="card__icon">🎨</div>
-            <h3>Images in any style</h3>
-            <p>Photoreal, 3D, illustration or anime — up to 4K resolution.</p>
-          </article>
-          <article class="card reveal">
-            <div class="card__icon">🎬</div>
-            <h3>Text-to-video</h3>
-            <p>Generate 15-second clips for Reels, TikTok and Shorts.</p>
-          </article>
-          <article class="card reveal">
-            <div class="card__icon">🧬</div>
-            <h3>Brand voice</h3>
-            <p>Upload your guidelines once. Every result matches your tone, colours and fonts.</p>
+            <div class="card__icon">🎚️</div>
+            <h3>Any tone</h3>
+            <p>Friendly, professional, playful, bold, luxury or minimal.</p>
           </article>
           <article class="card reveal">
             <div class="card__icon">🌍</div>
-            <h3>30+ languages</h3>
-            <p>Write once, publish everywhere with native-quality translation.</p>
+            <h3>8 languages</h3>
+            <p>English, Ukrainian, Spanish, German, French, Polish, Portuguese and Italian.</p>
+          </article>
+          <article class="card reveal">
+            <div class="card__icon">🗂️</div>
+            <h3>Saved history</h3>
+            <p>Every result is saved to your account, so you can reuse it anytime.</p>
+          </article>
+          <article class="card reveal">
+            <div class="card__icon">💼</div>
+            <h3>Commercial use</h3>
+            <p>Use everything you write in ads, stores and client work.</p>
           </article>
           <article class="card card--full reveal">
-            <div class="card__icon">🤝</div>
-            <h3>Built for teams</h3>
-            <p>Shared workspaces, approval flows and a content calendar that publishes straight to Instagram, LinkedIn and X.</p>
+            <div class="card__icon">🧠</div>
+            <h3>Powered by Claude</h3>
+            <p>Muse runs on Claude by Anthropic, one of the world's most capable AI models for writing — so your copy reads naturally, not like a robot wrote it.</p>
           </article>
         </div>
       </div>
@@ -154,7 +152,7 @@
         <div class="section__head reveal">
           <span class="eyebrow">Try it</span>
           <h2>See Muse in action</h2>
-          <p>Pick a prompt and watch it come to life.</p>
+          <p>Browse examples, or write your own prompt — 3 free tries, no sign-up.</p>
         </div>
         <div class="demo reveal">
           <div class="demo__tabs" role="tablist" aria-label="Demo prompts">
@@ -179,105 +177,58 @@
       </div>
     </section>
 
-    <!-- GALLERY -->
-    <section class="section" id="gallery">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="eyebrow">Gallery</span>
-          <h2>Made with Muse</h2>
-          <p>Every image below started as one sentence.</p>
-        </div>
-        <div class="gallery">
-          <figure class="shot shot--tall reveal"><div class="art art--1"></div><figcaption>“Neon jellyfish drifting through a midnight city”</figcaption></figure>
-          <figure class="shot reveal"><div class="art art--2"></div><figcaption>“Desert sunrise, soft pastel, minimal”</figcaption></figure>
-          <figure class="shot reveal"><div class="art art--3"></div><figcaption>“Liquid chrome sculpture, studio light”</figcaption></figure>
-          <figure class="shot shot--wide reveal"><div class="art art--5"></div><figcaption>“Aurora over a frozen lake, cinematic 16:9”</figcaption></figure>
-          <figure class="shot reveal"><div class="art art--4"></div><figcaption>“Holographic product shot for a sneaker brand”</figcaption></figure>
-          <figure class="shot shot--wide reveal"><div class="art art--6"></div><figcaption>“Retro-futuristic poster, 80s synthwave”</figcaption></figure>
-        </div>
-      </div>
-    </section>
-
     <!-- HOW IT WORKS -->
-    <section class="section section--alt" id="how">
+    <section class="section" id="how">
       <div class="container">
         <div class="section__head reveal">
           <span class="eyebrow">How it works</span>
-          <h2>From idea to published in minutes</h2>
+          <h2>From idea to published in a minute</h2>
         </div>
         <ol class="steps">
-          <li class="step reveal"><span class="step__num">1</span><h3>Describe</h3><p>Type what you need in plain words — or pick one of 80+ templates.</p></li>
-          <li class="step reveal"><span class="step__num">2</span><h3>Generate</h3><p>Get several variations in seconds. Remix, refine or upscale with one click.</p></li>
-          <li class="step reveal"><span class="step__num">3</span><h3>Publish</h3><p>Export in any format or schedule straight to your social channels.</p></li>
+          <li class="step reveal"><span class="step__num">1</span><h3>Pick a format</h3><p>Ad, social post, product description, email, blog outline or slogans.</p></li>
+          <li class="step reveal"><span class="step__num">2</span><h3>Describe it</h3><p>A sentence or two about your product, audience and offer is enough.</p></li>
+          <li class="step reveal"><span class="step__num">3</span><h3>Copy &amp; publish</h3><p>Get the result in seconds, tweak if you like, and post it.</p></li>
         </ol>
         <div class="metrics reveal">
-          <div><strong data-count="120" data-suffix="K+">0</strong><span>Creators</span></div>
-          <div><strong data-count="85" data-suffix="M">0</strong><span>Assets generated</span></div>
-          <div><strong data-count="10" data-suffix="×">0</strong><span>Faster content</span></div>
-          <div><strong data-count="4.9" data-suffix="/5" data-decimals="1">0</strong><span>Average rating</span></div>
+          <div><strong data-count="6">0</strong><span>Content formats</span></div>
+          <div><strong data-count="8">0</strong><span>Languages</span></div>
+          <div><strong data-count="6">0</strong><span>Tones of voice</span></div>
+          <div><strong data-count="10">0</strong><span>Free generations / month</span></div>
         </div>
       </div>
     </section>
 
     <!-- PRICING -->
-    <section class="section" id="pricing">
+    <section class="section section--alt" id="pricing">
       <div class="container">
         <div class="section__head reveal">
           <span class="eyebrow">Pricing</span>
-          <h2>Start free. Upgrade when you're hooked.</h2>
-          <div class="billing" role="group" aria-label="Billing period">
-            <span>Monthly</span>
-            <button class="switch" id="billingSwitch" role="switch" aria-checked="false" aria-label="Annual billing"><span></span></button>
-            <span>Yearly <em class="save">Save 20%</em></span>
-          </div>
+          <h2>Start free. Upgrade when you need more.</h2>
+          <p>1 generation = 1 credit. Credits refill every month.</p>
         </div>
         <div class="pricing">
           <article class="plan reveal">
             <h3>Free</h3>
-            <p class="plan__desc">Explore what Muse can do.</p>
-            <p class="plan__price"><span class="price" data-month="0" data-year="0">$0</span><small>/mo</small></p>
-            <a href="#contact" class="btn btn--ghost btn--block">Get started</a>
-            <ul class="plan__list"><li>50 credits / month</li><li>Text &amp; image generation</li><li>Standard resolution</li><li>Personal use</li></ul>
+            <p class="plan__desc">Try Muse at no cost.</p>
+            <p class="plan__price"><span class="price">$0</span><small>/mo</small></p>
+            <a href="login.html?mode=signup" class="btn btn--ghost btn--block">Start free</a>
+            <ul class="plan__list"><li>10 generations / month</li><li>All 6 formats</li><li>All tones &amp; languages</li><li>Saved history</li></ul>
           </article>
           <article class="plan plan--featured reveal">
             <span class="plan__badge">Most popular</span>
             <h3>Creator</h3>
-            <p class="plan__desc">For creators and freelancers.</p>
-            <p class="plan__price"><span class="price" data-month="24" data-year="19">$24</span><small>/mo</small></p>
-            <a href="#contact" class="btn btn--primary btn--block">Start 7-day trial</a>
-            <ul class="plan__list"><li>2,000 credits / month</li><li>Text-to-video</li><li>4K images, no watermark</li><li>Brand voice</li><li>Commercial license</li></ul>
+            <p class="plan__desc">For creators, freelancers and small shops.</p>
+            <p class="plan__price"><span class="price">$19</span><small>/mo</small></p>
+            <a href="login.html?mode=signup&amp;plan=creator" class="btn btn--primary btn--block">Get Creator</a>
+            <ul class="plan__list"><li>300 generations / month</li><li>Everything in Free</li><li>Commercial use</li><li>Email support</li></ul>
           </article>
           <article class="plan reveal">
-            <h3>Team</h3>
-            <p class="plan__desc">For agencies and marketing teams.</p>
-            <p class="plan__price"><span class="price" data-month="79" data-year="63">$79</span><small>/mo</small></p>
-            <a href="#contact" class="btn btn--ghost btn--block">Contact sales</a>
-            <ul class="plan__list"><li>Unlimited credits</li><li>5 seats included</li><li>Shared brand kits</li><li>Approval flows &amp; calendar</li><li>API access</li></ul>
+            <h3>Pro</h3>
+            <p class="plan__desc">For agencies and busy marketing teams.</p>
+            <p class="plan__price"><span class="price">$49</span><small>/mo</small></p>
+            <a href="login.html?mode=signup&amp;plan=pro" class="btn btn--ghost btn--block">Get Pro</a>
+            <ul class="plan__list"><li>1,000 generations / month</li><li>Everything in Creator</li><li>Priority support</li></ul>
           </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- TESTIMONIALS -->
-    <section class="section section--alt" id="testimonials">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="eyebrow">Loved by creators</span>
-          <h2>Less busywork, more ideas</h2>
-        </div>
-        <div class="testimonials">
-          <figure class="quote reveal">
-            <blockquote>“I produce a week of content for my clients in one afternoon. Muse basically doubled my agency's capacity.”</blockquote>
-            <figcaption><span class="avatar" style="--h:250">SK</span><div><b>Sarah Kim</b><small>Founder, Northwind Social</small></div></figcaption>
-          </figure>
-          <figure class="quote reveal">
-            <blockquote>“The brand voice feature is unreal. Our ads finally sound like us — and our CTR went up 37%.”</blockquote>
-            <figcaption><span class="avatar" style="--h:160">DO</span><div><b>David Okafor</b><small>Growth Lead, Vertex</small></div></figcaption>
-          </figure>
-          <figure class="quote reveal">
-            <blockquote>“I replaced my stock photo subscription, my copywriter tool and my video editor. One app, one bill.”</blockquote>
-            <figcaption><span class="avatar" style="--h:20">ML</span><div><b>Maria López</b><small>YouTuber, 800K subscribers</small></div></figcaption>
-          </figure>
         </div>
       </div>
     </section>
@@ -290,28 +241,26 @@
           <h2>Frequently asked questions</h2>
         </div>
         <div class="faq">
-          <details class="reveal" open><summary>Can I use the content commercially?</summary><p>Yes. On paid plans you own everything you generate and can use it in ads, products and client work.</p></details>
-          <details class="reveal"><summary>What is a credit?</summary><p>One text generation costs 1 credit, one image costs 4 credits and one video clip costs 20 credits. Unused credits roll over for one month.</p></details>
-          <details class="reveal"><summary>Is my data used to train models?</summary><p>No. Your prompts, uploads and brand kits stay private and are never used for training.</p></details>
-          <details class="reveal"><summary>Can I cancel anytime?</summary><p>Absolutely. No contracts — cancel from your settings with one click and keep access until the end of the billing period.</p></details>
+          <details class="reveal" open><summary>Can I use the content commercially?</summary><p>Yes. You can use everything you generate in ads, online stores, social media and client work.</p></details>
+          <details class="reveal"><summary>What is a credit?</summary><p>One generation uses one credit. Free accounts get 10 credits every month; paid plans refill on each billing date. If a generation fails, the credit is returned automatically.</p></details>
+          <details class="reveal"><summary>Is my content private?</summary><p>Your prompts and results are visible only to you. Muse uses Anthropic's Claude API, and your content is not used to train AI models.</p></details>
+          <details class="reveal"><summary>Can I cancel anytime?</summary><p>Yes. There are no contracts — cancel from “Manage billing” in your account and keep access until the end of the paid period.</p></details>
+          <details class="reveal"><summary>Does Muse create images or videos?</summary><p>Not yet. Muse focuses on writing great text: ads, posts, product descriptions, emails, blog outlines and slogans.</p></details>
         </div>
       </div>
     </section>
 
-    <!-- CTA / CONTACT -->
+    <!-- CTA -->
     <section class="section" id="contact">
       <div class="container">
         <div class="cta reveal">
           <div>
-            <h2>Your next idea is one sentence away.</h2>
-            <p>Join 120,000+ creators making more with less effort.</p>
+            <h2>Your next post is one sentence away.</h2>
+            <p>Create a free account and get 10 generations every month.</p>
           </div>
-          <form class="cta__form" data-signup novalidate>
-            <label for="email" class="sr-only">Email</label>
-            <input id="email" type="email" placeholder="you@email.com" required autocomplete="email">
-            <button class="btn btn--light" type="submit">Get 50 free credits</button>
-            <p class="cta__msg form-msg" role="status" aria-live="polite"></p>
-          </form>
+          <div class="cta__form">
+            <a href="login.html?mode=signup" class="btn btn--light btn--lg">Start writing free</a>
+          </div>
         </div>
       </div>
     </section>
@@ -321,16 +270,16 @@
     <div class="container footer__inner">
       <div class="footer__brand">
         <a href="#" class="logo"><img src="assets/favicon.svg" alt="" width="24" height="24"><span>Muse</span></a>
-        <p>Create anything. Just describe it.</p>
+        <p>Marketing copy in seconds.</p>
       </div>
       <div class="footer__cols">
-        <div><h4>Product</h4><a href="#features">Features</a><a href="#gallery">Gallery</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
-        <div><h4>Company</h4><a href="about.html">About</a><a href="about.html#careers">Careers</a><a href="blog.html">Blog</a></div>
+        <div><h4>Product</h4><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="login.html">Log in</a></div>
+        <div><h4>Company</h4><a href="about.html">About</a><a href="blog.html">Blog</a><a href="about.html#contact">Contact</a></div>
         <div><h4>Legal</h4><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
       </div>
     </div>
     <div class="container footer__bottom">
-      <p>© <span id="year"></span> Muse AI Inc. All rights reserved.</p>
+      <p>© <span id="year"></span> Muse. All rights reserved.</p>
     </div>
   </footer>
 

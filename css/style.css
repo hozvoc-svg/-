@@ -179,6 +179,11 @@ p { margin: 0 0 1em; }
 .chip { font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
 .chip.is-active { background: color-mix(in srgb, var(--accent) 18%, transparent); border-color: transparent; color: var(--text); }
 .chip--ghost { border-style: dashed; }
+.studio__out {
+  min-height: 150px; padding: 16px 18px; border-radius: 14px; background: var(--bg-alt); border: 1px solid var(--border);
+  white-space: pre-line; font-size: 15px; line-height: 1.6;
+}
+.studio__out.is-typing::after { content: "▍"; color: var(--accent); animation: blink 1s steps(1) infinite; }
 .studio__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .studio__grid .art { aspect-ratio: 1; border-radius: 14px; }
 .studio__grid.is-loading .art { animation: none; }
@@ -438,6 +443,70 @@ p { margin: 0 0 1em; }
 .notfound .code { font-size: clamp(96px, 20vw, 180px); font-weight: 800; line-height: 1; letter-spacing: -.05em; }
 .notfound p { color: var(--muted); font-size: 18px; margin-bottom: 28px; }
 
+/* ---------- Studio app ---------- */
+.app-body { background: var(--bg-alt); }
+.credits {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 14px; padding: 8px 12px;
+  border-radius: 999px; background: var(--surface); border: 1px solid var(--border); white-space: nowrap;
+}
+.account { position: relative; }
+.account summary { list-style: none; padding: 0; overflow: hidden; }
+.account summary::-webkit-details-marker { display: none; }
+.avatar--sm { width: 100%; height: 100%; border-radius: 10px; font-size: 13px; }
+.account__menu {
+  position: absolute; right: 0; top: calc(100% + 8px); z-index: 60; min-width: 220px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px; box-shadow: var(--shadow);
+  display: grid; gap: 10px; font-size: 14px;
+}
+.account__menu p { margin: 0; }
+.account__menu small { display: block; color: var(--muted); }
+.account__menu a, .account__menu button { text-align: left; font: 500 14px var(--font); color: var(--text); background: none; border: 0; padding: 0; cursor: pointer; }
+.account__menu a:hover, .account__menu button:hover { color: var(--accent); }
+
+.studio-app { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 24px; padding-top: 32px; padding-bottom: 48px; align-items: start; }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; }
+.panel--output { position: sticky; top: 92px; }
+.panel__title { font-size: 20px; margin-bottom: 16px; }
+.panel__title--sm { font-size: 15px; margin: 28px 0 10px; color: var(--muted); }
+.templates { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+.tpl {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px; cursor: pointer;
+  font: 600 13px var(--font); color: var(--muted); background: var(--bg-alt); border: 1px solid var(--border); border-radius: 14px; transition: all .2s;
+}
+.tpl span { font-size: 22px; }
+.tpl:hover { color: var(--text); }
+.tpl.is-active { color: var(--text); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--bg-alt)); }
+.field textarea, .field select {
+  padding: 12px 14px; border-radius: 10px; font: 500 15px/1.5 var(--font); border: 1px solid var(--border); background: var(--bg); color: var(--text); resize: vertical;
+}
+.field textarea:focus, .field select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+#genBtn small { font-weight: 500; opacity: .8; }
+.output__head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.output__head .panel__title { margin: 0; }
+.output__actions { display: flex; align-items: center; gap: 10px; }
+.output { min-height: 260px; margin-top: 16px; padding: 18px; border-radius: 14px; background: var(--bg-alt); border: 1px solid var(--border); white-space: pre-line; font-size: 15px; line-height: 1.65; }
+.output.is-typing::after { content: "▍"; color: var(--accent); animation: blink 1s steps(1) infinite; }
+.output__empty { color: var(--muted); margin: 0; }
+.history { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; max-height: 320px; overflow-y: auto; }
+.history button {
+  width: 100%; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; text-align: left;
+  padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-alt); color: var(--text); font: 500 14px var(--font); cursor: pointer;
+}
+.history button:hover { border-color: var(--accent); }
+.history__prompt { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.history small { color: var(--muted); font-size: 12px; }
+
+.modal { width: min(720px, calc(100% - 32px)); border: 1px solid var(--border); border-radius: 24px; padding: 32px; background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.modal::backdrop { background: rgba(5, 6, 12, .6); backdrop-filter: blur(4px); }
+.modal h2 { font-size: 26px; text-align: center; }
+.modal__lead { text-align: center; color: var(--muted); }
+.modal__close { position: absolute; top: 14px; right: 14px; }
+.modal__plans { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+.modal .plan--featured { transform: none; }
+.modal__plans .plan .btn { margin-top: 22px; }
+.modal .form-msg { text-align: center; margin-top: 14px; }
+
 /* Scroll reveal */
 .js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
 .js .reveal.is-visible { opacity: 1; transform: none; }
@@ -479,6 +548,15 @@ p { margin: 0 0 1em; }
   .shot--tall { grid-row: auto; }
   .shot--wide { grid-column: auto; }
   .demo__form { flex-direction: column; }
+  .studio-app { grid-template-columns: 1fr; padding-top: 20px; }
+  .panel--output { position: static; }
+  .panel { padding: 18px; }
+  .templates { grid-template-columns: repeat(2, 1fr); }
+  .credits__label { display: none; }
+  .modal { padding: 24px 18px; }
+  .modal__plans { grid-template-columns: 1fr; }
+  .history button { grid-template-columns: auto 1fr; }
+  .history small { display: none; }
   .split, .values, .posts { grid-template-columns: 1fr; }
   .split { gap: 28px; }
   .auth-card { padding: 28px 20px; }

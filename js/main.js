@@ -81,37 +81,48 @@
     });
   });
 
-  // Hero studio: type a prompt, show a loading shimmer, then reveal new "images"
+  // Hero studio: type a prompt, then stream the "generated" copy below it
   const typing = $('#typing');
-  const grid = $('#studioGrid');
-  if (typing && grid) {
-    const arts = $$('.art', grid);
-    const phrases = [
-      'A neon jellyfish drifting through a midnight city',
-      'Pastel desert sunrise, minimal, soft light',
-      'Holographic sneaker product shot, studio lighting',
+  const studioOut = $('#studioOut');
+  if (typing && studioOut) {
+    const chips = $$('.chip:not(.chip--ghost)', $('#studioChips'));
+    const scenes = [
+      { chip: 0, prompt: 'Cold brew coffee for busy students, first can $1',
+        out: "☕ Deadlines don't wait. Neither should your coffee.\n\nDrift Cold Brew: smooth, zero bitterness, ready when you are. Your first can is just $1 👉 Tap to try it." },
+      { chip: 1, prompt: 'LinkedIn post: we just hit 1,000 customers',
+        out: "1,000 customers. 🎉\n\nTwo years ago we shipped our first order from a kitchen table. Today, a thousand businesses trust us every week. Thank you for every order, review and idea.\n\n#milestone #smallbusiness" },
+      { chip: 2, prompt: 'Email: 20% off winter collection, ends Sunday',
+        out: "Subject: Your winter favorites, now 20% off ❄️\n\nHi there, our coziest pieces are on sale until Sunday. Use code WARM20 at checkout and stay snug for less." },
     ];
-    const artSets = [[1, 5, 4, 6], [2, 6, 3, 1], [4, 3, 2, 5]];
-    const showSet = (i) => arts.forEach((el, k) => { el.className = `art art--${artSets[i][k]}`; });
+    const show = (scene) => chips.forEach((c, i) => c.classList.toggle('is-active', i === scene.chip));
     if (reduceMotion) {
-      typing.textContent = phrases[0];
+      show(scenes[0]); typing.textContent = scenes[0].prompt; studioOut.textContent = scenes[0].out;
     } else {
-      let pi = 0, ci = 0, deleting = false;
-      const loop = () => {
-        const phrase = phrases[pi];
-        ci += deleting ? -1 : 1;
-        typing.textContent = phrase.slice(0, ci);
-        let delay = deleting ? 18 : 45;
-        if (!deleting && ci === phrase.length) {
-          grid.classList.add('is-loading');
-          setTimeout(() => { showSet(pi); grid.classList.remove('is-loading'); }, 1100);
-          deleting = true; delay = 3200;
-        } else if (deleting && ci === 0) {
-          deleting = false; pi = (pi + 1) % phrases.length; delay = 400;
-        }
-        setTimeout(loop, delay);
+      let si = 0;
+      const typeInto = (el, text, speed, done) => {
+        let i = 0;
+        const step = () => {
+          i = Math.min(i + (speed < 20 ? 3 : 1), text.length);
+          el.textContent = text.slice(0, i);
+          if (i < text.length) setTimeout(step, speed); else done();
+        };
+        step();
       };
-      setTimeout(loop, 800);
+      const run = () => {
+        const scene = scenes[si];
+        show(scene);
+        studioOut.textContent = '';
+        studioOut.classList.remove('is-typing');
+        typeInto(typing, scene.prompt, 40, () => setTimeout(() => {
+          studioOut.classList.add('is-typing');
+          typeInto(studioOut, scene.out, 15, () => {
+            studioOut.classList.remove('is-typing');
+            si = (si + 1) % scenes.length;
+            setTimeout(run, 3500);
+          });
+        }, 500));
+      };
+      setTimeout(run, 600);
     }
   }
 
@@ -200,7 +211,7 @@
           signal: controller.signal,
         });
         if (!res.ok) {
-          let message = 'The live demo is not available here yet. Deploy the site on Vercel with an API key to enable it.';
+          let message = 'The live demo is not available right now. Please try again later.';
           try { message = (await res.json()).error || message; } catch (e) {}
           throw new Error(message);
         }
@@ -215,7 +226,7 @@
       } catch (err) {
         if (err.name === 'AbortError') return;
         demoOutput.textContent = err instanceof TypeError
-          ? 'The live demo needs a server. Deploy on Vercel with ANTHROPIC_API_KEY to enable it.'
+          ? 'The live demo is not available right now. Create a free account to start writing.'
           : err.message;
         demoStatus.textContent = 'unavailable';
       } finally {
@@ -269,9 +280,14 @@
     });
   });
 
-  // Auth page: switch between log in and sign up
+  // Auth page: log in / sign up through Supabase (see js/auth.js)
   const auth = $('#authCard');
   if (auth) {
+    const params = new URLSearchParams(location.search);
+    const plan = params.get('plan');
+    const next = params.get('next') || (plan ? `app.html?plan=${encodeURIComponent(plan)}` : 'app.html');
+    const msg = $('#authMsg');
+    const submit = $('#authSubmit');
     const setMode = (mode) => {
       auth.dataset.mode = mode;
       $$('[data-auth-tab]', auth).forEach((t) => {
@@ -280,20 +296,49 @@
         t.setAttribute('aria-selected', String(on));
       });
       $$('[data-only]', auth).forEach((el) => { el.hidden = el.dataset.only !== mode; });
-      $('#authSubmit').textContent = mode === 'signup' ? 'Create account' : 'Log in';
-      $('#authMsg').textContent = '';
+      $('input[name="password"]', auth).autocomplete = mode === 'signup' ? 'new-password' : 'current-password';
+      submit.textContent = mode === 'signup' ? 'Create account' : 'Log in';
+      msg.textContent = '';
     };
     $$('[data-auth-tab]', auth).forEach((t) => t.addEventListener('click', () => setMode(t.dataset.authTab)));
-    setMode(new URLSearchParams(location.search).get('mode') === 'signup' ? 'signup' : 'login');
-    $('#authForm').addEventListener('submit', (e) => {
+    setMode(params.get('mode') === 'signup' || plan ? 'signup' : 'login');
+
+    const notReady = 'Accounts are not available yet: the site owner still needs to connect Supabase (see README).';
+    const friendly = (err) => err.message === 'not-configured' ? notReady : err.message || 'Something went wrong. Please try again.';
+
+    // Already signed in? Go straight to the app.
+    window.Muse?.session().then((s) => { if (s) location.replace(next); }).catch(() => {});
+
+    $('#googleBtn').addEventListener('click', async () => {
+      try { await window.Muse.signInWithGoogle(next); } catch (err) { msg.textContent = friendly(err); }
+    });
+
+    $('#authForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const formEl = e.currentTarget;
       const visible = $$('input', formEl).filter((i) => !i.closest('[hidden]'));
       const invalid = visible.find((i) => !i.checkValidity());
-      if (invalid) { $('#authMsg').textContent = 'Please fill in all fields correctly.'; invalid.focus(); return; }
-      $('#authMsg').textContent = auth.dataset.mode === 'signup'
-        ? '🎉 Account created! (Demo — connect your auth provider in js/main.js.)'
-        : '✓ Logged in! (Demo — connect your auth provider in js/main.js.)';
+      if (invalid) {
+        msg.textContent = invalid.name === 'password' ? 'Password must be at least 8 characters.' : 'Please fill in all fields correctly.';
+        invalid.focus();
+        return;
+      }
+      const data = Object.fromEntries(new FormData(formEl));
+      submit.disabled = true;
+      msg.textContent = '';
+      try {
+        if (auth.dataset.mode === 'signup') {
+          const { needsConfirmation } = await window.Muse.signUp(data.email, data.password, data.name);
+          if (needsConfirmation) { msg.textContent = '📬 Almost there! Check your email to confirm your account.'; return; }
+        } else {
+          await window.Muse.signIn(data.email, data.password);
+        }
+        location.href = next;
+      } catch (err) {
+        msg.textContent = friendly(err);
+      } finally {
+        submit.disabled = false;
+      }
     });
   }
 
