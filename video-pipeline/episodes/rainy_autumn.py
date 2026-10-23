@@ -59,6 +59,7 @@ SHOTS = {
     45: ([(0.59, 0.48, "lamp"), (0.69, 0.42, "lamp")], [(1.00, .5, .5), (1.20, .62, .48)]),
     46: ([(0.59, 0.48, "lamp"), (0.69, 0.42, "lamp")], [(1.00, .5, .5), (1.18, .45, .50)]),
     47: ([(0.51, 0.40, "lamp")], [(1.00, .5, .5), (1.15, .5, .45), (1.25, .5, .45)]),
+    49: ([(0.61, 0.60, "lamp")], [(1.00, .5, .5), (1.12, .55, .55)]),
     48: ([(0.44, 0.66, "lamp")], [(1.00, .5, .5), (1.12, .45, .55), (1.20, .45, .55)]),
 }
 
@@ -268,6 +269,9 @@ STORY = [
           "A little flame is glowing. A cat is sleeping. A little girl is dreaming of tomorrow's sun.",
           "All is well. All is quiet.",
           "Good night."]),
+    (49, ["The house is dark now.",
+          "The futons are laid out on the floor, soft and ready, and one small lamp still glows on the low table by the window.",
+          "Outside, the rain keeps falling on the leaves in the garden, gently, endlessly, like a lullaby that never needs to end."]),
     (48, ["Thank you for spending this quiet time with me.",
           "If this story helped you relax, you can subscribe for a new cozy story every week.",
           "Sleep well, and sweet dreams."]),

@@ -117,7 +117,8 @@ def caption(c, s, cw, cy, size):
 
 
 def render_segment(job):
-    seg, path, vertical = job
+    seg, final_path, vertical = job
+    path = final_path + ".part.mp4"
     cw, ch = (1080, 1920) if vertical else (S.W, S.H)
     surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, cw, ch)
     ff = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra",
@@ -163,7 +164,8 @@ def render_segment(job):
         ff.stdin.write(bytes(surf.get_data()))
     ff.stdin.close()
     ff.wait()
-    return path
+    os.replace(path, final_path)
+    return final_path
 
 
 def cozy_ambience(timeline, total):
@@ -275,10 +277,17 @@ def build(kind):
     vertical = kind == "short"
     segs = SHORT if vertical else LONG
     timeline, voice = tts(segs, kind)
-    jobs = [(seg, os.path.join(TMP, f"{kind}_seg{i:02d}.mp4"), vertical) for i, seg in enumerate(timeline)]
+    # segments are cached by content, so editing one scene only re-renders what changed
+    code = open(S.__file__).read() + open(__file__).read()
+    def seg_path(seg):
+        key = hashlib.md5(repr((seg, vertical, EPISODE, code)).encode()).hexdigest()[:16]
+        return os.path.join(TMP, f"{kind}_seg_{key}.mp4")
+    jobs = [(seg, seg_path(seg), vertical) for seg in timeline]
     jobs_sorted = sorted(jobs, key=lambda j: -j[0]["frames"])
+    todo = [j for j in jobs_sorted if not os.path.exists(j[1])]
+    print(f"rendering {len(todo)} of {len(jobs)} segments", flush=True)
     with Pool(os.cpu_count()) as pool:
-        pool.map(render_segment, jobs_sorted)
+        pool.map(render_segment, todo)
     total = sum(s["frames"] for s in timeline) / FPS
     out = os.path.join(OUT, f"{EPISODE}_{kind}.mp4")
     mix(voice, [j[1] for j in jobs], out, total, timeline)
