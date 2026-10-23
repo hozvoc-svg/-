@@ -147,7 +147,7 @@ def render_segment(job):
             S.snowfall(c, T, 0.4)
             S.text(c, "9 hikers. 1 tent.", cw / 2, 180, 72, S.INK)
             S.text(c, "Cut from the INSIDE.", cw / 2, 270, 64, S.RED)
-        for a, b, s in caps:
+        for a, b, s in (caps if getattr(_ep, "CAPTIONS", True) else ()):
             if a <= t < b + 0.05:
                 if vertical:
                     caption(c, s, cw, 1560, 62)
