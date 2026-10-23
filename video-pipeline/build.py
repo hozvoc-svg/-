@@ -2,7 +2,7 @@
 
 Voice: ElevenLabs when ELEVENLABS_API_KEY is set, otherwise the local Piper LibriTTS voice.
 """
-import importlib, json, math, os, subprocess, sys, wave
+import hashlib, importlib, json, math, os, subprocess, sys, wave
 from multiprocessing import Pool
 import numpy as np
 import cairo
@@ -65,7 +65,8 @@ def tts(segs, tag):
     for si, seg in enumerate(segs):
         parts, sents, cur = [], [], 0
         for s in seg["text"]:
-            p = os.path.join(TMP, f"{tag}_{si}_{len(sents)}.wav")
+            key = hashlib.md5(f"{EL_KEY and EL_VOICE}|{SPEAKER}|{LENGTH_SCALE}|{say_text(s)}".encode()).hexdigest()[:16]
+            p = os.path.join(TMP, f"tts_{key}.wav")
             if os.path.exists(p):  # reuse paid/slow narration on re-runs
                 with wave.open(p) as w:
                     x = np.frombuffer(w.readframes(w.getnframes()), np.int16)
