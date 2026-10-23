@@ -39,17 +39,16 @@ def dust(c, T, a=0.5):
         c.fill()
 
 
-def sc_photo(c, t, d, T, a):
+def draw_image(c, a, f, alpha=1.0):
+    """Draw image a["img"] at camera progress f (0..1) along a["cam"] = ((z, x, y), (z, x, y))."""
     img = load(os.path.join(IMG_DIR, a["img"]))
     iw, ih = img.get_width(), img.get_height()
-    (z0, x0, y0), (z1, x1, y1) = MOVES[a.get("move", 0) % len(MOVES)]
-    f = ease(t / d) * 0.9 + 0.1 * (t / d)
+    (z0, x0, y0), (z1, x1, y1) = a.get("cam") or MOVES[a.get("move", 0) % len(MOVES)]
     z = z0 + (z1 - z0) * f
     cx = x0 + (x1 - x0) * f
     cy = y0 + (y1 - y0) * f
-    base = max(W / iw, H / ih)
-    s = base * z
-    vw, vh = W / s, H / s  # visible window in image pixels
+    s = max(W / iw, H / ih) * z
+    vw, vh = W / s, H / s
     ox = clamp(cx * iw - vw / 2, 0, iw - vw)
     oy = clamp(cy * ih - vh / 2, 0, ih - vh)
     c.save()
@@ -57,8 +56,32 @@ def sc_photo(c, t, d, T, a):
     c.translate(-ox, -oy)
     c.set_source_surface(img, 0, 0)
     c.get_source().set_filter(cairo.FILTER_GOOD)
-    c.paint()
+    c.paint_with_alpha(alpha)
     c.restore()
+    return lambda nx, ny: ((nx * iw - ox) * s, (ny * ih - oy) * s, s)
+
+
+def flicker(c, T, pos, size, col, a):
+    x, y, s = pos
+    k = 0.75 + 0.15 * math.sin(T * 7.1) + 0.10 * math.sin(T * 13.7 + 1.3)
+    g = cairo.RadialGradient(x, y, 2, x, y, size * s)
+    g.add_color_stop_rgba(0, col[0], col[1], col[2], 0.28 * k * a)
+    g.add_color_stop_rgba(1, col[0], col[1], col[2], 0)
+    c.set_source(g)
+    c.arc(x, y, size * s, 0, 2 * math.pi)
+    c.fill()
+
+
+def sc_photo(c, t, d, T, a):
+    f = t / d
+    to_screen = draw_image(c, a, f)
+    xf = a.get("xfade", 0.0)
+    if a.get("prev") and t < xf:  # dissolve from the previous shot's last frame
+        draw_image(c, a["prev"], 1.0, 1 - ease(t / xf))
+    for lx, ly, kind in a.get("lamps", ()):
+        col = (1.0, 0.55, 0.20) if kind == "fire" else (1.0, 0.78, 0.40)
+        alpha = 1.0 if not (a.get("prev") and t < xf) else ease(t / xf)
+        flicker(c, T, to_screen(lx, ly), 260 if kind == "fire" else 200, col, alpha)
     fx = a.get("fx", ())
     if "rain" in fx:
         C.rain_lines(c, T, 0, 0, W, H, 0.7, 0.28)
@@ -70,6 +93,14 @@ def sc_photo(c, t, d, T, a):
         C.fireflies(c, T, 0, H * 0.45, W, H * 0.5, 45, 0.9)
     if "night" in fx:
         rgba(c, (0.02, 0.03, 0.08), 0.25 + 0.25 * prog(t, 0, d))
+        c.rectangle(0, 0, W, H)
+        c.fill()
+    if a.get("fade_in"):
+        rgba(c, (0, 0, 0), 1 - ease(t / a["fade_in"]))
+        c.rectangle(0, 0, W, H)
+        c.fill()
+    if a.get("fade_out"):
+        rgba(c, (0, 0, 0), ease((t - (d - a["fade_out"])) / a["fade_out"]))
         c.rectangle(0, 0, W, H)
         c.fill()
     if a.get("title"):
