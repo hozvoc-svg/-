@@ -93,5 +93,20 @@ SHORT = []
 
 
 def thumb(S, c):
-    from episodes.rainy_autumn import thumb as story_thumb
-    story_thumb(S, c)
+    """Same girl-by-the-window shot as the story cut, labelled for the ambience version."""
+    import cairo
+    import cozy_scenes as C
+    S.draw_image(c, dict(img="rainy_autumn/08.png", cam=((1.08, .42, .5), (1.08, .42, .5))), 0)
+    g = cairo.LinearGradient(1100, 0, 1920, 0)
+    g.add_color_stop_rgba(0, 0.08, 0.05, 0.03, 0)
+    g.add_color_stop_rgba(1, 0.08, 0.05, 0.03, 0.75)
+    c.set_source(g)
+    c.rectangle(0, 0, 1920, 1080)
+    c.fill()
+    C.serif(c, "Rainy", 1560, 330, 150, C.INK)
+    C.serif(c, "Autumn", 1560, 480, 130, C.INK)
+    C.serif(c, "at Grandma's", 1560, 590, 70, (1, 0.90, 0.70))
+    C.rgba(c, (0.15, 0.10, 0.08), 0.8)
+    C.rrect(c, 1270, 680, 580, 100, 50)
+    c.fill()
+    C.serif(c, "Rain & Fireplace", 1560, 750, 52, C.INK, bold=False, italic=True)
