@@ -29,7 +29,7 @@ def _lerp(a, b, t):
     return a + (b - a) * t[..., None]
 
 
-def _craters(img, seed, n, dark=0.75, rim=1.15, rmax=0.05):
+def _craters(img, seed, n, dark=0.75, rim=1.06, rmax=0.05):
     h, w, _ = img.shape
     r = np.random.default_rng(seed)
     yy, xx = np.mgrid[0:h, 0:w]
@@ -94,7 +94,7 @@ def texture(body):
     elif body == "neptune":
         n = _n(h, w, 51, 6)
         img = _lerp(np.array([0.10, 0.22, 0.65]), np.array([0.25, 0.45, 0.90]), n * 0.6 + 0.4 * (0.5 + 0.5 * np.sin(lat * 10)))
-        streak = (_n(h, w // 6 + 1, 52, 4) > 0.7)
+        streak = (_n(h, w // 6 + 1, 52, 6) > 0.74) & (np.abs(np.sin(lat * 9)) > 0.93)[:, : w // 6 + 1]
         streak = np.repeat(streak, 6, axis=1)[:, :w]
         img = np.where(streak[..., None], np.array([0.85, 0.90, 1.0]), img)
     elif body == "pluto":
@@ -109,6 +109,74 @@ def texture(body):
     elif body == "sun":
         n = _n(h, w, 71, 7, 0.65)
         img = _lerp(np.array([1.0, 0.55, 0.12]), np.array([1.0, 0.92, 0.55]), n)
+    elif body.startswith("star_"):
+        n = _n(h, w, 72, 7, 0.65)
+        lo, hi = {"star_red": ((0.75, 0.18, 0.06), (1.0, 0.50, 0.25)), "star_orange": ((0.95, 0.40, 0.10), (1.0, 0.75, 0.40)),
+                  "star_blue": ((0.55, 0.70, 1.0), (0.92, 0.96, 1.0)), "star_white": ((0.85, 0.88, 1.0), (1.0, 1.0, 1.0))}[body]
+        img = _lerp(np.array(lo), np.array(hi), n)
+    elif body == "io":
+        n = _n(h, w, 81)
+        img = _lerp(np.array([0.85, 0.70, 0.25]), np.array([1.0, 0.92, 0.55]), n)
+        spots = _n(h, w, 82, 7) > 0.66
+        img = np.where(spots[..., None], np.array([0.35, 0.18, 0.08]), img)
+        red = _n(h, w, 83) > 0.68
+        img = np.where(red[..., None], np.array([0.80, 0.35, 0.15]), img)
+    elif body == "europa":
+        n = _n(h, w, 84)
+        img = _lerp(np.array([0.80, 0.76, 0.70]), np.array([0.97, 0.95, 0.92]), n)
+        r = np.random.default_rng(85)
+        yy, xx = np.mgrid[0:h, 0:w]
+        for _ in range(40):  # long brown cracks (lineae)
+            a0, b0 = r.random() * w, r.random() * h
+            ang = r.random() * math.pi
+            dist = np.abs((xx - a0) * math.sin(ang) - (yy - b0) * math.cos(ang))
+            img = np.where((dist < 1.6 + r.random() * 1.5)[..., None], np.array([0.62, 0.40, 0.25]), img)
+    elif body == "titan":
+        n = _n(h, w, 86, 4)
+        img = _lerp(np.array([0.80, 0.52, 0.20]), np.array([0.95, 0.70, 0.35]), 0.5 * n + 0.5 * (0.5 + 0.5 * np.sin(lat * 3)))
+    elif body == "enceladus":
+        n = _n(h, w, 87)
+        img = np.array([0.93, 0.96, 1.0]) * (0.88 + 0.12 * n[..., None])
+        yy, xx = np.mgrid[0:h, 0:w]
+        for k in range(4):  # blue "tiger stripes" near the south pole
+            y0 = h * (0.82 + 0.03 * k)
+            img = np.where((np.abs(yy - y0 - 6 * np.sin(xx / 40.0 + k)) < 2.5)[..., None], np.array([0.45, 0.65, 0.85]), img)
+        img = _craters(img, 88, 25, dark=0.85, rmax=0.03)
+    elif body == "ganymede":
+        n = _n(h, w, 89)
+        light = _n(h, w, 90) > 0.5
+        img = np.where(light[..., None], np.array([0.72, 0.68, 0.62]), np.array([0.42, 0.38, 0.33])) * (0.85 + 0.3 * n[..., None])
+        img = _craters(img, 91, 60, dark=0.85)
+    elif body == "triton":
+        n = _n(h, w, 92, 7)
+        img = _lerp(np.array([0.78, 0.68, 0.66]), np.array([0.95, 0.90, 0.88]), n)
+        img = np.where((lat > 0.45)[..., None], img * np.array([1.0, 0.92, 0.88]), img)
+    elif body == "charon":
+        n = _n(h, w, 93)
+        img = np.array([0.60, 0.58, 0.58]) * (0.8 + 0.4 * n[..., None])
+        img = np.where((lat < -0.75)[..., None], np.array([0.45, 0.22, 0.15]), img)
+        img = _craters(img, 94, 40)
+    elif body == "iapetus":
+        yy, xx = np.mgrid[0:h, 0:w]
+        dark = ((xx / w) % 1.0 < 0.5)
+        img = np.where(dark[..., None], np.array([0.22, 0.15, 0.10]), np.array([0.90, 0.88, 0.85]))
+        img = _craters(img, 95, 50)
+    elif body == "mimas":
+        img = np.array([0.80, 0.80, 0.82]) * (0.85 + 0.25 * _n(h, w, 96)[..., None])
+        img = _craters(img, 97, 120, rmax=0.03)
+        yy, xx = np.mgrid[0:h, 0:w]
+        d = np.sqrt(((xx - w * 0.5) / (w * 0.07)) ** 2 + ((yy - h * 0.5) / (h * 0.14)) ** 2)
+        img *= np.where(d < 1, 0.7 + 0.3 * d ** 2, np.where(d < 1.15, 1.2, 1.0))[..., None]
+    elif body == "miranda":
+        n = _n(h, w, 98)
+        patch = _n(h, w, 99, 3) > 0.55
+        img = np.where(patch[..., None], np.array([0.55, 0.55, 0.58]), np.array([0.78, 0.78, 0.80])) * (0.85 + 0.3 * n[..., None])
+        yy, xx = np.mgrid[0:h, 0:w]
+        for k in range(14):
+            img = np.where(patch[..., None] & ((yy + 0.35 * xx) % 26 < 3)[..., None], img * 0.75, img)
+    elif body in ("phobos", "deimos"):
+        img = np.array([0.45, 0.40, 0.37]) * (0.8 + 0.4 * _n(h, w, 100)[..., None])
+        img = _craters(img, 101, 50)
     else:  # small icy / rocky moons
         n = _n(h, w, hash(body) % 1000)
         img = np.array([0.75, 0.75, 0.78]) * (0.7 + 0.5 * n[..., None])
@@ -223,7 +291,8 @@ def sc_title(c, t, d, T, a):
     ap = prog(t, 1.0, 4.0) * (1 - prog(t, d - 4, d - 1))
     A.crescent(c, W / 2 - 360, 330, 70)
     text(c, "Sleepy Cosmos", W / 2, 470, 120, INK, ap)
-    text(c, "A Calm Journey Through the Solar System", W / 2, 580, 52, (1, 0.9, 0.7), ap, bold=False, italic=True)
+    text(c, a.get("subtitle", "A Calm Journey Through the Solar System"), W / 2, 580, 52, (1, 0.9, 0.7), ap,
+         bold=False, italic=True)
 
 
 def sc_travel(c, t, d, T, a):
@@ -344,6 +413,50 @@ def sc_earth(c, t, d, T, a):
     if a.get("moon_focus"):
         mx, my, mR = cx + R * 1.75, cy - R * 0.25, int(R * 0.36)
     paint_sphere(c, "moon", mx, my, mR, 0.25, light=(-0.6, -0.3, 0.72), tilt=0.05)
+
+
+def sc_moon(c, t, d, T, a):
+    body = a["body"]
+    draw_backdrop(c, hash(body) % 6, T, 2.5)
+    twinkle(c, T, 30, hash(body) % 70)
+    parent = a.get("parent")
+    if parent:
+        pR = int(a.get("parent_size", 700))
+        px, py = W * a.get("px", 0.15), H * a.get("py", 0.75)
+        A.glow(c, px, py, pR * 1.15, (0.8, 0.8, 0.85), 0.18)
+        if parent in ("saturn", "uranus"):
+            A.rings(c, px, py, pR, tilt=0.18 if parent == "saturn" else 0.1, angle=-0.2 if parent == "saturn" else 1.7,
+                    col=(0.92, 0.85, 0.70) if parent == "saturn" else (0.55, 0.62, 0.65), front=False)
+        paint_sphere(c, parent, px, py, pR, T * 0.006, light=(-0.6, -0.3, 0.72),
+                     tilt=1.7 if parent == "uranus" else 0.12, night=0.25,
+                     clouds_phase=T * 0.0055 if parent == "earth" else None)
+        if parent in ("saturn", "uranus"):
+            A.rings(c, px, py, pR, tilt=0.18 if parent == "saturn" else 0.1, angle=-0.2 if parent == "saturn" else 1.7,
+                    col=(0.92, 0.85, 0.70) if parent == "saturn" else (0.55, 0.62, 0.65), front=True)
+    R = int(a.get("size", 300) * (1 + 0.05 * t / d))
+    cx, cy = W * a.get("x", 0.6) + 25 * math.sin(t / d * math.pi), H * a.get("y", 0.48)
+    if body == "titan":
+        A.glow(c, cx, cy, R * 1.12, (1.0, 0.7, 0.35), 0.45)
+    if body == "io":
+        for k in range(3):  # faint volcanic plumes on the limb
+            ang = -2.4 + k * 0.5
+            A.glow(c, cx + math.cos(ang) * R * 1.02, cy + math.sin(ang) * R * 1.02, R * 0.12,
+                   (0.7, 0.75, 1.0), 0.25 + 0.1 * math.sin(T * 0.3 + k))
+    paint_sphere(c, body, cx, cy, R, T * 0.004 + a.get("phase", 0), light=(-0.6, -0.3, 0.72), tilt=a.get("tilt", 0.1),
+                 night=a.get("night", 0))
+    if body == "enceladus":
+        for k in range(5):  # water-ice geysers from the south pole
+            ang = math.pi / 2 + (k - 2) * 0.12
+            x0, y0 = cx + math.cos(ang) * R * 0.95, cy + math.sin(ang) * R * 0.95
+            g = cairo.LinearGradient(x0, y0, x0 + math.cos(ang) * R * 0.9, y0 + math.sin(ang) * R * 0.9)
+            g.add_color_stop_rgba(0, 0.85, 0.92, 1.0, 0.35 + 0.1 * math.sin(T + k))
+            g.add_color_stop_rgba(1, 0.85, 0.92, 1.0, 0)
+            c.set_source(g)
+            c.move_to(x0 - R * 0.04, y0)
+            c.line_to(x0 + math.cos(ang) * R * 0.9 - R * 0.15, y0 + math.sin(ang) * R * 0.9)
+            c.line_to(x0 + math.cos(ang) * R * 0.9 + R * 0.15, y0 + math.sin(ang) * R * 0.9)
+            c.line_to(x0 + R * 0.04, y0)
+            c.fill()
 
 
 def sc_belt(c, t, d, T, a):
@@ -474,6 +587,198 @@ def vignette(c):
     c.set_source(g)
     c.rectangle(-400, -600, W + 800, H + 1200)
     c.fill()
+
+
+
+STAR_GLOW = {"star_red": (1.0, 0.35, 0.15), "star_orange": (1.0, 0.6, 0.25), "star_blue": (0.6, 0.75, 1.0),
+             "star_white": (0.85, 0.9, 1.0), "sun": (1.0, 0.75, 0.35)}
+
+
+def sc_star(c, t, d, T, a):
+    """A single star of a given colour and size, with soft corona."""
+    body = a.get("body", "sun")
+    draw_backdrop(c, a.get("neb", 2), T, 1.5)
+    R = int(a.get("size", 260) * (1 + 0.05 * t / d))
+    cx, cy = W * a.get("x", 0.5), H * 0.52
+    col = STAR_GLOW[body]
+    A.glow(c, cx, cy, R * 3.0, col, 0.28)
+    A.glow(c, cx, cy, R * 1.7, col, 0.45)
+    paint_sphere(c, body, cx, cy, R, T * 0.004, emissive=True, tilt=0.1)
+    if a.get("companion"):
+        A.glow(c, W * 0.18, H * 0.3, 60, (1, 0.9, 0.7), 0.6)
+        A.glow(c, W * 0.18, H * 0.3, 8, (1, 1, 1), 1.0)
+
+
+_nursery = {}
+
+
+def sc_nursery(c, t, d, T, a):
+    """Dense coloured nebula with young blue stars and dark dust pillars."""
+    seed = a.get("seed", 11)
+    if seed not in _nursery:
+        w, h = 2400, 1350
+        surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        cc = cairo.Context(surf)
+        A.background(cc, w, h, (0.02, 0.01, 0.05), (0.05, 0.02, 0.08))
+        for k, (cols, al) in enumerate([(((0.55, 0.20, 0.35), (0.85, 0.45, 0.25), (0.25, 0.15, 0.45)), 1.0),
+                                        (((0.15, 0.45, 0.60), (0.35, 0.25, 0.65), (0.75, 0.35, 0.45)), 0.8)]):
+            neb = A.nebula_surface(w, h, seed=seed + k * 5, colors=cols, strength=1.35)
+            cc.set_source_surface(neb, 0, 0)
+            cc.paint_with_alpha(al)
+        dust = A.fractal_noise(h // 4, w // 4, seed + 50, 6)
+        mask = np.clip((dust - 0.55) * 4, 0, 1) * np.clip(np.linspace(1.2, -0.2, h // 4), 0, 1)[:, None]
+        buf = np.zeros((h // 4, w // 4, 4), np.uint8)
+        buf[..., 3] = (mask * 230).astype(np.uint8)
+        buf[..., 0] = (mask * 8).astype(np.uint8); buf[..., 1] = (mask * 6).astype(np.uint8); buf[..., 2] = (mask * 10).astype(np.uint8)
+        ds = cairo.ImageSurface.create_for_data(memoryview(buf), cairo.FORMAT_ARGB32, w // 4, h // 4)
+        cc.save(); cc.scale(4, 4); cc.set_source_surface(ds, 0, 0); cc.get_source().set_filter(cairo.FILTER_BEST); cc.paint(); cc.restore()
+        A.stars(cc, w, h, n=900, seed=seed + 3)
+        surf.flush()
+        _nursery[seed] = surf
+    ox = -((T * 3) % 400)
+    c.set_source_surface(_nursery[seed], ox, -100 - 30 * math.sin(T * 0.01))
+    c.paint()
+    r = random.Random(seed)
+    for i in range(14):
+        x, y = r.random() * W, r.random() * H * 0.8
+        tw = 0.8 + 0.2 * math.sin(T * (0.5 + r.random()) + i)
+        A.glow(c, x, y, 40 + 40 * r.random(), (0.6, 0.75, 1.0), 0.35 * tw)
+        A.glow(c, x, y, 4, (1, 1, 1), 1.0)
+
+
+def sc_shell(c, t, d, T, a):
+    """Planetary nebula (kind=ring) or supernova remnant (kind=nova): glowing shells around a tiny core."""
+    draw_backdrop(c, a.get("neb", 4), T, 1.2, 0.8)
+    cx, cy = W / 2, H / 2
+    kind = a.get("kind", "ring")
+    grow = 1 + 0.08 * t / d
+    if kind == "ring":
+        for rad, col, al in [(330, (0.85, 0.25, 0.20), 0.35), (260, (0.95, 0.55, 0.30), 0.30), (190, (0.30, 0.75, 0.80), 0.40),
+                             (120, (0.45, 0.85, 0.95), 0.30)]:
+            g = cairo.RadialGradient(cx, cy, rad * grow * 0.55, cx, cy, rad * grow)
+            g.add_color_stop_rgba(0, *col, 0)
+            g.add_color_stop_rgba(0.75, *col, al)
+            g.add_color_stop_rgba(1, *col, 0)
+            c.save(); c.translate(cx, cy); c.scale(1.15, 0.9); c.translate(-cx, -cy)
+            c.set_source(g); c.arc(cx, cy, rad * grow, 0, 2 * math.pi); c.fill(); c.restore()
+        A.glow(c, cx, cy, 30, (0.9, 0.95, 1.0), 0.8)
+        A.glow(c, cx, cy, 5, (1, 1, 1), 1.0)
+    else:
+        r = random.Random(5)
+        for i in range(260):  # filaments
+            ang = r.random() * 2 * math.pi
+            rad = (180 + 260 * r.random()) * grow
+            ln = 40 + 90 * r.random()
+            col = r.choice([(1.0, 0.45, 0.25), (0.45, 0.75, 1.0), (1.0, 0.85, 0.55)])
+            c.set_line_width(2 + 2 * r.random())
+            c.set_source_rgba(*col, 0.12 + 0.18 * r.random())
+            c.move_to(cx + math.cos(ang) * rad, cy + math.sin(ang) * rad * 0.85)
+            c.line_to(cx + math.cos(ang + 0.05) * (rad + ln), cy + math.sin(ang + 0.05) * (rad + ln) * 0.85)
+            c.stroke()
+        A.glow(c, cx, cy, 380 * grow, (0.55, 0.45, 0.85), 0.18)
+        A.glow(c, cx, cy, 90, (0.7, 0.85, 1.0), 0.45)
+        A.glow(c, cx, cy, 6, (1, 1, 1), 1.0)
+
+
+def sc_pulsar(c, t, d, T, a):
+    draw_backdrop(c, 1, T, 1.2)
+    twinkle(c, T, 40, 61)
+    cx, cy = W / 2, H / 2
+    ang = T * 0.35
+    for sgn in (1, -1):
+        dx, dy = math.cos(ang) * sgn, math.sin(ang) * 0.35 * sgn - 0.9 * sgn
+        L = math.hypot(dx, dy)
+        dx, dy = dx / L, dy / L
+        for wid, al in ((90, 0.12), (40, 0.25)):
+            g = cairo.LinearGradient(cx, cy, cx + dx * 900, cy + dy * 900)
+            g.add_color_stop_rgba(0, 0.75, 0.85, 1.0, al)
+            g.add_color_stop_rgba(1, 0.75, 0.85, 1.0, 0)
+            c.set_source(g)
+            c.move_to(cx, cy)
+            c.line_to(cx + dx * 900 - dy * wid, cy + dy * 900 + dx * wid)
+            c.line_to(cx + dx * 900 + dy * wid, cy + dy * 900 - dx * wid)
+            c.close_path()
+            c.fill()
+    c.set_line_width(1.5)
+    for k in range(5):  # faint magnetic field loops
+        c.set_source_rgba(0.6, 0.7, 1.0, 0.10)
+        c.save(); c.translate(cx, cy); c.rotate(ang * 0.2); c.scale(1, 0.5 + 0.12 * k)
+        c.arc(0, 0, 60 + 35 * k, 0, 2 * math.pi); c.stroke(); c.restore()
+    A.glow(c, cx, cy, 70, (0.8, 0.9, 1.0), 0.7)
+    A.glow(c, cx, cy, 10, (1, 1, 1), 1.0)
+
+
+def sc_blackhole(c, t, d, T, a):
+    draw_backdrop(c, a.get("neb", 0), T, 1.0)
+    twinkle(c, T, 40, 77)
+    z = a.get("zoom", 1.0) * (1 + 0.05 * t / d)
+    cx, cy = W / 2, H * 0.52
+    R = 150 * z
+    def disk(front):
+        for k in range(26):
+            rr = R * (1.6 + k * 0.11)
+            hot = 1 - k / 26
+            col = (1.0, 0.55 + 0.4 * hot, 0.25 + 0.6 * hot)
+            al = 0.10 + 0.25 * hot
+            c.save(); c.translate(cx, cy); c.scale(1, 0.18)
+            c.set_line_width(R * 0.12)
+            shimmer = 0.6 + 0.4 * math.sin(T * 0.4 + k * 0.8)
+            c.set_source_rgba(*col, al * shimmer)
+            if front:
+                c.arc(0, 0, rr, 0, math.pi)
+            else:
+                c.arc(0, 0, rr, math.pi, 2 * math.pi)
+            c.stroke(); c.restore()
+    disk(False)
+    # gravitationally lensed light arcing over and under the hole
+    for k, (sc_, al) in enumerate([(1.55, 0.35), (1.30, 0.55), (1.12, 0.8)]):
+        c.set_line_width(R * (0.10 if k < 2 else 0.05))
+        c.set_source_rgba(1.0, 0.75, 0.45, al)
+        c.arc(cx, cy, R * sc_, math.pi * 1.05, math.pi * 1.95)
+        c.stroke()
+        c.set_source_rgba(1.0, 0.75, 0.45, al * 0.5)
+        c.arc(cx, cy, R * sc_ * 0.92, math.pi * 0.08, math.pi * 0.92)
+        c.stroke()
+    c.set_source_rgb(0, 0, 0)
+    c.arc(cx, cy, R, 0, 2 * math.pi)
+    c.fill()
+    disk(True)
+    A.glow(c, cx, cy, R * 4, (1.0, 0.6, 0.3), 0.12)
+
+
+_galaxy = {}
+
+
+def sc_galaxy(c, t, d, T, a):
+    """Rotating spiral galaxy made of thousands of soft points."""
+    draw_backdrop(c, a.get("neb", 1), T, 0.8, 0.6)
+    seed = a.get("seed", 3)
+    if seed not in _galaxy:
+        r = np.random.default_rng(seed)
+        n = 9000
+        arm = r.integers(0, a.get("arms", 2), n)
+        rad = np.clip(r.random(n) ** 1.3 + r.normal(0, 0.03, n), 0.01, 1.05)
+        spread = r.normal(0, 0.28, n) * (1.3 - rad * 0.7)
+        disk = r.random(n) < 0.18  # diffuse disk stars between the arms
+        ang = np.where(disk, r.random(n) * 2 * math.pi, rad * 7.0 + arm * (2 * math.pi / a.get("arms", 2)) + spread)
+        size = 0.6 + r.random(n) ** 4 * 2.6
+        hue = np.clip(rad + r.normal(0, 0.15, n), 0, 1)
+        _galaxy[seed] = (rad, ang, size, hue, r.random(n))
+    rad, ang, size, hue, br = _galaxy[seed]
+    cx, cy = W / 2 + a.get("dx", 0), H / 2
+    scale = a.get("scale", 520) * (1 + 0.06 * t / d)
+    tilt = a.get("tilt", 0.45)
+    rot = T * 0.006
+    A.glow(c, cx, cy, scale * 0.9, (0.55, 0.6, 0.9), 0.15)
+    xs = cx + np.cos(ang + rot) * rad * scale
+    ys = cy + np.sin(ang + rot) * rad * scale * tilt
+    for x, y, s_, h_, b in zip(xs, ys, size, hue, br):
+        col = (1.0, 0.85 - 0.25 * h_, 0.6 + 0.4 * h_) if h_ < 0.4 else (0.65 + 0.2 * b, 0.75, 1.0)
+        c.set_source_rgba(*col, 0.25 + 0.55 * b)
+        c.arc(x, y, s_, 0, 2 * math.pi)
+        c.fill()
+    A.glow(c, cx, cy, scale * 0.28, (1.0, 0.85, 0.6), 0.55)
+    A.glow(c, cx, cy, scale * 0.08, (1.0, 0.95, 0.85), 0.9)
 
 
 SCENES = {k[3:]: v for k, v in globals().items() if k.startswith("sc_")}
