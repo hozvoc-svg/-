@@ -158,7 +158,8 @@ def render_segment(job):
                 else:
                     caption(c, s, cw, ch - 70, CAPTION_SIZE)
                 break
-        fade = 1 - S.clamp(t / getattr(_ep, "FADE", 0.25))
+        fade_len = getattr(_ep, "FADE", 0.25)
+        fade = 1 - S.clamp(t / fade_len) if fade_len > 0.05 else 0.0  # tiny FADE = no dip to black
         if fade > 0:
             c.set_source_rgba(0, 0, 0, fade * 0.8)
             c.paint()
