@@ -772,7 +772,8 @@ _galaxy = {}
 
 def sc_galaxy(c, t, d, T, a):
     """Rotating spiral galaxy made of thousands of soft points."""
-    draw_backdrop(c, a.get("neb", 1), T, 0.8, 0.6)
+    if not a.get("no_bg"):
+        draw_backdrop(c, a.get("neb", 1), T, 0.8, 0.6)
     seed = a.get("seed", 3)
     if seed not in _galaxy:
         r = np.random.default_rng(seed)

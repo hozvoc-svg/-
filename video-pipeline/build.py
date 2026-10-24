@@ -379,6 +379,18 @@ def space_ambience(total):
 
 
 def mix(voice, video_list, out, total, timeline=None):
+    if AMBIENT == "music":
+        import music
+        mus = os.path.join(TMP, f"{EPISODE}_music.wav")
+        music.render(mus, total + 1, seed=getattr(_ep, "MUSIC_SEED", 1))
+        lst = os.path.join(TMP, os.path.basename(out) + ".txt")
+        with open(lst, "w") as fh:
+            fh.writelines(f"file '{p}'\n" for p in video_list)
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", lst, "-i", mus,
+                        "-filter_complex", f"[1:a]loudnorm=I=-18:TP=-1.5,afade=t=in:d=5,afade=t=out:st={max(0, total - 12)}:d=12[a]",
+                        "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "256k",
+                        "-shortest", "-movflags", "+faststart", out], check=True)
+        return
     if AMBIENT == "space":
         amb = space_ambience(total)
         lst = os.path.join(TMP, os.path.basename(out) + ".txt")
