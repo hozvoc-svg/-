@@ -70,7 +70,7 @@ def texture(body):
     elif body == "clouds":
         n = _n(h, w, 31, 7)
         img = np.clip((n - 0.5) * 3.0, 0, 1)
-        return _tex.setdefault(body, img.astype(np.float32))
+        return _tex.setdefault(body, _seamless(img.astype(np.float32)[..., None])[..., 0])
     elif body == "mars":
         n = _n(h, w, 12)
         img = _lerp(np.array([0.55, 0.22, 0.10]), np.array([0.82, 0.45, 0.25]), n)
@@ -180,8 +180,19 @@ def texture(body):
     else:  # small icy / rocky moons
         n = _n(h, w, hash(body) % 1000)
         img = np.array([0.75, 0.75, 0.78]) * (0.7 + 0.5 * n[..., None])
-    _tex[body] = np.clip(img, 0, 1).astype(np.float32)
+    _tex[body] = _seamless(np.clip(img, 0, 1).astype(np.float32))
     return _tex[body]
+
+
+def _seamless(img, band=160, shift=0.2):
+    """Make the texture wrap around the sphere without a seam: near the left/right edges, cross-fade into a
+    horizontally shifted copy, which is continuous across the wrap point (u = 0 = 1)."""
+    w = img.shape[1]
+    rolled = np.roll(img, int(w * shift), axis=1)
+    x = np.arange(w, dtype=np.float32)
+    k = np.clip(np.minimum(x, w - 1 - x) / band, 0, 1)
+    k = (k * k * (3 - 2 * k))[None, :, None]
+    return img * k + rolled * (1 - k)
 
 
 # ---------- sphere renderer ----------
@@ -336,21 +347,20 @@ def sc_sun(c, t, d, T, a):
         c.line_to(cx + math.cos(ang + 0.08) * R, cy + math.sin(ang + 0.08) * R)
         c.fill()
     paint_sphere(c, "sun", cx, cy, R, T * 0.004, emissive=True, tilt=0.1)
-    # prominence loops
+    # prominences: soft glowing arches hugging the limb
     for k in range(3):
         ang = -2.2 + k * 1.9 + 0.1 * math.sin(T * 0.05 + k)
-        h = 0.18 + 0.06 * math.sin(T * 0.3 + k)
-        c.set_line_width(R * 0.07)
-        c.set_source_rgba(1.0, 0.55, 0.20, 0.18)
-        x0, y0 = cx + math.cos(ang - 0.12) * R, cy + math.sin(ang - 0.12) * R
-        x1, y1 = cx + math.cos(ang + 0.12) * R, cy + math.sin(ang + 0.12) * R
+        h = 0.10 + 0.04 * math.sin(T * 0.3 + k)
+        x0, y0 = cx + math.cos(ang - 0.10) * R * 0.98, cy + math.sin(ang - 0.10) * R * 0.98
+        x1, y1 = cx + math.cos(ang + 0.10) * R * 0.98, cy + math.sin(ang + 0.10) * R * 0.98
         mx, my = cx + math.cos(ang) * R * (1 + h * 2), cy + math.sin(ang) * R * (1 + h * 2)
-        c.move_to(x0, y0)
-        c.curve_to(mx, my, mx, my, x1, y1)
-        c.stroke_preserve()
-        c.set_line_width(R * 0.025)
-        c.set_source_rgba(1.0, 0.70, 0.35, 0.30)
-        c.stroke()
+        c.set_line_cap(cairo.LINE_CAP_ROUND)
+        for wdt, al in ((0.10, 0.05), (0.06, 0.08), (0.03, 0.12)):
+            c.set_line_width(R * wdt)
+            c.set_source_rgba(1.0, 0.55, 0.22, al)
+            c.move_to(x0, y0)
+            c.curve_to(mx, my, mx, my, x1, y1)
+            c.stroke()
 
 
 MOON_COLS = {"mars": ["phobos", "deimos"], "jupiter": ["io", "europa", "ganymede", "callisto"],
