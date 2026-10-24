@@ -4,6 +4,11 @@ from episodes.solar_journey import EL_VOICE, EL_SETTINGS, _with_pauses as _pause
 SCENES_MODULE = "space_scenes"
 AMBIENT = "space"
 CAPTIONS = False
+XFADE = 2.5
+OVERLAY_FX = (("shooting_star", 0.7),)
+CHAPTER_STYLE = "letters"
+CHAPTER_PAIR = "classic"
+FINAL = "hevc1440"
 FADE = 0.001
 GAP, TAIL = 0.0, 6.0
 PRON = {"Io": "Eye-oh", "Charon": "Karon", "Iapetus": "Eye-app-et-us", "Enceladus": "En-sell-a-dus",

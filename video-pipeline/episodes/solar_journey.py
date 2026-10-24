@@ -4,6 +4,11 @@
 SCENES_MODULE = "space_scenes"
 AMBIENT = "space"
 CAPTIONS = False
+XFADE = 2.5
+OVERLAY_FX = (("shooting_star", 0.7),)
+CHAPTER_STYLE = "letters"
+CHAPTER_PAIR = "classic"
+FINAL = "hevc1440"
 FADE = 0.001
 GAP, TAIL = 0.0, 5.5
 EL_VOICE = "JBFqnCBsd6RMkjVDRZzb"  # George: warm, calm British narrator

@@ -45,7 +45,7 @@ def _craters(img, seed, n, dark=0.75, rim=1.06, rmax=0.05):
 def texture(body):
     if body in _tex:
         return _tex[body]
-    h, w = 512, 1024
+    h, w = 1024, 2048
     lat = np.linspace(-1, 1, h)[:, None] * np.ones((1, w))
     if body in ("mercury", "moon", "ceres", "callisto"):
         n = _n(h, w, 11 if body == "mercury" else 23)
@@ -78,16 +78,27 @@ def texture(body):
         img = np.where(dark[..., None], img * 0.65, img)
         img = np.where((np.abs(lat) > 0.9)[..., None], np.array([0.95, 0.93, 0.90]), img)
     elif body in ("jupiter", "saturn"):
-        warp = _n(h, w, 21, 5) * 0.08
+        # turbulent belts: coarse latitude bands warped by fine-scale noise, plus thin detail streaks
+        warp = (_n(h, w, 21, 5) - 0.5) * 0.10 + (_n(h, w, 24, 7, 0.6) - 0.5) * 0.035
         y = np.clip(lat + warp, -1, 1)
-        stripes = 0.5 + 0.5 * np.sin(y * (22 if body == "jupiter" else 30) + 2.0 * _n(h, w, 22, 3))
+        f = 22 if body == "jupiter" else 30
+        stripes = 0.5 + 0.5 * np.sin(y * f + 2.0 * _n(h, w, 22, 3))
+        fine = 0.5 + 0.5 * np.sin(y * f * 4.3 + 6.0 * _n(h, w, 25, 6, 0.6))
+        detail = _n(h, w, 26, 8, 0.62)
+        t = np.clip(0.75 * stripes + 0.15 * fine + 0.25 * (detail - 0.5), 0, 1)
         if body == "jupiter":
-            img = _lerp(np.array([0.62, 0.42, 0.28]), np.array([0.96, 0.90, 0.80]), stripes)
-            yy, xx = np.mgrid[0:h, 0:w]
-            d = ((xx - w * 0.3) / (w * 0.045)) ** 2 + ((yy - h * 0.62) / (h * 0.045)) ** 2
-            img = np.where((d < 1)[..., None], _lerp(np.array([0.75, 0.30, 0.18]), np.array([0.85, 0.50, 0.35]), np.clip(d, 0, 1)), img)
+            img = _lerp(np.array([0.58, 0.38, 0.25]), np.array([0.97, 0.91, 0.82]), t)
+            yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+            dx, dy = (xx - w * 0.3) / (w * 0.05), (yy - h * 0.62) / (h * 0.042)
+            r = np.sqrt(dx * dx + dy * dy)
+            ang = np.arctan2(dy, dx) + 2.2 * np.exp(-r * 1.2)  # swirl inside the storm
+            swirl = 0.5 + 0.5 * np.sin(ang * 3 + r * 6)
+            spot = _lerp(np.array([0.72, 0.30, 0.18]), np.array([0.90, 0.55, 0.38]), swirl * 0.6 + 0.2 * r)
+            m = np.clip((1.25 - r) / 0.35, 0, 1)
+            m = (m * m * (3 - 2 * m))[..., None]
+            img = img * (1 - m) + spot * m
         else:
-            img = _lerp(np.array([0.78, 0.66, 0.45]), np.array([0.95, 0.88, 0.70]), stripes)
+            img = _lerp(np.array([0.76, 0.64, 0.43]), np.array([0.96, 0.89, 0.72]), t)
     elif body == "uranus":
         n = _n(h, w, 41, 4)
         img = _lerp(np.array([0.55, 0.80, 0.82]), np.array([0.70, 0.90, 0.92]), 0.6 * n + 0.4 * (0.5 + 0.5 * np.sin(lat * 8)))

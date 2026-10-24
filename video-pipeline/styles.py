@@ -339,7 +339,7 @@ def fx_bokeh(c, T, s=1.0, n=26, seed=4):
         c.arc(x, y, rad, 0, 2 * math.pi); c.stroke()
 
 
-def fx_shooting_star(c, T, s=1.0, period=9.0, seed=1):
+def fx_shooting_star(c, T, s=1.0, period=37.0, seed=1):
     r = random.Random(int(T // period) + seed)
     ph = (T % period) / 1.4
     if ph > 1:

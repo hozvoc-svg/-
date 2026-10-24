@@ -6,6 +6,7 @@ import hashlib, importlib, json, math, os, subprocess, sys, wave
 from multiprocessing import Pool
 import numpy as np
 import cairo
+import styles as ST
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -28,6 +29,12 @@ SPEAKER = int(os.environ.get("SPEAKER", getattr(_ep, "SPEAKER", 186)))
 LENGTH_SCALE = getattr(_ep, "LENGTH_SCALE", 1.07)
 AMBIENT = getattr(_ep, "AMBIENT", "drone")
 CAPTION_SIZE = getattr(_ep, "CAPTION_SIZE", 44)
+XFADE = getattr(_ep, "XFADE", 0.0)               # seconds of dissolve between consecutive segments
+OVERLAY_FX = getattr(_ep, "OVERLAY_FX", ())      # e.g. (("shooting_star", 0.8),) drawn over every frame
+CHAPTER_STYLE = getattr(_ep, "CHAPTER_STYLE", None)  # styles.TITLES key for animated chapter names
+CHAPTER_PAIR = getattr(_ep, "CHAPTER_PAIR", "storybook")
+CHAPTER_SUB = getattr(_ep, "CHAPTER_SUB", "")
+FINAL = getattr(_ep, "FINAL", "x264")            # delivery encode: "x264" 1080p or "hevc1440" (sharper on YouTube)
 FPS = 24
 SR = 22050
 GAP, TAIL = getattr(_ep, "GAP", 0.28), getattr(_ep, "TAIL", 0.45)
@@ -129,7 +136,7 @@ def render_segment(job):
     surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, cw, ch)
     ff = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra",
                            "-s", f"{cw}x{ch}", "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium",
-                           "-crf", "19", "-pix_fmt", "yuv420p", path], stdin=subprocess.PIPE)
+                           "-crf", "16", "-pix_fmt", "yuv420p", path], stdin=subprocess.PIPE)
     fn = S.SCENES[seg["scene"]]
     d = seg["frames"] / FPS
     caps = chunks(seg["sents"], 5 if vertical else 7)
@@ -149,8 +156,21 @@ def render_segment(job):
         c.scale(z, z)
         c.translate(-S.W / 2, -S.H / 2)
         fn(c, t, d, T, seg["args"])
+        prev = seg.get("prev")
+        if XFADE and prev and t < XFADE:  # dissolve in from the previous scene, still moving
+            pd = prev["frames"] / FPS
+            c.push_group()
+            c.set_source_rgb(*S.BG1)
+            c.paint()
+            S.SCENES[prev["scene"]](c, pd + t, pd + XFADE, T, prev["args"])
+            c.pop_group_to_source()
+            c.paint_with_alpha(1 - ST.ease(t / XFADE))
+        for name, strength in OVERLAY_FX:
+            ST.FX[name](c, T, strength)
         S.vignette(c)
         c.restore()
+        if CHAPTER_STYLE and seg.get("chapter") and seg["start"] > 1 and 1.5 <= t < 9.5:
+            ST.TITLES[CHAPTER_STYLE](c, seg["chapter"], CHAPTER_SUB, (t - 1.5) / 8.0, CHAPTER_PAIR, y=S.H * 0.86)
         if vertical:
             S.snowfall(c, T, 0.4)
             S.text(c, "9 hikers. 1 tent.", cw / 2, 180, 72, S.INK)
@@ -425,6 +445,10 @@ def build(kind):
     def seg_path(seg):
         key = hashlib.md5(repr((seg, vertical, EPISODE, code)).encode()).hexdigest()[:16]
         return os.path.join(TMP, f"{kind}_seg_{key}.mp4")
+    for i, seg in enumerate(timeline):
+        if i and XFADE:
+            p_ = timeline[i - 1]
+            seg["prev"] = dict(scene=p_["scene"], args=p_["args"], frames=p_["frames"])
     jobs = [(seg, seg_path(seg), vertical) for seg in timeline]
     jobs_sorted = sorted(jobs, key=lambda j: -j[0]["frames"])
     todo = [j for j in jobs_sorted if not os.path.exists(j[1])]
