@@ -22,6 +22,8 @@ EL_KEY = os.environ.get("ELEVENLABS_API_KEY")
 EL_ON = bool(EL_KEY) or os.environ.get("ELEVENLABS") == "1"
 EL_VOICE = os.environ.get("ELEVENLABS_VOICE_ID", "JBFqnCBsd6RMkjVDRZzb")
 EL_MODEL = os.environ.get("ELEVENLABS_MODEL", "eleven_multilingual_v2")
+EL_SETTINGS = getattr(_ep, "EL_SETTINGS", dict(stability=0.5, similarity_boost=0.75))
+EL_VOICE = getattr(_ep, "EL_VOICE", EL_VOICE)
 SPEAKER = int(os.environ.get("SPEAKER", getattr(_ep, "SPEAKER", 186)))
 LENGTH_SCALE = getattr(_ep, "LENGTH_SCALE", 1.07)
 AMBIENT = getattr(_ep, "AMBIENT", "drone")
@@ -43,7 +45,7 @@ def eleven(text):
     req = urllib.request.Request(
         f"https://api.elevenlabs.io/v1/text-to-speech/{EL_VOICE}?output_format=pcm_{SR}",
         data=json.dumps(dict(text=text, model_id=EL_MODEL,
-                             voice_settings=dict(stability=0.5, similarity_boost=0.75))).encode(),
+                             voice_settings=EL_SETTINGS)).encode(),
         headers={"Content-Type": "application/json", **({"xi-api-key": EL_KEY} if EL_KEY else {})})
     with urllib.request.urlopen(req, timeout=120) as r:
         return np.frombuffer(r.read(), np.int16)
@@ -67,7 +69,7 @@ def tts(segs, tag):
     for si, seg in enumerate(segs):
         parts, sents, cur = [], [], 0
         for s in seg.get("text", ()):
-            key = hashlib.md5(f"{EL_ON and EL_VOICE}|{SPEAKER}|{LENGTH_SCALE}|{say_text(s)}".encode()).hexdigest()[:16]
+            key = hashlib.md5(f"{EL_ON and (EL_VOICE, EL_MODEL, sorted(EL_SETTINGS.items()))}|{SPEAKER}|{LENGTH_SCALE}|{say_text(s)}".encode()).hexdigest()[:16]
             p = os.path.join(TMP, f"tts_{key}.wav")
             if os.path.exists(p):  # reuse paid/slow narration on re-runs
                 with wave.open(p) as w:
@@ -318,7 +320,57 @@ def nature_ambience(timeline, total):
     return p
 
 
+def space_ambience(total):
+    """Stereo drone: slow, overlapping pad chords plus a faint filtered-noise 'solar wind'."""
+    sr = 44100
+    n = int(total * sr) + sr
+    rng = np.random.default_rng(21)
+    out = np.zeros((n, 2), np.float32)
+    chords = [[55.0, 82.41, 110.0, 164.81, 246.94], [49.0, 73.42, 110.0, 146.83, 220.0],
+              [43.65, 65.41, 98.0, 130.81, 196.0], [51.91, 77.78, 116.54, 155.56, 233.08]]
+    step, L = 24.0, 36.0  # a new chord every 24 s, each lasting 36 s so they overlap
+    tt = np.arange(int(L * sr)) / sr
+    env = (np.sin(np.pi * tt / L) ** 2).astype(np.float32)
+    k, t0 = 0, 0.0
+    while t0 < total:
+        i0 = int(t0 * sr)
+        m = min(len(tt), n - i0)
+        for j, f in enumerate(chords[k % len(chords)]):
+            for ch, det in ((0, 0.997), (1, 1.003)):
+                ph = rng.random() * 6.28
+                amp = 0.05 / (1 + j * 0.6)
+                trem = 1 + 0.15 * np.sin(2 * np.pi * (0.03 + 0.01 * j) * tt[:m] + ph)
+                out[i0:i0 + m, ch] += (amp * env[:m] * trem * np.sin(2 * np.pi * f * det * tt[:m] + ph)).astype(np.float32)
+        t0 += step
+        k += 1
+    ch = sr * 10
+    freqs = np.fft.rfftfreq(ch, 1 / sr)
+    shape = np.where((freqs > 80) & (freqs < 900), 1 / np.sqrt(np.maximum(freqs, 1)), 0)
+    for c_ in range(2):
+        for i in range(0, n, ch):
+            seg = np.fft.irfft(np.fft.rfft(rng.standard_normal(ch)) * shape, ch).astype(np.float32)
+            out[i:i + ch, c_][:] += seg[:len(out[i:i + ch])] * 0.01
+    out *= 0.6 / max(1e-6, np.abs(out).max())
+    p = os.path.join(TMP, f"{EPISODE}_space.wav")
+    with wave.open(p, "wb") as w:
+        w.setnchannels(2); w.setsampwidth(2); w.setframerate(sr)
+        w.writeframes((out * 32767).astype(np.int16).tobytes())
+    return p
+
+
 def mix(voice, video_list, out, total, timeline=None):
+    if AMBIENT == "space":
+        amb = space_ambience(total)
+        lst = os.path.join(TMP, os.path.basename(out) + ".txt")
+        with open(lst, "w") as fh:
+            fh.writelines(f"file '{p}'\n" for p in video_list)
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", lst,
+                        "-i", voice, "-i", amb, "-filter_complex",
+                        "[1:a]aresample=44100,highpass=f=60,loudnorm=I=-17:TP=-1.5,pan=stereo|c0=c0|c1=c0[v];"
+                        "[2:a]volume=0.32[m];[v][m]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.95[a]",
+                        "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
+                        "-movflags", "+faststart", out], check=True)
+        return
     if AMBIENT == "nature":
         amb = nature_ambience(timeline, total)
         lst = os.path.join(TMP, os.path.basename(out) + ".txt")
