@@ -11,7 +11,7 @@ pip install pycairo numpy piper-tts
 ```
 
 Voice:
-- **ElevenLabs** is used when `ELEVENLABS_API_KEY` is set. Optional: `ELEVENLABS_VOICE_ID`
+- **ElevenLabs** is used when `ELEVENLABS_API_KEY` is set, or with `ELEVENLABS=1` when an environment network secret injects the `xi-api-key` header for api.elevenlabs.io. Optional: `ELEVENLABS_VOICE_ID`
   (default `JBFqnCBsd6RMkjVDRZzb`), `ELEVENLABS_MODEL` (default `eleven_multilingual_v2`).
   Commercial use needs a paid ElevenLabs plan.
 - Otherwise the local **Piper LibriTTS** voice (CC BY 4.0, speaker 186) is used:

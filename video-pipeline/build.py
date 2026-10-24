@@ -18,6 +18,8 @@ OUT = os.path.join(HERE, "out")
 TMP = os.path.join(HERE, "tmp")
 VOICE = os.path.join(HERE, "voice/lt/en-us-libritts-high.onnx")
 EL_KEY = os.environ.get("ELEVENLABS_API_KEY")
+# ELEVENLABS=1 uses ElevenLabs without a local key: the environment's network secret injects xi-api-key
+EL_ON = bool(EL_KEY) or os.environ.get("ELEVENLABS") == "1"
 EL_VOICE = os.environ.get("ELEVENLABS_VOICE_ID", "JBFqnCBsd6RMkjVDRZzb")
 EL_MODEL = os.environ.get("ELEVENLABS_MODEL", "eleven_multilingual_v2")
 SPEAKER = int(os.environ.get("SPEAKER", getattr(_ep, "SPEAKER", 186)))
@@ -42,13 +44,13 @@ def eleven(text):
         f"https://api.elevenlabs.io/v1/text-to-speech/{EL_VOICE}?output_format=pcm_{SR}",
         data=json.dumps(dict(text=text, model_id=EL_MODEL,
                              voice_settings=dict(stability=0.5, similarity_boost=0.75))).encode(),
-        headers={"xi-api-key": EL_KEY, "Content-Type": "application/json"})
+        headers={"Content-Type": "application/json", **({"xi-api-key": EL_KEY} if EL_KEY else {})})
     with urllib.request.urlopen(req, timeout=120) as r:
         return np.frombuffer(r.read(), np.int16)
 
 
 def tts(segs, tag):
-    if EL_KEY:
+    if EL_ON:
         synth = eleven
     else:
         from piper import PiperVoice, SynthesisConfig
@@ -65,7 +67,7 @@ def tts(segs, tag):
     for si, seg in enumerate(segs):
         parts, sents, cur = [], [], 0
         for s in seg.get("text", ()):
-            key = hashlib.md5(f"{EL_KEY and EL_VOICE}|{SPEAKER}|{LENGTH_SCALE}|{say_text(s)}".encode()).hexdigest()[:16]
+            key = hashlib.md5(f"{EL_ON and EL_VOICE}|{SPEAKER}|{LENGTH_SCALE}|{say_text(s)}".encode()).hexdigest()[:16]
             p = os.path.join(TMP, f"tts_{key}.wav")
             if os.path.exists(p):  # reuse paid/slow narration on re-runs
                 with wave.open(p) as w:
