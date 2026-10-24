@@ -264,3 +264,58 @@ def text(c, s, x, y, size=48, col=INK, a=1.0, align="center", bold=True, italic=
 
 
 SCENES = {k[3:]: v for k, v in list(globals().items()) if k.startswith("sc_")}
+
+
+# ---------- real telescope photographs (ESA/Hubble, ESA/Webb; CC BY 4.0) ----------
+import os
+TELESCOPE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "images", "telescope")
+_photos = OrderedDict()
+
+
+def photo(name, max_w=4096):
+    """Load a telescope JPEG (PIL), downscaled to at most max_w wide, as a cairo surface; LRU of 3."""
+    if name in _photos:
+        _photos.move_to_end(name)
+        return _photos[name]
+    from PIL import Image
+    Image.MAX_IMAGE_PIXELS = None
+    im = Image.open(os.path.join(TELESCOPE_DIR, name + ".jpg")).convert("RGB")
+    if im.width > max_w:
+        im = im.resize((max_w, int(im.height * max_w / im.width)), Image.LANCZOS)
+    arr = np.asarray(im)
+    buf = np.zeros((im.height, im.width, 4), np.uint8)
+    buf[..., 0], buf[..., 1], buf[..., 2], buf[..., 3] = arr[..., 2], arr[..., 1], arr[..., 0], 255
+    src = cairo.ImageSurface.create_for_data(memoryview(buf), cairo.FORMAT_ARGB32, im.width, im.height)
+    surf = cairo.ImageSurface(cairo.FORMAT_RGB24, im.width, im.height)
+    cc = cairo.Context(surf)
+    cc.set_source_surface(src, 0, 0)
+    cc.paint()
+    surf.flush()
+    _photos[name] = surf
+    while len(_photos) > 3:
+        _photos.popitem(last=False)
+    return surf
+
+
+def sc_photo(c, t, d, T, a):
+    """Slow Ken Burns move across a telescope image: zoom z0->z1 while the centre drifts c0->c1."""
+    img = photo(a["img"])
+    iw, ih = img.get_width(), img.get_height()
+    f = ease(t / d) * 0.85 + 0.15 * t / d
+    (z0, x0, y0), (z1, x1, y1) = a["cam"]
+    z = z0 + (z1 - z0) * f
+    cx, cy = x0 + (x1 - x0) * f, y0 + (y1 - y0) * f
+    s = max(W / iw, H / ih) * z
+    vw, vh = W / s, H / s
+    ox = clamp(cx * iw - vw / 2, 0, iw - vw)
+    oy = clamp(cy * ih - vh / 2, 0, ih - vh)
+    c.save()
+    c.scale(s, s)
+    c.translate(-ox, -oy)
+    c.set_source_surface(img, 0, 0)
+    c.get_source().set_filter(cairo.FILTER_GOOD)
+    c.paint()
+    c.restore()
+
+
+SCENES = {k[3:]: v for k, v in list(globals().items()) if k.startswith("sc_")}
