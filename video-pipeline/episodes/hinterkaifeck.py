@@ -239,3 +239,40 @@ def thumb(S, c):
     S.text(c, "SOMEONE WAS", 70, 190, 130, S.INK, align="left")
     S.text(c, "IN THE ATTIC", 70, 330, 130, S.RED, align="left")
     S.label(c, "6 DEAD · 1922 · UNSOLVED", 420, 1010, 52, S.AMBER)
+
+
+def thumb_short(S, c):
+    """9:16 cover for the Short (1080x1920): glowing attic with a watcher, red tracks, the farmer with a lantern."""
+    import cairo
+    import build
+    S.night(c, 2.0)
+    c.save()
+    c.scale(1.62, 1.62)  # the 16:9 scene primitives, enlarged to fill the tall frame
+    c.translate(-260, -40)
+    S.treeline(c, 700, seed=6, scale=0.9)
+    S.field(c, 760)
+    S.farm(c, 420, 840, 1.0, T=2.0, attic=1.0, lights=(0, 0, 0))
+    S.stick(c, 875, 568, 0.36, col=(0.02, 0.01, 0.01))
+    c.restore()
+    S.snow_steps(c, [(-40, 1880), (300, 1640), (560, 1460), (770, 1370)], 1.0, size=2.2, col=(0.62, 0.08, 0.10))
+    S.stick(c, 260, 1760, 2.4, col=(1, 1, 1), arms=(0.35, -1.0))
+    S.lantern(c, 160, 1600, 2.0, 1.0, 2.2)  # hanging from the raised hand
+    S.snowfall(c, 3.0, 0.5, 0.3)
+    v = cairo.RadialGradient(540, 960, 500, 540, 960, 1150)
+    v.add_color_stop_rgba(0, 0, 0, 0, 0)
+    v.add_color_stop_rgba(1, 0, 0, 0, 0.6)
+    c.set_source(v)
+    c.paint()
+    build.punch_caption(c, "SOMEONE WAS", 1080, 330, 130, 1)
+    c.save()
+    c.select_font_face("Inter Display Black", 0, 1)
+    c.set_font_size(150)
+    s = "IN THE ATTIC"
+    w = c.text_extents(s).x_advance
+    c.move_to(540 - w / 2, 500)
+    c.text_path(s)
+    c.set_source_rgba(0.9, 0.1, 0.12, 0.25); c.set_line_width(40); c.set_line_join(1); c.stroke_preserve()
+    c.set_source_rgb(0, 0, 0); c.set_line_width(24); c.stroke_preserve()
+    c.set_source_rgb(0.95, 0.18, 0.2); c.fill()
+    c.restore()
+    S.label(c, "1922  ·  6 DEAD  ·  UNSOLVED", 540, 640, 52, (1.0, 0.75, 0.3))
