@@ -14,6 +14,8 @@ MUSIC_SEED = 3
 SHOT = 68  # seconds per image
 
 _DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "images", "telescope")
+# two-panel comparison images: keep the camera inside one panel so the split line never shows
+_CAM_OVERRIDE = {"weic2320a": ((2.05, 0.25, 0.5), (2.3, 0.25, 0.47))}
 _SKIP = {"weic2207a", "weic2220a", "weic2315a", "weic2402a", "weic2403a"}  # collages / labelled insets
 
 
@@ -43,6 +45,7 @@ def _shots():
             cam = ((1.0, 0.5, 0.5), (1.45, 0.5 + r.uniform(-0.12, 0.12), 0.5 + r.uniform(-0.1, 0.1)))
         else:                # pull back to reveal the whole image
             cam = ((1.45, 0.5 + r.uniform(-0.12, 0.12), 0.5 + r.uniform(-0.1, 0.1)), (1.0, 0.5, 0.5))
+        cam = _CAM_OVERRIDE.get(n, cam)
         shots.append(dict(scene="photo", args=dict(img=n, cam=cam), duration=SHOT))
     return shots
 
