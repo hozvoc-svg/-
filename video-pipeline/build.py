@@ -98,7 +98,7 @@ def tts(segs, tag):
                              start=t0, frames=frames, sents=sents))
         t0 += frames / FPS
     full = np.concatenate(audio)
-    p = os.path.join(TMP, f"{tag}_voice.wav")
+    p = os.path.join(TMP, f"{EPISODE}_{tag}_voice.wav")  # per-episode: parallel builds must not share it
     with wave.open(p, "wb") as w:
         w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes(full.tobytes())
     return timeline, p
