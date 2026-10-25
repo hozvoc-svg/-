@@ -92,7 +92,8 @@ def render(path, seconds, seed=1, wet=0.45):
             t = np.arange(n) / SR
             env = np.minimum(1, t / OVER) * np.minimum(1, (n - np.arange(n)) / SR / OVER)
             env = (env * env * (3 - 2 * env)).astype(np.float32)
-            bright = 2.2 + 1.6 * math.sin(b * 0.37) + 0.8 * np.sin(2 * np.pi * t / 23.0)
+            # harmonic brightness sweep; kept well above zero (a non-positive value made exp() blow up -> NaN -> silence)
+            bright = np.maximum(1.0, 2.6 + 1.0 * math.sin(b * 0.37) + 0.5 * np.sin(2 * np.pi * t / 23.0))
             pad = np.zeros((n, 2), np.float32)
             for j, m in enumerate(chord[1:]):
                 v = _pad_note(hz(m), n, t, rng, bright) * (0.11 / (1 + 0.15 * j))
@@ -124,6 +125,7 @@ def render(path, seconds, seed=1, wet=0.45):
             carry = mixd[blk:]
             if b == nblocks - 1 or written + blk >= total:
                 out = mixd[:max(0, total - written)]
+            out = np.nan_to_num(out)
             out = np.tanh(out * 1.2) / np.tanh(1.2)  # gentle soft clip
             w.writeframes((np.clip(out, -1, 1) * 32767 * 0.85).astype(np.int16).tobytes())
             written += len(out)
