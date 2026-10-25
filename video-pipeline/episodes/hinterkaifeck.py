@@ -6,6 +6,8 @@ OVERLAY_FX = (("film_grain", 0.6),)
 CHAPTER_STYLE = "typewriter"
 CHAPTER_PAIR = "editorial"
 CHAPTER_Y = 0.13
+CAPTION_STYLE = "punch"
+VERTICAL_FILL = True
 EL_SETTINGS = dict(stability=0.45, similarity_boost=0.75, style=0.15, speed=0.95)
 
 PRON = {
@@ -34,6 +36,7 @@ LONG = [
     ]),
     dict(scene="title", text=[
         "This is the mystery of Hinterkaifeck. One of the strangest unsolved murder cases in history.",
+        "A case that, even after a hundred years, raises more questions than answers.",
     ]),
     dict(scene="map", chapter="The farm", text=[
         "Hinterkaifeck was a small farmstead about seventy kilometers north of Munich, between the towns of Ingolstadt and Schrobenhausen.",
@@ -52,7 +55,7 @@ LONG = [
     ]),
     dict(scene="secret", chapter="A family with secrets", text=[
         "To the neighbors, the Grubers were hard-working, but cold. They kept to themselves.",
-        "And there were rumors about them.",
+        "They were also known to be fairly well off. And there were rumors about them.",
         "In 1915, Andreas and Viktoria were convicted by a court of having an incestuous relationship, and both were sent to prison.",
     ]),
     dict(scene="secret", args=dict(war=True), text=[
@@ -111,6 +114,7 @@ LONG = [
         "And then comes the strangest part.",
         "The killer did not run.",
         "For the next few days, someone stayed at Hinterkaifeck.",
+        "Not for an hour. Not for one night. For days.",
         "The cattle were fed. Bread and meat were eaten from the kitchen.",
         "And people passing by saw smoke rising from the chimney.",
     ]),
@@ -123,7 +127,8 @@ LONG = [
         "On Monday, a mechanic named Albert Hofner came to repair the engine of a feed cutting machine.",
         "He knocked. No one answered. All he heard was the dog, barking.",
         "He worked on the machine alone for about four and a half hours, and then went home.",
-        "He saw nothing. But we will never know whether someone was watching him.",
+        "He saw nothing. But the killer may still have been on the farm that day.",
+        "And we will never know whether someone was watching him.",
     ]),
     dict(scene="discovery", text=[
         "On Tuesday, April 4th, a group of neighbors finally went to check.",
@@ -132,6 +137,7 @@ LONG = [
     ]),
     dict(scene="money", chapter="The investigation", text=[
         "Police from Munich arrived the next day.",
+        "The autopsies were carried out right there, on the farm.",
         "Robbery looked like the obvious motive.",
         "But a large amount of money was found in the house, untouched.",
         "Whoever did this, was not here for money.",
@@ -150,6 +156,7 @@ LONG = [
         "He had a motive. The fight over Viktoria, and over little Josef.",
         "When the bodies were found, he went into the house alone, and found his way in the dark, as if he knew it well.",
         "He also moved the bodies, destroying evidence.",
+        "Later, he said he was only searching for his son, little Josef.",
         "But he always denied it. He was never charged, and he even won lawsuits against people who called him a murderer.",
     ]),
     dict(scene="soldier", text=[
@@ -159,13 +166,17 @@ LONG = [
         "But nothing was ever proven.",
     ]),
     dict(scene="stranger", text=[
-        "Others suspected traveling workers, or local thieves who had been watching the farm.",
-        "Someone who might have been hiding there for a long time, and knew the family's routine.",
+        "Germany in 1922 was poor and chaotic. Thousands of former soldiers and drifters wandered the countryside, looking for work, or food.",
+        "Others suspected thieves from the area.",
+        "In the nineteen fifties, a woman claimed that her two brothers, Adolf and Anton Gump, were the killers.",
+        "Anton was arrested, but released for lack of evidence.",
     ]),
     dict(scene="demolition", chapter="Lost evidence", text=[
         "In 1923, the farm was torn down.",
         "During the demolition, the murder weapon, the mattock, was found hidden in the attic.",
         "The same attic where the old maid had heard footsteps.",
+        "Some believe the killer had been hiding on the farm for weeks, or even months, taking food at night.",
+        "That would explain the footsteps, the missing keys, and the strange newspaper.",
         "And many key pieces of evidence were later lost, some of them during the Second World War.",
     ]),
     dict(scene="academy", text=[
@@ -174,7 +185,9 @@ LONG = [
         "But they never published the name, out of respect for the suspect's living relatives.",
     ]),
     dict(scene="unsolved", chapter="Still unsolved", text=[
-        "Today, more than a hundred years later, the case is still officially unsolved.",
+        "The case was officially closed in 1955. The last suspect was questioned in 1986.",
+        "Today, more than a hundred years later, the case is still unsolved.",
+        "It inspired books, documentaries, and even a German film.",
         "Who was walking in the attic? Why did the killer stay for days?",
         "Why was the money left behind? And who did it?",
     ]),
@@ -187,7 +200,27 @@ LONG = [
         "Tell me in the comments. And if you like unsolved mysteries, subscribe. There are many more to come.",
     ]),
 ]
-SHORT = []
+# 9:16 cut of the same scenes; vx = horizontal centre of the vertical window in the 16:9 frame
+SHORT = [
+    dict(scene="tracks", args=dict(vx=0.35), text=[
+        "In 1922, a farmer in Germany found footprints in the snow.",
+        "They came out of the forest, to his house... and never went back."]),
+    dict(scene="attic", args=dict(vx=0.45), text=[
+        "Then, at night, he heard footsteps. In his attic.",
+        "He went up with a lantern.",
+        "Nothing."]),
+    dict(scene="barn_night", args=dict(n=4, vx=0.6), text=[
+        "A few days later, all six people on the farm were dead."]),
+    dict(scene="farm_open", args=dict(vx=0.38), text=[
+        "But here's the strangest part. The killer never left."]),
+    dict(scene="days_after", args=dict(vx=0.38), text=[
+        "For days, someone kept feeding the cows...",
+        "...eating their food, and lighting the fire."]),
+    dict(scene="board", args=dict(vx=0.5), text=[
+        "More than a hundred years later, no one knows who it was."]),
+    dict(scene="stranger", args=dict(vx=0.6), text=[
+        "Who was in the attic? The full story is on the channel."]),
+]
 
 
 def thumb(S, c):

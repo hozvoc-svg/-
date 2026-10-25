@@ -2,7 +2,8 @@
 import math, random
 import cairo
 from scenes import (W, H, INK, DIM, RED, AMBER, SNOW, clamp, ease, prog, rgba, text, text_w, rrect, label, line,
-                    stick, snowfall, tree, vignette, xmark, check, STARS)
+                    snowfall, tree, vignette, xmark, check, STARS)
+import scenes as _base
 
 BG1, BG2 = (0.025, 0.03, 0.06), (0.08, 0.09, 0.15)
 GROUND = (0.62, 0.66, 0.76)
@@ -18,6 +19,57 @@ _r = random.Random(5)
 SMOKE = [(_r.random(), _r.random() * 6.28, _r.random()) for _ in range(26)]
 _r = random.Random(9)
 DUST = [(_r.random() * W, _r.random() * H, _r.random(), _r.random() * 6.28) for _ in range(60)]
+
+
+# ---------- channel-style stick figure: hollow head, thick glowing outline, thin dark core ----------
+
+def _limbs(x, y, s, phase, arms, wave, head_hold):
+    """Same skeleton as scenes.stick, returned as segments plus the head centre (local coords)."""
+    sw = 0.0 if phase is None else math.sin(phase)
+    bob = 0.0 if phase is None else abs(math.cos(phase)) * 3
+    hip, neck, head = (0, -52 - bob), (0, -100 - bob), (0, -120 - bob)
+    segs = []
+    lg = 0.42 * sw
+    for sgn in (1, -1):
+        ang = sgn * (0.18 + lg) if phase is not None else sgn * 0.2
+        segs.append((hip, (math.sin(ang) * 54, hip[1] + math.cos(ang) * 54)))
+    segs.append((hip, (neck[0], neck[1])))
+    if head_hold:
+        for sgn in (1, -1):
+            ex, ey = sgn * 30, -88 - bob
+            segs += [(neck, (ex, ey)), ((ex, ey), (sgn * 16, head[1] - 4))]
+    else:
+        al = arms if arms is not None else ((-0.5 * sw, 0.5 * sw) if phase is not None else (0.35, -0.35))
+        for i, sgn in enumerate((1, -1)):
+            ang = al[i]
+            if wave is not None and i == 1:
+                ang = -2.6 + 0.35 * math.sin(wave)
+            segs.append((neck, (math.sin(ang + sgn * 0.15) * 46, neck[1] + math.cos(ang + sgn * 0.15) * 46)))
+    return segs, head
+
+
+def stick(c, x, y, s=1.0, col=INK, a=1.0, phase=None, arms=None, lying=0.0, wave=None, head_hold=0.0):
+    if sum(col) < 0.3:  # shadowy silhouettes stay solid black
+        return _base.stick(c, x, y, s, col, a, phase, arms, lying, wave, head_hold)
+    segs, head = _limbs(x, y, s, phase, arms, wave, head_hold)
+    c.save()
+    c.translate(x, y)
+    if lying:
+        c.rotate(lying)
+    c.scale(s, s)
+    c.set_line_cap(cairo.LINE_CAP_ROUND)
+    c.set_line_join(cairo.LINE_JOIN_ROUND)
+    glow_col = (0.55, 0.85, 1.0) if col == INK else col
+    for width, colr, alpha in ((30, glow_col, 0.10), (20, glow_col, 0.18), (12, col, 1.0), (3.2, (0.02, 0.02, 0.03), 1.0)):
+        rgba(c, colr, alpha * a)
+        c.set_line_width(width)
+        for (x0, y0), (x1, y1) in segs:
+            c.move_to(x0, y0 + (2 if width < 4 else 0))
+            c.line_to(x1, y1)
+        c.stroke()
+        c.arc(head[0], head[1], 21, 0, 2 * math.pi)
+        c.stroke()
+    c.restore()
 
 
 # ---------- environment ----------
