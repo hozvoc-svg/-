@@ -34,6 +34,7 @@ OVERLAY_FX = getattr(_ep, "OVERLAY_FX", ())      # e.g. (("shooting_star", 0.8),
 CHAPTER_STYLE = getattr(_ep, "CHAPTER_STYLE", None)  # styles.TITLES key for animated chapter names
 CHAPTER_PAIR = getattr(_ep, "CHAPTER_PAIR", "storybook")
 CHAPTER_SUB = getattr(_ep, "CHAPTER_SUB", "")
+CHAPTER_Y = getattr(_ep, "CHAPTER_Y", 0.86)       # vertical position of chapter titles, fraction of height
 FINAL = getattr(_ep, "FINAL", "x264")            # delivery encode: "x264" 1080p or "hevc1440" (sharper on YouTube)
 FPS = 24
 SR = 22050
@@ -170,7 +171,7 @@ def render_segment(job):
         S.vignette(c)
         c.restore()
         if CHAPTER_STYLE and seg.get("chapter") and seg["start"] > 1 and 1.5 <= t < 9.5:
-            ST.TITLES[CHAPTER_STYLE](c, seg["chapter"], CHAPTER_SUB, (t - 1.5) / 8.0, CHAPTER_PAIR, y=S.H * 0.86)
+            ST.TITLES[CHAPTER_STYLE](c, seg["chapter"], CHAPTER_SUB, (t - 1.5) / 8.0, CHAPTER_PAIR, y=S.H * CHAPTER_Y)
         if vertical:
             S.snowfall(c, T, 0.4)
             S.text(c, "9 hikers. 1 tent.", cw / 2, 180, 72, S.INK)
