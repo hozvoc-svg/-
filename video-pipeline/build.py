@@ -29,6 +29,9 @@ SPEAKER = int(os.environ.get("SPEAKER", getattr(_ep, "SPEAKER", 186)))
 LENGTH_SCALE = getattr(_ep, "LENGTH_SCALE", 1.07)
 AMBIENT = getattr(_ep, "AMBIENT", "drone")
 CAPTION_SIZE = getattr(_ep, "CAPTION_SIZE", 44)
+CAPTION_STYLE = getattr(_ep, "CAPTION_STYLE", "box")  # "box" or "punch" (2-3 bold words, one highlighted)
+VERTICAL_FILL = getattr(_ep, "VERTICAL_FILL", False)  # Shorts: scale the 16:9 frame to fill 9:16 height
+SHORT_HOOK = getattr(_ep, "SHORT_HOOK", ())          # Shorts: [(text, rgb, size)] pinned at the top
 XFADE = getattr(_ep, "XFADE", 0.0)               # seconds of dissolve between consecutive segments
 OVERLAY_FX = getattr(_ep, "OVERLAY_FX", ())      # e.g. (("shooting_star", 0.8),) drawn over every frame
 CHAPTER_STYLE = getattr(_ep, "CHAPTER_STYLE", None)  # styles.TITLES key for animated chapter names
@@ -130,6 +133,49 @@ def caption(c, s, cw, cy, size):
     S.text(c, s, cw / 2, cy + 6, size, S.INK)
 
 
+STOP = set("THE A AN AND OR BUT OF TO IN ON AT FOR WITH WAS WERE IS ARE HE SHE IT THEY HIS HER THEIR THAT THIS BY FROM AS BE HAD HAVE NOT".split())
+HILITE = (0.25, 0.92, 1.0)
+
+
+def punch_caption(c, s, cw, cy, size, age):
+    """Channel caption style: heavy uppercase words, black outline, one key word in glowing cyan, quick pop-in."""
+    words = s.upper().split()
+    clean = [w.strip(".,!?;:'\"…") for w in words]
+    cand = [i for i, w in enumerate(clean) if w not in STOP and len(w) > 2]
+    key = max(cand, key=lambda i: len(clean[i])) if cand else -1
+    c.select_font_face("Inter Display Black", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+    c.set_font_size(size)
+    sp = c.text_extents(" ").x_advance * 1.35
+    widths = [c.text_extents(w).x_advance for w in words]
+    lines, cur, cw_ = [], [], 0
+    for i, w in enumerate(widths):  # wrap at ~82% of the frame width
+        if cur and cw_ + sp + w > cw * 0.82:
+            lines.append(cur); cur, cw_ = [], 0
+        cw_ += (sp if cur else 0) + w
+        cur.append(i)
+    lines.append(cur)
+    pop = 0.86 + 0.14 * ST.ease(age / 0.12)
+    c.save()
+    c.translate(cw / 2, cy)
+    c.scale(pop, pop)
+    y0 = -(len(lines) - 1) * size * 1.05
+    for li, ln in enumerate(lines):
+        lw = sum(widths[i] for i in ln) + sp * (len(ln) - 1)
+        x = -lw / 2
+        y = y0 + li * size * 1.05
+        for i in ln:
+            c.new_path()
+            c.move_to(x, y)
+            c.text_path(words[i])
+            if i == key:
+                for k, a in ((size * 0.5, 0.10), (size * 0.32, 0.16), (size * 0.2, 0.25)):
+                    c.set_source_rgba(*HILITE, a); c.set_line_width(k); c.set_line_join(cairo.LINE_JOIN_ROUND); c.stroke_preserve()
+            c.set_source_rgba(0, 0, 0, 0.95); c.set_line_width(size * 0.16); c.set_line_join(cairo.LINE_JOIN_ROUND); c.stroke_preserve()
+            c.set_source_rgb(*(HILITE if i == key else (1, 1, 1))); c.fill()
+            x += widths[i] + sp
+    c.restore()
+
+
 def render_segment(job):
     seg, final_path, vertical = job
     path = final_path + ".part.mp4"
@@ -140,7 +186,7 @@ def render_segment(job):
                            "-crf", "16", "-pix_fmt", "yuv420p", path], stdin=subprocess.PIPE)
     fn = S.SCENES[seg["scene"]]
     d = seg["frames"] / FPS
-    caps = chunks(seg["sents"], 5 if vertical else 7)
+    caps = chunks(seg["sents"], 3 if CAPTION_STYLE == "punch" else (5 if vertical else 7))
     for f in range(seg["frames"]):
         t = f / FPS
         T = seg["start"] + t
@@ -148,7 +194,12 @@ def render_segment(job):
         c.set_source_rgb(*S.BG1)
         c.paint()
         c.save()
-        if vertical:
+        if vertical and VERTICAL_FILL:
+            fx = seg["args"].get("vx", 0.5)  # horizontal centre of the 9:16 window in the 16:9 frame
+            c.translate(540, 960)
+            c.scale(ch / S.H, ch / S.H)
+            c.translate(-S.W * fx, -S.H / 2)
+        elif vertical:
             c.translate(540, 820)
             c.scale(1.12, 1.12)
             c.translate(-S.W / 2 - 60, -S.H / 2)
@@ -172,13 +223,15 @@ def render_segment(job):
         c.restore()
         if CHAPTER_STYLE and seg.get("chapter") and seg["start"] > 1 and 1.5 <= t < 9.5:
             ST.TITLES[CHAPTER_STYLE](c, seg["chapter"], CHAPTER_SUB, (t - 1.5) / 8.0, CHAPTER_PAIR, y=S.H * CHAPTER_Y)
-        if vertical:
+        if vertical and not VERTICAL_FILL:
             S.snowfall(c, T, 0.4)
-            S.text(c, "9 hikers. 1 tent.", cw / 2, 180, 72, S.INK)
-            S.text(c, "Cut from the INSIDE.", cw / 2, 270, 64, S.RED)
+        for i, (hs, hcol, hsize) in enumerate(SHORT_HOOK if vertical else ()):
+            S.text(c, hs, cw / 2, 180 + i * hsize * 1.3, hsize, hcol)
         for a, b, s in (caps if getattr(_ep, "CAPTIONS", True) else ()):
             if a <= t < b + 0.05:
-                if vertical:
+                if CAPTION_STYLE == "punch":
+                    punch_caption(c, s, cw, ch * (0.70 if vertical else 0.86), 96 if vertical else 74, t - a)
+                elif vertical:
                     caption(c, s, cw, 1560, 62)
                 else:
                     caption(c, s, cw, ch - 70, CAPTION_SIZE)

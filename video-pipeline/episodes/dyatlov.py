@@ -21,6 +21,8 @@ PRON = {
     "-30°C": "minus thirty degrees",
 }
 
+SHORT_HOOK = [("9 hikers. 1 tent.", (0.95, 0.96, 0.98), 72), ("Cut from the INSIDE.", (0.92, 0.22, 0.24), 64)]
+
 LONG = [
     dict(scene="tent_night", chapter="The tent", text=[
         "February 1959.",
