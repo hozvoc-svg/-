@@ -5,7 +5,7 @@ FADE = 0.001
 OVERLAY_FX = (("film_grain", 0.6),)
 CHAPTER_STYLE = "typewriter"
 CHAPTER_PAIR = "editorial"
-CHAPTER_Y = 0.13
+CHAPTER_Y = 0.075
 CAPTION_STYLE = "punch"
 VERTICAL_FILL = True
 EL_SETTINGS = dict(stability=0.45, similarity_boost=0.75, style=0.15, speed=0.95)

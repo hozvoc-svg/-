@@ -1,7 +1,7 @@
 """Stickman scenes for rural night mysteries (Hinterkaifeck): a lonely farm, a forest, snow, lanterns."""
 import math, random
 import cairo
-from scenes import (W, H, INK, DIM, RED, AMBER, SNOW, clamp, ease, prog, rgba, text, text_w, rrect, label, line,
+from scenes import (W, H, INK, DIM, RED, AMBER, SNOW, clamp, ease, prog, rgba, text, text_w, rrect, line,
                     snowfall, tree, vignette, xmark, check, STARS)
 import scenes as _base
 
@@ -19,6 +19,14 @@ _r = random.Random(5)
 SMOKE = [(_r.random(), _r.random() * 6.28, _r.random()) for _ in range(26)]
 _r = random.Random(9)
 DUST = [(_r.random() * W, _r.random() * H, _r.random(), _r.random() * 6.28) for _ in range(60)]
+
+
+_HIDE_LABELS = [False]  # set while drawing a 9:16 Short, where side labels would be cut off
+
+
+def label(c, *args, **kw):
+    if not _HIDE_LABELS[0]:
+        _base.label(c, *args, **kw)
 
 
 # ---------- channel-style stick figure: hollow head, thick glowing outline, thin dark core ----------
@@ -912,8 +920,8 @@ def sc_memorial(c, t, d, T, a):
     for i, (n, age) in enumerate(FAMILY):
         ap = prog(t, 0.5 + i * 0.5, 1.0 + i * 0.5)
         x = 260 + i * 280
-        text(c, n, x, 900 + (i % 2) * 46, 26, INK, ap, bold=False)
-    text(c, "HINTERKAIFECK  ·  1922", W / 2, 250, 72, INK, prog(t, d * 0.55, d * 0.7))
+        text(c, n, x, 340 + (i % 2) * 40, 28, INK, ap, bold=False)
+    text(c, "HINTERKAIFECK  ·  1922", W / 2, 230, 72, INK, prog(t, d * 0.55, d * 0.7))
 
 
 def sc_outro(c, t, d, T, a):
@@ -938,4 +946,11 @@ def sc_outro(c, t, d, T, a):
     snowfall(c, T, 0.3, 0.3)
 
 
-SCENES = {k[3:]: v for k, v in globals().items() if k.startswith("sc_")}
+def _scene(fn):
+    def run(c, t, d, T, a):
+        _HIDE_LABELS[0] = "vx" in a
+        fn(c, t, d, T, a)
+    return run
+
+
+SCENES = {k[3:]: _scene(v) for k, v in globals().items() if k.startswith("sc_")}
