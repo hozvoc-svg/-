@@ -52,3 +52,30 @@ def _shots():
 
 LONG = _shots()
 SHORT = []
+
+
+def thumb(S, c):
+    """Webb's Cosmic Cliffs with a calm title on the starry sky above the cliffs."""
+    import cairo
+    import styles as ST
+    S.sc_photo(c, 0.0, 1.0, 0.0, dict(img="weic2205a", cam=((1.0, 0.5, 0.55), (1.0, 0.5, 0.55))))
+    g = cairo.LinearGradient(0, 0, 0, 1080)
+    g.add_color_stop_rgba(0, 0, 0, 0.05, 0.55)
+    g.add_color_stop_rgba(0.45, 0, 0, 0.05, 0.0)
+    c.set_source(g)
+    c.paint()
+    ST._font(c, "Cinzel", 120, bold=True)
+    t = "REAL SPACE"
+    ST._glyphs(c, t, 960 - ST._width(c, t, 8) / 2, 230, (1, 0.95, 0.85), 1.0, 8, shadow=0.8)
+    ST._font(c, "Cormorant Garamond Light", 70, bold=True)
+    t = "Hubble & Webb  ·  Sleep Music"
+    ST._glyphs(c, t, 960 - ST._width(c, t) / 2, 330, (0.85, 0.92, 1.0), 1.0, shadow=0.8)
+    c.set_source_rgba(0.05, 0.05, 0.12, 0.8)
+    c.new_path()
+    c.arc(820, 420, 42, 1.5708, 4.7124)
+    c.arc(1100, 420, 42, -1.5708, 1.5708)
+    c.close_path()
+    c.fill()
+    ST._font(c, "Montserrat Thin", 44, bold=True)
+    t = "1 HOUR"
+    ST._glyphs(c, t, 960 - ST._width(c, t, 6) / 2, 436, (1, 1, 1), 1.0, 6, shadow=0)
