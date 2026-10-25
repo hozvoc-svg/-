@@ -73,10 +73,14 @@ def hue(i, n, s=0.75, v=1.0):
     return colorsys.hsv_to_rgb((0.95 - 0.8 * i / max(1, n - 1)) % 1.0, s, v)
 
 
-def text(c, s, x, y, size, col, outline=0.14, glow=None):
+def text(c, s, x, y, size, col, outline=0.14, glow=None, max_w=None):
     c.select_font_face(FONT, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
     c.set_font_size(size)
     w = c.text_extents(s).x_advance
+    if max_w and w > max_w:  # shrink to fit
+        size *= max_w / w
+        c.set_font_size(size)
+        w = max_w
     c.new_path()
     c.move_to(x - w / 2, y)
     c.text_path(s)
@@ -97,7 +101,7 @@ def shards(k, radius, angle, seed):
              s * math.sin(x) + r.uniform(-300, 100), r.uniform(4, 11)) for x, s in zip(a, speed)]
 
 
-def draw(c, S, fi):
+def draw(c, S, fi, hud=True):
     f = S["frames"][fi]
     t = f["t"]
     n = S["rings"]
@@ -157,6 +161,8 @@ def draw(c, S, fi):
     c.set_source_rgb(1, 1, 1)
     c.arc(CX + p[0], CY + p[1], br, 0, 2 * math.pi)
     c.fill()
+    if not hud:
+        return
     # text
     text(c, "CAN THE BALL", W / 2, 250, 92, (1, 1, 1))
     text(c, "ESCAPE?", W / 2, 360, 110, (0.3, 0.93, 1.0), glow=(0.3, 0.93, 1.0))
@@ -187,6 +193,36 @@ def _render(args):
     ff.stdin.close()
     ff.wait()
     return path
+
+
+def cover(S, path, top, mid, sticker, t=1.5):
+    """Shorts cover: the full ring stack early in the run, big hook text, a sticker at the bottom."""
+    surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
+    c = cairo.Context(surf)
+    fi = min(len(S["frames"]) - 1, int(t * FPS))
+    c.save()
+    c.translate(CX, CY + 60)
+    c.scale(1.05, 1.05)
+    c.translate(-CX, -CY)
+    draw(c, S, fi, hud=False)
+    c.restore()
+    text(c, top, W / 2, 230, 118, (1, 1, 1), max_w=W * 0.9)
+    text(c, mid, W / 2, 380, 150, (0.3, 0.93, 1.0), glow=(0.3, 0.93, 1.0), max_w=W * 0.9)
+    c.save()
+    c.translate(W / 2, 1640)
+    c.rotate(-0.05)
+    c.select_font_face(FONT, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+    c.set_font_size(80)
+    half = c.text_extents(sticker).x_advance / 2 - 20  # pill fits the text
+    c.set_source_rgb(0.95, 0.2, 0.25)
+    c.new_path()
+    c.arc(-half, 0, 70, math.pi / 2, 3 * math.pi / 2)
+    c.arc(half, 0, 70, -math.pi / 2, math.pi / 2)
+    c.close_path()
+    c.fill()
+    text(c, sticker, 0, 28, 80, (1, 1, 1), outline=0.08)
+    c.restore()
+    surf.write_to_png(path)
 
 
 # ---------------- audio ----------------
