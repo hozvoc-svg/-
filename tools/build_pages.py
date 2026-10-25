@@ -19,7 +19,7 @@ def head(title, desc, extra=''):
   <meta name="theme-color" content="#0b0d14">
   <meta property="og:title" content="{title}">
   <meta property="og:description" content="{desc}">
-  <meta property="og:image" content="https://hozvoc-svg.github.io/-/assets/og-image.png">
+  <meta property="og:image" content="https://muse-ai-ivory.vercel.app/assets/og-image.png">
   <meta name="twitter:card" content="summary_large_image">{extra}
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="site.webmanifest">
@@ -722,7 +722,7 @@ page('blog.html', 'Blog — Muse', 'Practical guides on writing marketing conten
 ''', active='blog')
 
 # ================= Sitemap =================
-SITE = 'https://hozvoc-svg.github.io/-/'
+SITE = 'https://muse-ai-ivory.vercel.app/'
 PUBLIC = ['about.html', 'blog.html', 'blog-post.html', 'privacy.html', 'terms.html', 'tools.html', 'hashtag-generator.html',
           'business-name-generator.html', 'character-counter.html', 'email-subject-lines.html'] + [p[0] for p in POSTS]
 sitemap_path = os.path.join(OUT, 'sitemap.xml')

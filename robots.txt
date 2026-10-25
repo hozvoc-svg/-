@@ -1,7 +1,9 @@
 User-agent: *
 Allow: /
-Disallow: /-/login.html
-Disallow: /-/api/
+Disallow: /login.html
+Disallow: /app.html
+Disallow: /reset.html
+Disallow: /api/
 
 # Replace with your domain if you move the site
-Sitemap: https://hozvoc-svg.github.io/-/sitemap.xml
+Sitemap: https://muse-ai-ivory.vercel.app/sitemap.xml

@@ -15,7 +15,7 @@
 | Близький Схід | `ar.html` | Instagram, TikTok, Snapchat, X |
 | Китайськомовні продавці | `zh.html` | Китайськомовні спільноти продавців Amazon/Shopify |
 
-Наприклад: `https://muse-ai.vercel.app/es.html`. Перемикач мов 🌐 є вгорі кожної сторінки.
+Наприклад: `https://muse-ai-ivory.vercel.app/es.html`. Перемикач мов 🌐 є вгорі кожної сторінки.
 Індія та Латинська Америка — величезні ринки малого бізнесу, і конкурентів, які пишуть їхньою мовою, там менше.
 
 ## 0. Красиве посилання (без «hozvoc»)
@@ -23,7 +23,7 @@
 Безкоштовна адреса GitHub завжди містить ім'я акаунта (`hozvoc-svg.github.io`). Посилання без нього:
 
 - **Vercel (безкоштовно, рекомендовано):** при запуску (README, крок 4) назвіть проєкт `muse-ai`.
-  Адреса буде **https://muse-ai.vercel.app** (якщо назва зайнята, спробуйте `muse-copy`, `musewrite`, `muse-ua`).
+  Адреса буде **https://muse-ai-ivory.vercel.app** (якщо назва зайнята, спробуйте `muse-copy`, `musewrite`, `muse-ua`).
   Змінити можна будь-коли: Vercel → Project → Settings → General → Project Name.
 - **Власний домен (~$10–15/рік):** купіть, наприклад, `musewrite.com` на Namecheap або Cloudflare й
   підключіть у Vercel → Settings → Domains. Виглядає найпрофесійніше.
@@ -39,7 +39,7 @@
 3. Нова адреса: **https://hozvoc-svg.github.io/muse-ai/**. Напишіть мені, і я оновлю посилання в sitemap
    та прев'ю для соцмереж.
 
-На Vercel назвіть проєкт `muse-ai`, і основна адреса сервісу буде **https://muse-ai.vercel.app**
+На Vercel назвіть проєкт `muse-ai`, і основна адреса сервісу буде **https://muse-ai-ivory.vercel.app**
 (якщо назва вільна). Власний домен на кшталт `musewrite.com` коштує ~$10–15 на рік, його можна
 підключити у Vercel → Settings → Domains.
 

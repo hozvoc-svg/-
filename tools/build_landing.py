@@ -5,7 +5,7 @@ Edit the copy in LANG below, then run:  python3 tools/build_landing.py
 import pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SITE = "https://hozvoc-svg.github.io/-/"  # public URL used for og:image and hreflang links
+SITE = "https://muse-ai-ivory.vercel.app/"  # public URL used for og:image and hreflang links
 
 # Language list: code, file, native name, short label, extra Google font
 LANGS = [
