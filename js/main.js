@@ -341,6 +341,13 @@
     // Already signed in? Go straight to the app.
     window.Muse?.session().then((s) => { if (s) location.replace(next); }).catch(() => {});
 
+    // Show "Continue with Google" only when it is set up in Supabase.
+    const google = $('#googleBtn');
+    const divider = $('.divider', auth);
+    google.hidden = true;
+    divider.hidden = true;
+    window.Muse?.googleEnabled().then((on) => { google.hidden = !on; divider.hidden = !on; }).catch(() => {});
+
     $('#googleBtn').addEventListener('click', async () => {
       try { await window.Muse.signInWithGoogle(next); } catch (err) { msg.textContent = authError(err); }
     });

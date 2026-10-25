@@ -84,6 +84,16 @@ check('switching to Arabic flips layout', (await p.getAttribute('html', 'dir')) 
 await p.screenshot({ path: H.ROOT + '/tests/.output/app-ar.png' });
 await ctx.close();
 
+// 6b. Google button follows the Supabase setting
+H.db.googleEnabled = false;
+ctx = await newCtx({ locale: 'en-US' }); p = await ctx.newPage();
+await p.goto(B + '/login.html'); await p.waitForTimeout(600);
+check('Google button hidden when provider is off', await p.isHidden('#googleBtn') && await p.isHidden('.divider'));
+H.db.googleEnabled = true;
+await p.reload(); await p.waitForTimeout(600);
+check('Google button shown when provider is on', await p.isVisible('#googleBtn'));
+await ctx.close();
+
 // 7. Forgot + reset password (English)
 ctx = await newCtx({ locale: 'en-US' }); p = await ctx.newPage(); watch(p, 'reset');
 await p.goto(B + '/login.html');

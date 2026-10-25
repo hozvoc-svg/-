@@ -58,6 +58,7 @@ async function mockSupabase(req, res, url) {
     const { password, ...user } = db.users[id]; return send(res, 200, user);
   }
   if (p === '/auth/v1/logout') return send(res, 204);
+  if (p === '/auth/v1/settings') return send(res, 200, { external: { email: true, google: db.googleEnabled ?? true } });
   if (p === '/auth/v1/recover') { log.push('RECOVER ' + body.email); return send(res, 200, {}); }
   if (p === '/auth/v1/user' && req.method === 'PUT') {
     const id = sbUserFromAuth(req); if (!id) return send(res, 401, { msg: 'invalid JWT' });

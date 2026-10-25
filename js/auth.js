@@ -86,6 +86,14 @@ window.Muse = (() => {
     if (!res.ok) throw new Error((await res.json().catch(() => ({}))).code || 'server');
   };
 
+  // Whether "Continue with Google" is turned on in Supabase (Authentication → Providers).
+  const googleEnabled = async () => {
+    const { config } = await init();
+    const res = await fetch(`${config.supabaseUrl}/auth/v1/settings`, { headers: { apikey: config.supabaseAnonKey } });
+    if (!res.ok) return false;
+    return Boolean((await res.json()).external?.google);
+  };
+
   const signOut = async () => {
     const { sb } = await init();
     await sb.auth.signOut();
@@ -121,5 +129,5 @@ window.Muse = (() => {
     return url.href;
   };
 
-  return { init, session, requireSession, signIn, signUp, signInWithGoogle, signOut, resetPassword, updatePassword, saveBrand, profile, history, checkoutUrl };
+  return { init, session, requireSession, signIn, signUp, signInWithGoogle, googleEnabled, signOut, resetPassword, updatePassword, saveBrand, profile, history, checkoutUrl };
 })();
