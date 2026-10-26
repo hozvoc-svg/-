@@ -271,8 +271,8 @@ def audio(S, path):
         w.writeframes((st * 32767 * 0.9).astype(np.int16).tobytes())
 
 
-def build(out, seed=1, rings=15):
-    S = simulate(seed, rings)
+def build(out, seed=1, rings=15, gap_deg=30.0, gap_grow=24.0):
+    S = simulate(seed, rings, gap_deg=gap_deg, gap_grow=gap_grow)
     tmp = os.path.join(os.path.dirname(os.path.abspath(out)), f".escape_{seed}")
     os.makedirs(tmp, exist_ok=True)
     nf = len(S["frames"])
