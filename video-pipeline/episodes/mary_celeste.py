@@ -32,6 +32,7 @@ LONG = [
     dict(scene="title", text=[
         "This is the Mary Celeste. The most famous ghost ship in history.",
         "And after one hundred and fifty years, nobody knows what happened to the ten people on board.",
+        "Ten people, a ship that could still sail, and no explanation.",
     ]),
     dict(scene="ship_profile", chapter="The ship", text=[
         "The Mary Celeste was a two-masted merchant ship, about thirty one meters long.",
@@ -147,6 +148,7 @@ LONG = [
         "But the ship did not sink.",
         "Perhaps the rope tying the lifeboat to the ship snapped, in a sudden gust of wind.",
         "And ten people watched their ship sail away, without them, in the middle of the ocean.",
+        "Nobody knows how long they survived out there.",
     ]),
     dict(scene="wreck", chapter="The end of the ship", text=[
         "As for the Mary Celeste, her bad luck never ended.",
@@ -156,11 +158,13 @@ LONG = [
     dict(scene="unsolved", chapter="Still unsolved", text=[
         "Today, more than one hundred and fifty years later, the mystery is still unsolved.",
         "Why did ten people leave a ship that could still float? Where did they go?",
+        "Why was nothing taken, except the lifeboat, the papers, and the navigation tools?",
         "And what made an experienced captain abandon his ship, with his own wife and child?",
         "In 2001, an expedition claimed to have found her wreck near Haiti. But tests on the wood later raised doubts. Even her final resting place is uncertain.",
     ]),
     dict(scene="outro", text=[
         "So what do you think happened? Alcohol vapor? A broken pump? Or something we still have not imagined?",
+        "And if you were the captain, would you have made the same choice?",
         "Tell me in the comments. And if you like unsolved mysteries, subscribe. There are many more to come.",
     ]),
 ]
@@ -184,7 +188,6 @@ SHORT = [
 def thumb(S, c):
     """The empty ship drifting on a grey sea, torn sails, a lifeboat-shaped gap and a big question."""
     S.sky(c, *S.GREY_SKY)
-    S.clouds(c, 3.0, a=0.35)
     S.sea(c, 3.0, 640, amp=18)
     S.ship(c, 1300, 760, 1.15, 3.0, torn=0.8, rock=0.0)
     S.vignette(c)
