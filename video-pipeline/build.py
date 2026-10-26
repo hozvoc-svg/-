@@ -38,6 +38,7 @@ CHAPTER_STYLE = getattr(_ep, "CHAPTER_STYLE", None)  # styles.TITLES key for ani
 CHAPTER_PAIR = getattr(_ep, "CHAPTER_PAIR", "storybook")
 CHAPTER_SUB = getattr(_ep, "CHAPTER_SUB", "")
 CHAPTER_Y = getattr(_ep, "CHAPTER_Y", 0.86)       # vertical position of chapter titles, fraction of height
+SEG_CRF = str(getattr(_ep, "SEG_CRF", 16))       # intermediate segment quality (higher = smaller files)
 FINAL = getattr(_ep, "FINAL", "x264")            # delivery encode: "x264" 1080p or "hevc1440" (sharper on YouTube)
 FPS = 24
 SR = 22050
@@ -183,7 +184,7 @@ def render_segment(job):
     surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, cw, ch)
     ff = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra",
                            "-s", f"{cw}x{ch}", "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium",
-                           "-crf", "16", "-pix_fmt", "yuv420p", path], stdin=subprocess.PIPE)
+                           "-crf", SEG_CRF, "-pix_fmt", "yuv420p", path], stdin=subprocess.PIPE)
     fn = S.SCENES[seg["scene"]]
     d = seg["frames"] / FPS
     caps = chunks(seg["sents"], 3 if CAPTION_STYLE == "punch" else (5 if vertical else 7))
