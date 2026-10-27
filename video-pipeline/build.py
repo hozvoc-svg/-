@@ -30,7 +30,9 @@ LENGTH_SCALE = getattr(_ep, "LENGTH_SCALE", 1.07)
 AMBIENT = getattr(_ep, "AMBIENT", "drone")
 CAPTION_SIZE = getattr(_ep, "CAPTION_SIZE", 44)
 CAPTION_STYLE = getattr(_ep, "CAPTION_STYLE", "box")  # "box" or "punch" (2-3 bold words, one highlighted)
-VERTICAL_FILL = getattr(_ep, "VERTICAL_FILL", False)  # Shorts: scale the 16:9 frame to fill 9:16 height
+VERTICAL_FILL = getattr(_ep, "VERTICAL_FILL", False)
+CAPTION_Y = getattr(_ep, "CAPTION_Y", 0.70)        # Shorts: caption baseline as a fraction of height
+CAPTION_PX = getattr(_ep, "CAPTION_PX", 96)        # Shorts: caption font size  # Shorts: scale the 16:9 frame to fill 9:16 height
 SHORT_HOOK = getattr(_ep, "SHORT_HOOK", ())          # Shorts: [(text, rgb, size)] pinned at the top
 XFADE = getattr(_ep, "XFADE", 0.0)               # seconds of dissolve between consecutive segments
 OVERLAY_FX = getattr(_ep, "OVERLAY_FX", ())      # e.g. (("shooting_star", 0.8),) drawn over every frame
@@ -227,11 +229,14 @@ def render_segment(job):
         if vertical and not VERTICAL_FILL:
             S.snowfall(c, T, 0.4)
         for i, (hs, hcol, hsize) in enumerate(SHORT_HOOK if vertical else ()):
-            S.text(c, hs, cw / 2, 180 + i * hsize * 1.3, hsize, hcol)
+            if hasattr(S, "hook"):
+                S.hook(c, i, hs, hcol, hsize)
+            else:
+                S.text(c, hs, cw / 2, 180 + i * hsize * 1.3, hsize, hcol)
         for a, b, s in (caps if getattr(_ep, "CAPTIONS", True) else ()):
             if a <= t < b + 0.05:
                 if CAPTION_STYLE == "punch":
-                    punch_caption(c, s, cw, ch * (0.70 if vertical else 0.86), 96 if vertical else 74, t - a)
+                    punch_caption(c, s, cw, ch * (CAPTION_Y if vertical else 0.86), CAPTION_PX if vertical else 74, t - a)
                 elif vertical:
                     caption(c, s, cw, 1560, 62)
                 else:
