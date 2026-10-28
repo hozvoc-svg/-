@@ -35,9 +35,12 @@ def simulate(seed, n=24, omega=1.15, gap0=11.0, gap_rate=0.17, end_boost=1.6, g=
     # start packed in the middle with random velocities
     p = np.zeros((n, 2))
     k = 0
+    tries = 0
     while k < n:
-        q = rng.uniform(-R * 0.6, R * 0.6, 2)
-        if np.hypot(*q) < R * 0.65 and all(np.hypot(*(q - p[j])) > 2.2 * BALL for j in range(k)):
+        tries += 1
+        lim = R - BALL - 20 if tries > 2000 else R * 0.7  # widen the area if the centre gets too crowded
+        q = rng.uniform(-lim, lim, 2)
+        if np.hypot(*q) < lim and all(np.hypot(*(q - p[j])) > 2.05 * BALL for j in range(k)):
             p[k] = q
             k += 1
     v = rng.uniform(-450, 450, (n, 2))
