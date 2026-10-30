@@ -828,6 +828,591 @@ def sc_voy_yale(c, t, d, T, a):
     big(c, "0 WORDS READ", CW / 2, 560, 44, RED, prog(t, d * 0.45, d * 0.55))
 
 
+# ================= Sodder children =================
+
+def house(c, x, y, s=1.0, lit=0.0, fire=0.0, T=0.0):
+    c.save()
+    c.translate(x, y)
+    c.scale(s, s)
+    rgba(c, (0.32, 0.26, 0.22))
+    c.rectangle(-170, -200, 340, 200)
+    c.fill()
+    rgba(c, (0.15, 0.10, 0.09))
+    c.move_to(-200, -195); c.line_to(0, -330); c.line_to(200, -195); c.close_path(); c.fill()
+    for wx, wy in ((-110, -150), (40, -150), (-110, -70), (40, -70), (-35, -270)):
+        rgba(c, (1.0, 0.72, 0.32) if lit else (0.05, 0.05, 0.07), 0.9 if lit else 1)
+        c.rectangle(wx, wy, 60, 50)
+        c.fill()
+    if fire:
+        for k in range(16):
+            fx = -170 + (k * 23) % 340
+            h = (90 + 60 * math.sin(T * 9 + k * 1.7)) * fire
+            rgba(c, (1.0, 0.45 + 0.3 * (k % 2), 0.1), 0.85)
+            c.move_to(fx - 26, -150 + (k % 3) * 40); c.line_to(fx, -150 + (k % 3) * 40 - h)
+            c.line_to(fx + 26, -150 + (k % 3) * 40); c.close_path(); c.fill()
+        glow(c, 0, -160, 380, (1.0, 0.5, 0.15), fire)
+    c.restore()
+
+
+def snowy_night(c, T):
+    bg(c, (0.02, 0.03, 0.07), (0.07, 0.08, 0.15), stars=True, T=T)
+    rgba(c, (0.78, 0.82, 0.90))
+    c.rectangle(-400, 640, CW + 800, H + 600)
+    c.fill()
+
+
+def sc_sod_house(c, t, d, T, a):
+    col(c)
+    snowy_night(c, T)
+    house(c, CW / 2, 640, 1.0, lit=1 - prog(t, d * 0.6, d * 0.8), T=T)
+    big(c, "DEC 24, 1945", CW / 2, 230, 46, AMBER, prog(t, 0.1, 0.5))
+    big(c, "WEST VIRGINIA", CW / 2, 740, 40, INK, prog(t, 0.6, 1.0))
+
+
+def sc_sod_fire(c, t, d, T, a):
+    col(c)
+    snowy_night(c, T)
+    house(c, CW / 2, 640, 1.0, fire=0.4 + 0.6 * prog(t, 0.2, 1.5), T=T)
+    for i, x in enumerate((90, 160, 450, 520, 560, 40)):
+        f = prog(t, 0.6 + i * 0.25, 1.4 + i * 0.25)
+        if i < 2:
+            stick(c, x, 720, 1.0, col=AMBER, a=f)
+        else:
+            child(c, x, 720, 1.0, INK, a=f)
+    big(c, "1 A.M.", CW / 2, 230, 56, RED, prog(t, 0.1, 0.5))
+
+
+def sc_sod_missing(c, t, d, T, a):
+    col(c)
+    bg(c, (0.05, 0.04, 0.05), (0.12, 0.09, 0.08))
+    for i in range(5):
+        x = 80 + i * 112
+        ap = 1 - 0.85 * prog(t, d * (0.3 + 0.1 * i), d * (0.45 + 0.1 * i))
+        child(c, x, 600, 1.4, INK, a=ap)
+        text(c, "?", x, 330 - 8 * math.sin(T * 2 + i), 50, RED, 1 - ap + 0.15)
+    big(c, "5 CHILDREN", CW / 2, 230, 58, AMBER, prog(t, 0.1, 0.5))
+    big(c, "NEVER SEEN AGAIN", CW / 2, 720, 44, RED, prog(t, d * 0.55, d * 0.65))
+
+
+def sc_sod_ashes(c, t, d, T, a):
+    col(c)
+    bg(c, (0.35, 0.36, 0.40), (0.55, 0.55, 0.56))
+    rgba(c, (0.22, 0.20, 0.20))
+    c.move_to(-400, 640); c.curve_to(100, 560, 400, 580, CW + 400, 640); c.line_to(CW + 400, H + 600); c.line_to(-400, H + 600)
+    c.close_path(); c.fill()
+    for k in range(10):
+        line(c, 60 + k * 50, 600 + (k % 3) * 15, 90 + k * 50, 540 + (k % 4) * 20, 10, (0.10, 0.08, 0.07))
+    for k in range(14):
+        x = (k * 47 + T * 15) % (CW + 40) - 20
+        y = 520 - ((T * 30 + k * 40) % 300)
+        rgba(c, (0.5, 0.5, 0.5), 0.2)
+        c.arc(x, y, 20, 0, 2 * math.pi); c.fill()
+    big(c, "NO REMAINS", CW / 2, 240, 64, RED, prog(t, d * 0.25, d * 0.35))
+    big(c, "FOUND", CW / 2, 320, 64, RED, prog(t, d * 0.3, d * 0.4))
+
+
+def sc_sod_clues(c, t, d, T, a):
+    col(c)
+    snowy_night(c, T)
+    # ladder outline missing by the wall
+    c.set_dash([10, 8])
+    for k in (0, 1):
+        line(c, 150 + k * 60, 640, 190 + k * 60, 300, 4, (0.9, 0.9, 0.9), 0.6)
+    c.set_dash([])
+    big(c, "LADDER GONE", 200, 260, 34, AMBER, prog(t, 0.3, 0.8))
+    # cut phone wire
+    ap = prog(t, d * 0.45, d * 0.55)
+    line(c, 340, 330, 440, 380, 5, (0.1, 0.1, 0.1))
+    line(c, 470, 395, CW + 60, 440, 5, (0.1, 0.1, 0.1))
+    line(c, 470, 300, 470, 700, 14, (0.30, 0.22, 0.15))
+    big(c, "PHONE LINE CUT", CW / 2 + 60, 520, 36, RED, ap)
+
+
+def sc_sod_billboard(c, t, d, T, a):
+    col(c)
+    bg(c, (0.55, 0.65, 0.78), (0.85, 0.80, 0.70))
+    rgba(c, (0.35, 0.40, 0.30))
+    c.rectangle(-400, 640, CW + 800, H + 600)
+    c.fill()
+    line(c, 160, 640, 160, 520, 14, (0.3, 0.22, 0.15))
+    line(c, 450, 640, 450, 520, 14, (0.3, 0.22, 0.15))
+    rgba(c, (0.95, 0.93, 0.88))
+    c.rectangle(40, 260, CW - 80, 270)
+    c.fill()
+    for i in range(5):
+        x = 110 + i * 97
+        rgba(c, (0.75, 0.72, 0.65))
+        c.rectangle(x - 38, 300, 76, 96)
+        c.fill()
+        child(c, x, 395, 0.8, (0.25, 0.25, 0.28))
+    text(c, "WHAT WAS THEIR FATE?", CW / 2, 470, 32, (0.15, 0.15, 0.2))
+    big(c, "DECADES", CW / 2, 230, 56, AMBER, prog(t, 0.1, 0.5))
+
+
+# ================= Dancing plague of 1518 =================
+
+def old_street(c):
+    bg(c, (0.55, 0.62, 0.72), (0.85, 0.78, 0.62))
+    for i, x in enumerate((-40, 130, 300, 470)):
+        h = 260 + (i % 2) * 60
+        rgba(c, ((0.75, 0.68, 0.55), (0.62, 0.52, 0.42))[i % 2])
+        c.rectangle(x, 640 - h, 160, h)
+        c.fill()
+        rgba(c, (0.40, 0.22, 0.15))
+        c.move_to(x - 10, 640 - h); c.line_to(x + 80, 640 - h - 90); c.line_to(x + 170, 640 - h); c.close_path(); c.fill()
+        for wy in range(640 - h + 40, 600, 80):
+            rgba(c, (0.25, 0.2, 0.18))
+            c.rectangle(x + 30, wy, 30, 40); c.rectangle(x + 100, wy, 30, 40); c.fill()
+    rgba(c, (0.55, 0.50, 0.45))
+    c.rectangle(-400, 640, CW + 800, H + 600)
+    c.fill()
+
+
+def dancer(c, x, y, s, T, k=0, colr=INK, a=1.0):
+    ph = T * 7 + k
+    stick(c, x + 8 * math.sin(ph), y - 10 * abs(math.sin(ph)), s, col=colr, a=a, phase=ph,
+          arms=(1.9 + 0.7 * math.sin(ph), -1.9 - 0.7 * math.cos(ph)))
+
+
+def sc_dp_street(c, t, d, T, a):
+    col(c)
+    old_street(c)
+    dancer(c, CW / 2, 720, 1.4, T, colr=AMBER)
+    for i, x in enumerate((90, 520)):
+        stick(c, x, 720, 1.1, col=DIM, arms=(0.35, -1.0))
+    big(c, "JULY 1518", CW / 2, 230, 56, AMBER, prog(t, 0.1, 0.5))
+    big(c, "STRASBOURG", CW / 2, 300, 40, INK, prog(t, 0.5, 0.9))
+
+
+def sc_dp_days(c, t, d, T, a):
+    col(c)
+    bg(c, (0.04, 0.04, 0.08), (0.10, 0.10, 0.16))
+    sun = (T * 0.8) % (2 * math.pi)
+    sky = 0.5 + 0.5 * math.sin(sun)
+    bg(c, (0.05 + 0.4 * sky, 0.06 + 0.5 * sky, 0.12 + 0.6 * sky), (0.10 + 0.6 * sky, 0.10 + 0.5 * sky, 0.15 + 0.3 * sky))
+    rgba(c, (1, 0.9, 0.5) if sky > 0.5 else (0.9, 0.9, 1.0))
+    c.arc(CW / 2 + 220 * math.cos(sun), 450 - 200 * math.sin(sun), 30, 0, 2 * math.pi); c.fill()
+    rgba(c, (0.45, 0.40, 0.36))
+    c.rectangle(-400, 640, CW + 800, H + 600)
+    c.fill()
+    dancer(c, CW / 2, 720, 1.4, T * 0.8, colr=AMBER)
+    days = 1 + int(5 * prog(t, 0.3, d * 0.9))
+    big(c, f"DAY {days}", CW / 2, 240, 70, RED)
+
+
+def sc_dp_crowd(c, t, d, T, a):
+    col(c)
+    old_street(c)
+    n = int(4 + 22 * prog(t, 0.2, d * 0.8))
+    r = random.Random(3)
+    pos = [(r.uniform(30, CW - 30), r.uniform(650, 760)) for _ in range(26)]
+    for k in range(n):
+        x, y = pos[k]
+        dancer(c, x, y, 0.75 + (y - 650) / 400, T, k, colr=AMBER if k == 0 else INK)
+    big(c, f"{n * 4}+ DANCING", CW / 2, 240, 52, RED)
+
+
+def sc_dp_stage(c, t, d, T, a):
+    col(c)
+    old_street(c)
+    rgba(c, (0.45, 0.30, 0.18))
+    c.rectangle(40, 580, CW - 80, 60)
+    c.fill()
+    for i, x in enumerate((110, 240)):
+        stick(c, x, 580, 1.0, col=(0.6, 0.85, 1.0), arms=(1.0 + 0.3 * math.sin(T * 8 + i), 0.6))
+    for k in range(3):
+        y = 420 - ((T * 60 + k * 40) % 120)
+        text(c, "♪", 180 + k * 30, y, 44, CYAN, 0.8)
+    for k in range(3):
+        dancer(c, 360 + k * 80, 580, 0.9, T, k)
+    big(c, "MORE MUSIC", CW / 2, 230, 56, AMBER, prog(t, 0.2, 0.6))
+    big(c, "MORE DANCING", CW / 2, 300, 46, INK, prog(t, 0.6, 1.0))
+
+
+def sc_dp_collapse(c, t, d, T, a):
+    col(c)
+    old_street(c)
+    for k in range(4):
+        dancer(c, 80 + k * 140, 720, 1.0, T * 0.6, k, a=1 - 0.5 * prog(t, d * 0.4, d))
+    f = prog(t, d * 0.3, d * 0.6)
+    stick(c, CW / 2, 700 + 20 * f, 1.2, col=AMBER, lying=-math.pi / 2 * f)
+    big(c, "EXHAUSTION", CW / 2, 240, 56, RED, prog(t, d * 0.4, d * 0.5))
+
+
+def sc_dp_theories(c, t, d, T, a):
+    col(c)
+    bg(c, (0.06, 0.05, 0.08), (0.12, 0.10, 0.14))
+    for i, (s, k) in enumerate((("MASS HYSTERIA?", 0.15), ("POISONED BREAD?", 0.4), ("A CURSE?", 0.65))):
+        ap = prog(t, d * k, d * k + 0.4)
+        rgba(c, (0.12, 0.13, 0.20), 0.9 * ap)
+        rrect(c, 40, 260 + i * 140, CW - 80, 110, 18)
+        c.fill()
+        big(c, s, CW / 2, 330 + i * 140, 44, (AMBER, CYAN, RED)[i], ap)
+
+
+# ================= Tunguska =================
+
+def taiga(c, T, fallen=0.0, top=(0.45, 0.60, 0.75), bot=(0.85, 0.80, 0.65)):
+    bg(c, top, bot)
+    r = random.Random(11)
+    for k in range(40):
+        x = r.uniform(-300, CW + 300)
+        y = 640 + r.uniform(-10, 20)
+        h = r.uniform(120, 200)
+        ang = -math.pi / 2 + fallen * (1.45 if x > CW / 2 else -1.45)
+        x2, y2 = x + h * math.cos(ang), y + h * math.sin(ang)
+        line(c, x, y, x2, y2, 6, (0.18, 0.12, 0.08))
+        if fallen < 0.5:
+            rgba(c, (0.10, 0.22, 0.14))
+            c.move_to(x - 28, y - h * 0.3); c.line_to(x, y - h); c.line_to(x + 28, y - h * 0.3); c.close_path(); c.fill()
+    rgba(c, (0.30, 0.28, 0.20))
+    c.rectangle(-400, 650, CW + 800, H + 600)
+    c.fill()
+
+
+def sc_tun_morning(c, t, d, T, a):
+    col(c)
+    taiga(c, T)
+    stick(c, 440, 720, 1.2, col=INK, arms=(0.35, -2.2))
+    x = 40 + 300 * prog(t, 0.5, d)
+    y = 120 + 260 * prog(t, 0.5, d)
+    for k in range(10):
+        rgba(c, (1, 0.8, 0.4), 0.08 * (10 - k))
+        c.arc(x - k * 18, y - k * 16, 18 - k, 0, 2 * math.pi)
+        c.fill()
+    glow(c, x, y, 90, (1, 0.9, 0.6), 1.0)
+    big(c, "JUNE 30, 1908", CW / 2, 230, 46, AMBER, prog(t, 0.1, 0.5))
+    big(c, "SIBERIA", CW / 2, 300, 42, INK, prog(t, 0.5, 0.9))
+
+
+def sc_tun_blast(c, t, d, T, a):
+    col(c)
+    taiga(c, T, fallen=prog(t, 0.6, 1.4))
+    f = prog(t, 0.2, 0.9) * (1 - prog(t, 2.5, 4.0))
+    glow(c, CW / 2, 380, 700, (1.0, 0.85, 0.5), f)
+    rgba(c, (1, 1, 1), 0.7 * f)
+    c.paint()
+    big(c, "BOOM", CW / 2, 300, 110, RED, prog(t, 0.4, 0.7))
+
+
+def sc_tun_trees(c, t, d, T, a):
+    col(c)
+    bg(c, (0.55, 0.62, 0.70), (0.80, 0.76, 0.66))
+    rgba(c, (0.40, 0.36, 0.26))
+    c.rectangle(-400, 300, CW + 800, H + 600)
+    c.fill()
+    cx, cy = CW / 2, 470
+    n = int(160 * prog(t, 0.2, d * 0.6))
+    r = random.Random(4)
+    for k in range(n):
+        ang = r.uniform(0, 2 * math.pi)
+        d0 = r.uniform(40, 330)
+        x, y = cx + d0 * math.cos(ang), cy + d0 * math.sin(ang) * 0.55
+        line(c, x, y, x + 28 * math.cos(ang), y + 28 * math.sin(ang) * 0.55, 4, (0.18, 0.12, 0.08))
+    big(c, "80 MILLION", CW / 2, 230, 60, AMBER, prog(t, 0.2, 0.6))
+    big(c, "TREES FLATTENED", CW / 2, 760, 40, INK, prog(t, d * 0.5, d * 0.6))
+
+
+def sc_tun_power(c, t, d, T, a):
+    col(c)
+    bg(c, (0.05, 0.04, 0.06), (0.12, 0.08, 0.06))
+    n = int(10 * prog(t, 0.3, d * 0.7))
+    for k in range(n):
+        x = 90 + (k % 5) * 105
+        y = 330 + (k // 5) * 150
+        glow(c, x, y, 70, (1.0, 0.6, 0.2), 0.8)
+        rgba(c, (1, 0.85, 0.5))
+        c.arc(x, y, 20, 0, 2 * math.pi); c.fill()
+    big(c, "HUNDREDS OF TIMES", CW / 2, 230, 40, AMBER, prog(t, 0.1, 0.5))
+    big(c, "HIROSHIMA", CW / 2, 720, 56, RED, prog(t, d * 0.5, d * 0.6))
+
+
+def sc_tun_crater(c, t, d, T, a):
+    col(c)
+    taiga(c, T, fallen=1.0, top=(0.60, 0.65, 0.70), bot=(0.85, 0.82, 0.72))
+    stick(c, CW / 2, 720, 1.2, col=AMBER, head_hold=1.0)
+    c.set_dash([12, 10])
+    c.set_line_width(5)
+    rgba(c, RED)
+    c.save(); c.translate(CW / 2, 560); c.scale(1, 0.35); c.arc(0, 0, 200, 0, 2 * math.pi); c.restore(); c.stroke()
+    c.set_dash([])
+    big(c, "NO CRATER", CW / 2, 250, 64, RED, prog(t, d * 0.3, d * 0.4))
+
+
+def sc_tun_theory(c, t, d, T, a):
+    col(c)
+    bg(c, (0.02, 0.02, 0.06), (0.08, 0.06, 0.12), stars=True, T=T)
+    y = 160 + 300 * prog(t, 0.2, d * 0.6)
+    glow(c, 380, y, 120, (1, 0.7, 0.3), 1.0)
+    rgba(c, (0.5, 0.45, 0.4))
+    c.arc(380, y, 34, 0, 2 * math.pi); c.fill()
+    if t > d * 0.6:
+        glow(c, 380, 470, 300, (1, 0.9, 0.6), prog(t, d * 0.6, d * 0.65) * (1 - prog(t, d * 0.7, d)))
+    big(c, "EXPLODED IN THE AIR?", CW / 2, 640, 38, AMBER, prog(t, d * 0.5, d * 0.6))
+
+
+# ================= Antikythera mechanism =================
+
+def gear(c, x, y, r, teeth, ang, colr=(0.55, 0.42, 0.22)):
+    c.save()
+    c.translate(x, y)
+    c.rotate(ang)
+    rgba(c, colr)
+    c.new_path()
+    for k in range(teeth * 2):
+        rr = r if k % 2 == 0 else r * 0.88
+        a0 = k * math.pi / teeth
+        c.line_to(rr * math.cos(a0), rr * math.sin(a0))
+    c.close_path()
+    c.fill()
+    rgba(c, (0.15, 0.10, 0.06))
+    c.arc(0, 0, r * 0.18, 0, 2 * math.pi)
+    c.fill()
+    for k in range(4):
+        a0 = k * math.pi / 2
+        line(c, 0, 0, r * 0.7 * math.cos(a0), r * 0.7 * math.sin(a0), r * 0.08, (0.35, 0.26, 0.14))
+    c.restore()
+
+
+def sc_ant_divers(c, t, d, T, a):
+    col(c)
+    bg(c, (0.05, 0.25, 0.35), (0.01, 0.06, 0.12))
+    for k in range(20):
+        x = (k * 53) % CW
+        y = (700 - (T * 40 + k * 37) % 600)
+        rgba(c, (0.7, 0.9, 1.0), 0.35)
+        c.arc(x, y, 4 + k % 4, 0, 2 * math.pi); c.stroke()
+    rgba(c, (0.15, 0.13, 0.10))
+    c.move_to(80, 700); c.line_to(520, 700); c.line_to(470, 620); c.line_to(130, 620); c.close_path(); c.fill()
+    stick(c, 300 + 30 * math.sin(T), 520 + 10 * math.sin(T * 1.5), 1.1, col=INK, lying=0.3, arms=(1.4, -1.2))
+    big(c, "1901", CW / 2, 230, 64, AMBER, prog(t, 0.1, 0.5))
+    big(c, "ROMAN-ERA SHIPWRECK", CW / 2, 760, 34, INK, prog(t, d * 0.5, d * 0.6))
+
+
+def sc_ant_lump(c, t, d, T, a):
+    col(c)
+    bg(c, (0.12, 0.10, 0.09), (0.20, 0.17, 0.14))
+    glow(c, CW / 2, 450, 300, AMBER, 0.5)
+    rgba(c, (0.32, 0.36, 0.30))
+    c.move_to(180, 330); c.curve_to(330, 280, 460, 340, 440, 460); c.curve_to(460, 580, 300, 600, 200, 560)
+    c.curve_to(120, 520, 120, 380, 180, 330); c.close_path(); c.fill()
+    gear(c, 310, 450, 70, 24, 0.1, (0.40, 0.42, 0.32))
+    big(c, "CORRODED BRONZE", CW / 2, 230, 44, INK, prog(t, 0.1, 0.5))
+    big(c, "WITH GEARS", CW / 2, 720, 52, AMBER, prog(t, d * 0.5, d * 0.6))
+
+
+def sc_ant_gears(c, t, d, T, a):
+    col(c)
+    bg(c, (0.08, 0.07, 0.06), (0.14, 0.12, 0.10))
+    gear(c, 230, 420, 130, 40, T * 0.5)
+    gear(c, 410, 330, 70, 22, -T * 0.5 * 40 / 22 + 0.1)
+    gear(c, 420, 540, 90, 28, -T * 0.5 * 40 / 28)
+    gear(c, 520, 450, 40, 14, T * 0.5 * 28 / 14)
+    n = int(30 * prog(t, 0.3, d * 0.7))
+    big(c, f"{n}+ GEARS", CW / 2, 230, 60, AMBER)
+
+
+def sc_ant_sky(c, t, d, T, a):
+    col(c)
+    bg(c, (0.02, 0.02, 0.06), (0.06, 0.05, 0.12), stars=True, T=T)
+    cx, cy = CW / 2, 450
+    for k, (rr, sp, colr) in enumerate(((0, 0, (1, 0.85, 0.3)), (120, 1.0, (0.85, 0.85, 0.9)), (200, 0.5, (0.9, 0.5, 0.3)))):
+        if rr:
+            c.set_line_width(2)
+            rgba(c, INK, 0.2)
+            c.arc(cx, cy, rr, 0, 2 * math.pi); c.stroke()
+        x, y = cx + rr * math.cos(T * sp), cy + rr * math.sin(T * sp)
+        glow(c, x, y, 40 if k == 0 else 20, colr, 0.8)
+        rgba(c, colr)
+        c.arc(x, y, 30 if k == 0 else 14, 0, 2 * math.pi); c.fill()
+    big(c, "PREDICTED ECLIPSES", CW / 2, 230, 42, AMBER, prog(t, 0.1, 0.5))
+    big(c, "& THE PLANETS", CW / 2, 720, 44, INK, prog(t, d * 0.5, d * 0.6))
+
+
+def sc_ant_age(c, t, d, T, a):
+    col(c)
+    bg(c, (0.06, 0.06, 0.08), (0.12, 0.12, 0.15))
+    yr = int(2000 * ease(prog(t, 0.2, d * 0.7)))
+    big(c, f"{yr}", CW / 2, 470, 130, AMBER)
+    big(c, "YEARS OLD", CW / 2, 600, 52, INK, prog(t, d * 0.6, d * 0.7))
+
+
+def sc_ant_mystery(c, t, d, T, a):
+    col(c)
+    bg(c, (0.08, 0.07, 0.06), (0.14, 0.12, 0.10))
+    gear(c, CW / 2, 450, 150, 44, T * 0.3)
+    big(c, "WHO BUILT IT?", CW / 2, 240, 58, RED, prog(t, d * 0.3, d * 0.4))
+    big(c, "1,000+ YEARS AHEAD", CW / 2, 720, 40, AMBER, prog(t, d * 0.5, d * 0.6))
+
+
+# ================= Green children of Woolpit =================
+
+GREEN = (0.45, 0.85, 0.35)
+
+
+def village(c, T):
+    bg(c, (0.60, 0.70, 0.78), (0.88, 0.84, 0.66))
+    rgba(c, (0.45, 0.55, 0.30))
+    c.rectangle(-400, 600, CW + 800, H + 600)
+    c.fill()
+    for x in (60, 480):
+        rgba(c, (0.70, 0.62, 0.48))
+        c.rectangle(x - 70, 470, 140, 130); c.fill()
+        rgba(c, (0.55, 0.45, 0.25))
+        c.move_to(x - 85, 475); c.line_to(x, 390); c.line_to(x + 85, 475); c.close_path(); c.fill()
+
+
+def sc_wp_found(c, t, d, T, a):
+    col(c)
+    village(c, T)
+    rgba(c, (0.25, 0.18, 0.10))
+    c.save(); c.translate(CW / 2, 640); c.scale(1, 0.35); c.arc(0, 0, 140, 0, 2 * math.pi); c.restore(); c.fill()
+    for i, x in enumerate((CW / 2 - 50, CW / 2 + 50)):
+        child(c, x, 640 - 30 * prog(t, 0.3 + i * 0.3, 1.0 + i * 0.3), 1.4, GREEN)
+    big(c, "1100s · ENGLAND", CW / 2, 230, 44, AMBER, prog(t, 0.1, 0.5))
+    big(c, "GREEN SKIN", CW / 2, 760, 56, GREEN, prog(t, d * 0.5, d * 0.6))
+
+
+def sc_wp_language(c, t, d, T, a):
+    col(c)
+    village(c, T)
+    child(c, 220, 680, 1.5, GREEN)
+    stick(c, 430, 680, 1.3, col=INK, head_hold=1.0)
+    c.save(); c.translate(250, 370)
+    rgba(c, (1, 1, 1), 0.95)
+    rrect(c, -120, -60, 240, 110, 30); c.fill()
+    c.move_to(-20, 50); c.line_to(0, 90); c.line_to(20, 50); c.close_path(); c.fill()
+    text(c, "%#@?!", 0, 15, 46, (0.2, 0.2, 0.25))
+    c.restore()
+    big(c, "UNKNOWN LANGUAGE", CW / 2, 230, 42, RED, prog(t, d * 0.3, d * 0.4))
+
+
+def sc_wp_beans(c, t, d, T, a):
+    col(c)
+    bg(c, (0.25, 0.20, 0.15), (0.35, 0.28, 0.20))
+    rgba(c, (0.45, 0.32, 0.20))
+    c.rectangle(-400, 560, CW + 800, 40)
+    c.fill()
+    for k in range(12):
+        c.save(); c.translate(160 + (k % 6) * 55, 545 - (k // 6) * 22); c.scale(1, 0.6)
+        rgba(c, (0.55, 0.75, 0.35)); c.arc(0, 0, 20, 0, 2 * math.pi); c.fill(); c.restore()
+    child(c, 420, 680, 1.4, GREEN, arms=(0.9, -0.3))
+    big(c, "ONLY RAW BEANS", CW / 2, 240, 50, AMBER, prog(t, 0.2, 0.6))
+
+
+def sc_wp_fade(c, t, d, T, a):
+    col(c)
+    village(c, T)
+    f = prog(t, 0.3, d * 0.8)
+    colr = tuple(GREEN[i] * (1 - f) + INK[i] * f for i in range(3))
+    child(c, CW / 2, 680, 1.8, colr)
+    big(c, "SHE TURNED NORMAL", CW / 2, 230, 42, INK, prog(t, d * 0.5, d * 0.6))
+
+
+def sc_wp_land(c, t, d, T, a):
+    col(c)
+    bg(c, (0.25, 0.30, 0.35), (0.45, 0.55, 0.45))
+    glow(c, CW / 2, 640, 400, (0.6, 0.8, 0.5), 0.5)
+    rgba(c, (0.20, 0.35, 0.20))
+    c.rectangle(-400, 640, CW + 800, H + 600)
+    c.fill()
+    child(c, CW / 2, 700, 1.4, GREEN)
+    big(c, "A LAND OF TWILIGHT", CW / 2, 240, 42, GREEN, prog(t, 0.2, 0.6))
+    big(c, "WHERE?", CW / 2, 330, 60, RED, prog(t, d * 0.5, d * 0.6))
+
+
+# ================= Yuba County Five =================
+
+def mountain_road(c, T, snow=True):
+    bg(c, (0.35, 0.40, 0.50), (0.70, 0.72, 0.78))
+    rgba(c, (0.85, 0.88, 0.94) if snow else (0.3, 0.35, 0.25))
+    c.move_to(-400, 520); c.line_to(100, 300); c.line_to(300, 420); c.line_to(480, 260); c.line_to(CW + 400, 500)
+    c.line_to(CW + 400, H + 600); c.line_to(-400, H + 600); c.close_path(); c.fill()
+    rgba(c, (0.35, 0.33, 0.33))
+    c.move_to(-400, 760); c.curve_to(150, 640, 300, 620, CW + 400, 600); c.line_to(CW + 400, 680)
+    c.curve_to(300, 700, 150, 720, -400, 840); c.close_path(); c.fill()
+
+
+def car(c, x, y, s=1.0, colr=(0.85, 0.85, 0.80)):
+    c.save(); c.translate(x, y); c.scale(s, s)
+    rgba(c, colr)
+    c.move_to(-120, 0); c.line_to(-110, -40); c.line_to(-60, -45); c.line_to(-30, -80); c.line_to(60, -80)
+    c.line_to(90, -45); c.line_to(120, -40); c.line_to(125, 0); c.close_path(); c.fill()
+    rgba(c, (0.3, 0.45, 0.6))
+    c.rectangle(-20, -72, 70, 26); c.fill()
+    for wx in (-70, 75):
+        rgba(c, (0.1, 0.1, 0.1)); c.arc(wx, 0, 24, 0, 2 * math.pi); c.fill()
+    c.restore()
+
+
+def sc_yuba_game(c, t, d, T, a):
+    col(c)
+    bg(c, (0.20, 0.18, 0.30), (0.35, 0.25, 0.25))
+    rgba(c, (0.70, 0.50, 0.30))
+    c.rectangle(-400, 600, CW + 800, H + 600)
+    c.fill()
+    for i in range(5):
+        stick(c, 80 + i * 110, 700, 1.0, col=INK if i else AMBER, arms=(0.35, -2.4 + 0.4 * math.sin(T * 6 + i)))
+    rgba(c, (0.95, 0.5, 0.15))
+    c.arc(CW / 2, 380 + 20 * math.sin(T * 3), 30, 0, 2 * math.pi); c.fill()
+    big(c, "FEB 24, 1978", CW / 2, 230, 46, AMBER, prog(t, 0.1, 0.5))
+    big(c, "5 FRIENDS", CW / 2, 300, 44, INK, prog(t, 0.5, 0.9))
+
+
+def sc_yuba_car(c, t, d, T, a):
+    col(c)
+    mountain_road(c, T)
+    car(c, 320, 650, 1.1)
+    for k in range(40):
+        x = (k * 61 + T * 30) % (CW + 40) - 20
+        y = (k * 83 + T * 90) % 800
+        rgba(c, (1, 1, 1), 0.7); c.arc(x, y, 3, 0, 2 * math.pi); c.fill()
+    big(c, "CAR ABANDONED", CW / 2, 240, 46, RED, prog(t, d * 0.2, d * 0.3))
+    big(c, "IT STILL WORKED", CW / 2, 760, 40, INK, prog(t, d * 0.55, d * 0.65))
+
+
+def sc_yuba_far(c, t, d, T, a):
+    col(c)
+    bg(c, (0.25, 0.32, 0.45), (0.80, 0.82, 0.88))
+    rgba(c, (0.88, 0.90, 0.95))
+    c.rectangle(-400, 520, CW + 800, H + 600)
+    c.fill()
+    f = prog(t, 0.3, d * 0.8)
+    c.set_dash([10, 10])
+    line(c, 80, 700, 80 + 440 * f, 700 - 200 * f, 5, (0.4, 0.45, 0.55))
+    c.set_dash([])
+    car(c, 80, 720, 0.5)
+    rgba(c, (0.6, 0.6, 0.62))
+    c.rectangle(470, 440, 90, 60); c.fill()
+    big(c, "~19 MILES", CW / 2, 240, 58, AMBER, prog(t, d * 0.4, d * 0.5))
+    big(c, "THROUGH SNOW", CW / 2, 310, 40, INK, prog(t, d * 0.5, d * 0.6))
+
+
+def sc_yuba_trailer(c, t, d, T, a):
+    col(c)
+    bg(c, (0.20, 0.20, 0.24), (0.32, 0.30, 0.30))
+    rgba(c, (0.40, 0.35, 0.28))
+    c.rectangle(40, 560, CW - 80, 30)
+    c.fill()
+    n = int(12 * prog(t, 0.3, d * 0.6))
+    for k in range(n):
+        x = 90 + (k % 6) * 80
+        y = 520 - (k // 6) * 70
+        rgba(c, (0.70, 0.70, 0.72)); c.rectangle(x - 25, y - 30, 50, 60); c.fill()
+        rgba(c, (0.85, 0.3, 0.25)); c.rectangle(x - 25, y - 10, 50, 20); c.fill()
+    big(c, "FOOD · UNOPENED", CW / 2, 240, 46, RED, prog(t, d * 0.55, d * 0.65))
+
+
+def sc_yuba_missing(c, t, d, T, a):
+    col(c)
+    mountain_road(c, T, snow=False)
+    for i in range(5):
+        x = 80 + i * 110
+        ap = 0.25 if i < 4 else 1.0
+        stick(c, x, 720, 1.1, col=INK if i < 4 else AMBER, a=ap)
+    big(c, "1 NEVER FOUND", CW / 2, 240, 52, RED, prog(t, d * 0.3, d * 0.4))
+
+
 def _scene(fn):
     def run(c, t, d, T, a):
         _HIDE_LABELS[0] = True
