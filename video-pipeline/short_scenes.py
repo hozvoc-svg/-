@@ -1413,10 +1413,288 @@ def sc_yuba_missing(c, t, d, T, a):
     big(c, "1 NEVER FOUND", CW / 2, 240, 52, RED, prog(t, d * 0.3, d * 0.4))
 
 
+# ================= Kaspar Hauser (richer look: own palette per scene, light, particles) =================
+
+def bricks(c, colr, mortar, rows=14):
+    rgba(c, mortar)
+    c.rectangle(-400, -400, CW + 800, H + 800)
+    c.fill()
+    for r in range(-6, rows + 6):
+        off = 40 if r % 2 else 0
+        for k in range(-8, 12):
+            x = k * 84 + off
+            y = 120 + r * 46
+            shade = 0.85 + 0.15 * math.sin(k * 7.1 + r * 3.3)
+            rgba(c, tuple(v * shade for v in colr))
+            c.rectangle(x + 3, y + 3, 78, 40)
+            c.fill()
+
+
+def beam(c, x0, y0, x1, y1, w0, w1, colr, a):
+    g = cairo.LinearGradient(x0, y0, x1, y1)
+    g.add_color_stop_rgba(0, *colr, a)
+    g.add_color_stop_rgba(1, *colr, 0)
+    c.set_source(g)
+    c.move_to(x0 - w0, y0); c.line_to(x0 + w0, y0); c.line_to(x1 + w1, y1); c.line_to(x1 - w1, y1)
+    c.close_path(); c.fill()
+
+
+def motes(c, T, x0, y0, x1, y1, n=40, colr=(1, 0.95, 0.8), a=0.6, seed=2):
+    r = random.Random(seed)
+    for k in range(n):
+        u = (r.random() + T * 0.03 * (0.5 + r.random())) % 1
+        v = r.random()
+        x = x0 + (x1 - x0) * u + 30 * math.sin(T * 0.7 + k) * v
+        y = y0 + (y1 - y0) * u + 12 * math.sin(T * 0.5 + k * 1.3)
+        rgba(c, colr, a * (0.3 + 0.7 * abs(math.sin(T * 1.3 + k))))
+        c.arc(x, y, 1.5 + 2.5 * v, 0, 2 * math.pi)
+        c.fill()
+
+
+def cell_room(c, T, door=0.0):
+    bricks(c, (0.10, 0.12, 0.20), (0.03, 0.04, 0.07))
+    # tiny barred window high on the wall and its light beam
+    rgba(c, (0.55, 0.65, 0.85))
+    c.rectangle(420, 210, 80, 60)
+    c.fill()
+    for k in range(4):
+        line(c, 430 + k * 20, 210, 430 + k * 20, 270, 5, (0.05, 0.05, 0.08))
+    beam(c, 460, 240, 260, 700, 40, 170, (0.6, 0.75, 1.0), 0.35)
+    motes(c, T, 440, 250, 260, 680, n=45, colr=(0.85, 0.9, 1.0), a=0.5)
+    if door:
+        rgba(c, (0.02, 0.02, 0.03))
+        c.rectangle(40, 360, 150, 340)
+        c.fill()
+        rgba(c, (1.0, 0.75, 0.40), 0.9 * door)
+        c.rectangle(40, 360, 150 * door, 340)
+        c.fill()
+        beam(c, 115, 700, 330, 760, 75, 190, (1.0, 0.75, 0.40), 0.45 * door)
+    rgba(c, (0.05, 0.05, 0.08))
+    c.rectangle(-400, 700, CW + 800, H + 600)
+    c.fill()
+    # straw
+    r = random.Random(9)
+    for k in range(60):
+        x = 220 + r.uniform(-140, 140)
+        y = 700 + r.uniform(-14, 10)
+        a0 = r.uniform(-0.8, 0.8)
+        line(c, x, y, x + 30 * math.cos(a0), y + 30 * math.sin(a0) * 0.3, 2, (0.70, 0.60, 0.30), 0.8)
+
+
+def sc_kh_cell(c, t, d, T, a):
+    col(c)
+    cell_room(c, T)
+    stick(c, 260, 700, 1.25, col=INK, head_hold=1.0)
+    big(c, "A DARK CELL", CW / 2, 230, 50, (0.6, 0.75, 1.0), prog(t, d * 0.4, d * 0.5))
+
+
+def half_timber(c, x, y, w, h, colr):
+    rgba(c, colr)
+    c.rectangle(x, y - h, w, h)
+    c.fill()
+    for k in range(4):
+        line(c, x + k * w / 3, y - h, x + k * w / 3, y, 7, (0.28, 0.16, 0.10))
+    line(c, x, y - h / 2, x + w, y - h / 2, 7, (0.28, 0.16, 0.10))
+    line(c, x, y - h, x + w / 3, y - h / 2, 6, (0.28, 0.16, 0.10))
+    line(c, x + 2 * w / 3, y - h / 2, x + w, y - h, 6, (0.28, 0.16, 0.10))
+    rgba(c, (0.45, 0.18, 0.12))
+    c.move_to(x - 15, y - h); c.line_to(x + w / 2, y - h - 110); c.line_to(x + w + 15, y - h); c.close_path(); c.fill()
+
+
+def sc_kh_square(c, t, d, T, a):
+    col(c)
+    bg(c, (1.0, 0.72, 0.45), (0.60, 0.42, 0.38))
+    glow(c, 470, 260, 260, (1.0, 0.85, 0.5), 0.8)
+    for i, (x, h, colr) in enumerate(((-60, 300, (0.92, 0.84, 0.70)), (120, 360, (0.86, 0.76, 0.62)),
+                                       (300, 280, (0.95, 0.88, 0.74)), (460, 340, (0.88, 0.80, 0.66)))):
+        half_timber(c, x, 640, 170, h, colr)
+    rgba(c, (0.55, 0.47, 0.40))
+    c.rectangle(-400, 640, CW + 800, H + 600)
+    c.fill()
+    for i, x in enumerate((60, 540)):
+        stick(c, x, 730, 1.0, col=(0.35, 0.30, 0.32), arms=(0.35, -0.35))
+    sway = 0.12 * math.sin(T * 2.2)
+    x = 180 + 120 * prog(t, 0.2, d)
+    stick(c, x, 740, 1.3, col=AMBER, phase=T * 2.5, lying=sway)
+    paper(c, x + 45, 690, 34, 24, 0.3)
+    big(c, "MAY 1828", CW / 2, 220, 58, (0.25, 0.10, 0.08), prog(t, 0.1, 0.4))
+    big(c, "NUREMBERG", CW / 2, 290, 44, INK, prog(t, 0.4, 0.8))
+
+
+def sc_kh_name(c, t, d, T, a):
+    col(c)
+    bg(c, (0.16, 0.10, 0.06), (0.08, 0.05, 0.03))
+    fl = 0.85 + 0.15 * math.sin(T * 13) * math.sin(T * 7.7)
+    glow(c, 90, 360, 330 * fl, (1.0, 0.65, 0.25), 0.9)
+    line(c, 90, 520, 90, 400, 26, (0.92, 0.88, 0.78))
+    rgba(c, (1.0, 0.8, 0.3))
+    c.move_to(80, 400); c.curve_to(76, 380, 90, 360 - 10 * fl, 90, 350 - 12 * fl); c.curve_to(92, 365, 104, 380, 100, 400)
+    c.close_path(); c.fill()
+    paper(c, 340, 470, 440, 300, -0.04, colr=(0.93, 0.86, 0.68))
+    name = "Kaspar Hauser"
+    n = int(len(name) * prog(t, 0.4, d * 0.75))
+    c.save()
+    c.translate(150, 490)
+    c.rotate(-0.04)
+    c.select_font_face("Serif", cairo.FONT_SLANT_ITALIC, cairo.FONT_WEIGHT_BOLD)
+    c.set_font_size(42)
+    rgba(c, (0.12, 0.08, 0.20))
+    c.move_to(0, 0)
+    c.show_text(name[:n])
+    adv = c.text_extents(name[:n]).x_advance
+    c.restore()
+    # quill following the writing
+    qx, qy = 150 + adv, 475 - adv * 0.04
+    line(c, qx, qy, qx + 60, qy - 150, 5, (0.95, 0.95, 0.95))
+    rgba(c, (0.97, 0.97, 0.97))
+    c.move_to(qx + 60, qy - 150); c.curve_to(qx + 110, qy - 190, qx + 95, qy - 105, qx + 30, qy - 60); c.close_path(); c.fill()
+    big(c, "TWO WORDS", CW / 2, 230, 52, AMBER, prog(t, 0.1, 0.4))
+
+
+def sc_kh_captor(c, t, d, T, a):
+    col(c)
+    cell_room(c, T, door=prog(t, 0.3, 1.2))
+    stick(c, 400, 700, 1.15, col=INK, head_hold=1.0)
+    stick(c, 115, 700, 1.35, col=(0.0, 0.0, 0.0), a=prog(t, 0.6, 1.4))
+    rgba(c, (0.70, 0.50, 0.28))
+    c.save(); c.translate(300, 690); c.scale(1, 0.6); c.arc(0, 0, 30, 0, 2 * math.pi); c.restore(); c.fill()
+    rgba(c, (0.55, 0.55, 0.60))
+    c.rectangle(240, 640, 30, 55)
+    c.fill()
+    big(c, "BREAD & WATER", CW / 2, 230, 48, (0.6, 0.75, 1.0), prog(t, d * 0.2, d * 0.3))
+    big(c, "NEVER SAW HIS FACE", CW / 2, 300, 38, RED, prog(t, d * 0.55, d * 0.65))
+
+
+def bare_tree(c, x, y, h, colr, seed):
+    r = random.Random(seed)
+
+    def branch(x0, y0, ang, ln, w, depth):
+        x1, y1 = x0 + ln * math.cos(ang), y0 + ln * math.sin(ang)
+        line(c, x0, y0, x1, y1, w, colr)
+        if depth:
+            for s_ in (-1, 1):
+                branch(x1, y1, ang + s_ * r.uniform(0.3, 0.6), ln * 0.7, w * 0.65, depth - 1)
+    branch(x, y, -math.pi / 2, h, 14, 4)
+
+
+def sc_kh_park(c, t, d, T, a):
+    col(c)
+    bg(c, (0.02, 0.03, 0.08), (0.10, 0.10, 0.18), stars=True, T=T)
+    # shake right after the stab
+    sh = 14 * math.exp(-max(0, t - 0.25) * 6) if t > 0.25 else 0
+    c.translate(sh * math.sin(T * 70), sh * math.cos(T * 53))
+    for i, x in enumerate((40, 560)):
+        bare_tree(c, x, 680, 170, (0.05, 0.05, 0.08), i + 3)
+    rgba(c, (0.80, 0.84, 0.92))
+    c.rectangle(-400, 660, CW + 800, H + 600)
+    c.fill()
+    glow(c, 300, 600, 300, (0.9, 0.1, 0.12), 0.5 * prog(t, 0.2, 0.6))
+    stick(c, 300, 700, 1.3, col=INK, phase=T * 1.6, lying=0.18 * math.sin(T * 2), arms=(-0.9, 0.9))
+    # purse in the snow and the mirror-written note
+    rgba(c, (0.35, 0.20, 0.30))
+    c.save(); c.translate(470, 700); c.scale(1, 0.6); c.arc(0, 0, 22, 0, 2 * math.pi); c.restore(); c.fill()
+    ap = prog(t, d * 0.4, d * 0.5)
+    if ap:
+        s_ = 0.4 + 0.6 * ease(ap)
+        c.save(); c.translate(CW / 2, 430); c.scale(s_, s_)
+        paper(c, 0, 0, 420, 170, 0.05)
+        c.scale(-1, 1)  # mirror writing
+        c.select_font_face("Serif", cairo.FONT_SLANT_ITALIC, cairo.FONT_WEIGHT_NORMAL)
+        c.set_font_size(30)
+        for k, ln in enumerate(("I will tell you who I am,", "where I come from...")):
+            w = c.text_extents(ln).x_advance
+            c.move_to(-w / 2, -15 + k * 42)
+            rgba(c, (0.15, 0.12, 0.2))
+            c.show_text(ln)
+        c.restore()
+    big(c, "1833 · ANSBACH", CW / 2, 230, 48, RED, prog(t, 0.1, 0.4))
+    for k in range(30):
+        x = (k * 61 + T * 25) % (CW + 40) - 20
+        y = (k * 83 + T * 70) % 900
+        rgba(c, (1, 1, 1), 0.7); c.arc(x, y, 2.5, 0, 2 * math.pi); c.fill()
+
+
+def sc_kh_prince(c, t, d, T, a):
+    col(c)
+    bg(c, (0.22, 0.08, 0.30), (0.08, 0.03, 0.12))
+    glow(c, CW / 2, 420, 300, (1.0, 0.8, 0.3), 0.5)
+    c.save()
+    c.translate(CW / 2, 430)
+    c.scale(1 + 0.05 * math.sin(T * 2), 1 + 0.05 * math.sin(T * 2))
+    rgba(c, (1.0, 0.80, 0.25))
+    c.move_to(-130, 60); c.line_to(-130, -60); c.line_to(-65, 0); c.line_to(0, -90); c.line_to(65, 0)
+    c.line_to(130, -60); c.line_to(130, 60); c.close_path(); c.fill()
+    for k, x in enumerate((-80, 0, 80)):
+        rgba(c, ((0.9, 0.2, 0.3), (0.3, 0.6, 1.0), (0.3, 0.9, 0.5))[k])
+        c.arc(x, 30, 14, 0, 2 * math.pi); c.fill()
+    sp = (T * 0.8) % 2
+    if sp < 0.3:
+        glow(c, -100 + sp * 700, -40, 50, (1, 1, 1), 1 - sp / 0.3)
+    c.restore()
+    big(c, "A LOST PRINCE?", CW / 2, 230, 52, (1.0, 0.82, 0.3), prog(t, 0.1, 0.4))
+    if t > d * 0.35:
+        s_ = pop(t, d * 0.35)
+        c.save(); c.translate(CW / 2, 640); c.rotate(-0.12); c.scale(s_, s_)
+        rgba(c, RED); c.set_line_width(7); rrect(c, -200, -50, 400, 90, 10); c.stroke()
+        big(c, "DNA: PROBABLY NOT", 0, 15, 34, RED)
+        c.restore()
+    if t > d * 0.7:
+        big(c, "SELF-INFLICTED?", CW / 2, 760, 40, INK, prog(t, d * 0.7, d * 0.8))
+
+
+def sc_kh_grave(c, t, d, T, a):
+    col(c)
+    bg(c, (0.55, 0.58, 0.62), (0.30, 0.32, 0.35))
+    rgba(c, (0.22, 0.25, 0.22))
+    c.rectangle(-400, 660, CW + 800, H + 600)
+    c.fill()
+    rgba(c, (0.62, 0.62, 0.60))
+    c.move_to(140, 680); c.line_to(140, 380); c.curve_to(140, 280, 470, 280, 470, 380); c.line_to(470, 680)
+    c.close_path(); c.fill()
+    for k, ln in enumerate(("HIC JACET", "CASPARUS HAUSER", "AENIGMA", "SUI TEMPORIS")):
+        text(c, ln, 305, 400 + k * 52, 30 if k != 1 else 32, (0.25, 0.25, 0.27), prog(t, 0.2 + k * 0.3, 0.6 + k * 0.3))
+    for k in range(5):  # drifting fog
+        x = (T * (12 + 4 * k) + k * 200) % (CW + 500) - 250
+        rgba(c, (0.85, 0.87, 0.9), 0.18)
+        rrect(c, x, 600 + k * 30, 380, 46, 23); c.fill()
+    big(c, "RIDDLE OF HIS TIME", CW / 2, 240, 42, INK, prog(t, d * 0.45, d * 0.55))
+    big(c, "VICTIM OR LIAR?", CW / 2, 760, 46, RED, prog(t, d * 0.7, d * 0.8))
+
+
 def _scene(fn):
+    """Wraps a scene with an optional entrance effect from args["fx"]: zoom, flash, glitch or shake."""
     def run(c, t, d, T, a):
         _HIDE_LABELS[0] = True
+        fx = a.get("fx")
+        if fx == "glitch" and t < 0.35:
+            c.push_group()
+            fn(c, t, d, T, a)
+            pat = c.pop_group()
+            r = random.Random(int(t * 60))
+            for k in range(14):
+                y0 = k * H / 14
+                c.save()
+                c.rectangle(-400, y0, W + 800, H / 14 + 1)
+                c.clip()
+                c.translate(r.uniform(-60, 60) * (1 - t / 0.35), 0)
+                c.set_source(pat)
+                c.paint()
+                c.restore()
+            rgba(c, (0.3, 0.9, 1.0), 0.15 * (1 - t / 0.35))
+            c.paint()
+            return
+        c.save()
+        if fx == "zoom" and t < 0.4:
+            z = 1 + 0.25 * (1 - ease(t / 0.4))
+            c.translate(W / 2, H / 2); c.scale(z, z); c.translate(-W / 2, -H / 2)
+        if fx == "shake" and t < 0.5:
+            amp = 18 * (1 - t / 0.5)
+            c.translate(amp * math.sin(t * 90), amp * math.cos(t * 70))
         fn(c, t, d, T, a)
+        c.restore()
+        if fx == "flash" and t < 0.3:
+            rgba(c, (1, 1, 1), 0.85 * (1 - t / 0.3))
+            c.paint()
     return run
 
 

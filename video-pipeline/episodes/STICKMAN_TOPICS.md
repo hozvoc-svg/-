@@ -9,4 +9,4 @@ Jack the Ripper · Chicago Tylenol murders · Gloria Ramirez ("toxic lady", ER) 
 Sacred Heart church "Pew Man" (unidentified man, 1982)
 
 Made but not yet on the channel: Flight 19 · Roanoke · Wow! signal · Voynich manuscript ·
-Sodder children · Dancing plague of 1518 · Tunguska · Antikythera mechanism · Green children of Woolpit · Yuba County Five
+Sodder children · Dancing plague of 1518 · Tunguska · Antikythera mechanism · Green children of Woolpit · Yuba County Five · Kaspar Hauser

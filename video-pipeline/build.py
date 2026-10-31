@@ -438,6 +438,70 @@ def space_ambience(total):
     return p
 
 
+def sfx_track(timeline, total):
+    """Synthesised sound design: a whoosh at every cut, plus per-segment extras from the episode's SFX
+    list [(segment index, kind, offset seconds)], kind in hit / heartbeat / riser / glitch."""
+    sr = 44100
+    out = np.zeros(int((total + 2) * sr), np.float32)
+    rng = np.random.default_rng(3)
+
+    def put(sig, t):
+        i0 = max(0, int(t * sr))
+        n = min(len(sig), len(out) - i0)
+        out[i0:i0 + n] += sig[:n]
+
+    def noise(sec):
+        return rng.standard_normal(int(sec * sr)).astype(np.float32)
+
+    def whoosh():
+        n = noise(0.45)
+        t = np.linspace(0, 1, len(n))
+        env = np.sin(np.pi * t) ** 2
+        # rising band: smooth the noise less as it goes
+        k = np.exp(-np.arange(24) / 4.0); k /= k.sum()
+        low = np.convolve(n, k, mode="same")
+        return (low * (1 - t) + n * t * 0.5) * env * 0.35
+
+    def hit():
+        t = np.arange(int(1.2 * sr)) / sr
+        boom = np.sin(2 * np.pi * (55 * t + 40 * (1 - np.exp(-t * 8)) / 8)) * np.exp(-t * 3.5)
+        crack = noise(1.2) * np.exp(-t * 30) * 0.4
+        return (boom * 0.9 + crack).astype(np.float32)
+
+    def heartbeat():
+        t = np.arange(int(0.9 * sr)) / sr
+        thump = lambda t0: np.where(t >= t0, np.sin(2 * np.pi * 48 * (t - t0)) * np.exp(-(t - t0) * 18), 0)
+        return ((thump(0.0) + 0.7 * thump(0.28)) * 0.8).astype(np.float32)
+
+    def riser():
+        t = np.arange(int(1.6 * sr)) / sr
+        f = 200 + 900 * (t / t[-1]) ** 2
+        return (np.sin(2 * np.pi * np.cumsum(f) / sr) * (t / t[-1]) ** 2 * 0.25 + noise(1.6) * (t / t[-1]) ** 3 * 0.08).astype(np.float32)
+
+    def glitch():
+        s = noise(0.25)
+        s *= (np.arange(len(s)) // 400 % 2).astype(np.float32)
+        return s * 0.3
+
+    kinds = dict(hit=hit, heartbeat=heartbeat, riser=riser, glitch=glitch)
+    for i, seg in enumerate(timeline):
+        if i:
+            put(whoosh(), seg["start"] - 0.2)
+    for idx, kind, off in getattr(_ep, "SFX", ()):
+        seg = timeline[idx]
+        if kind == "heartbeat":
+            for k in range(int(seg["frames"] / FPS / 0.95)):
+                put(heartbeat(), seg["start"] + off + k * 0.95)
+        else:
+            put(kinds[kind](), seg["start"] + off)
+    out = np.tanh(out)
+    p = os.path.join(TMP, f"{EPISODE}_sfx.wav")
+    with wave.open(p, "wb") as w:
+        w.setnchannels(1); w.setsampwidth(2); w.setframerate(sr)
+        w.writeframes((out * 32767 * 0.8).astype(np.int16).tobytes())
+    return p
+
+
 def mix(voice, video_list, out, total, timeline=None):
     if AMBIENT == "music":
         import music
@@ -489,6 +553,11 @@ def mix(voice, video_list, out, total, timeline=None):
     lst = os.path.join(TMP, os.path.basename(out) + ".txt")
     with open(lst, "w") as fh:
         fh.writelines(f"file '{p}'\n" for p in video_list)
+    # optional sound design: whooshes on cuts, hits and heartbeats on chosen segments (episode SFX)
+    sfx = sfx_track(timeline, total) if (timeline and getattr(_ep, "SFX", None) is not None) else None
+    extra = ["-i", sfx] if sfx else []
+    sfx_mix = "[5:a]volume=0.9[s];[v][amb][s]amix=inputs=3:normalize=0:duration=first,alimiter=limit=0.95[a]" if sfx else \
+              "[v][amb]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.95[a]"
     # ambient: brown-noise wind plus a slow low drone under the narration
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error",
                     "-f", "concat", "-safe", "0", "-i", lst,
@@ -496,12 +565,12 @@ def mix(voice, video_list, out, total, timeline=None):
                     "-f", "lavfi", "-t", str(total), "-i", "anoisesrc=color=brown:amplitude=0.5:seed=4",
                     "-f", "lavfi", "-t", str(total), "-i", "sine=frequency=55:sample_rate=44100",
                     "-f", "lavfi", "-t", str(total), "-i", "sine=frequency=82.4:sample_rate=44100",
+                    *extra,
                     "-filter_complex",
                     "[1:a]aresample=44100,highpass=f=70,acompressor=threshold=0.1:ratio=3,loudnorm=I=-15:TP=-1.5[v];"
                     "[2:a]lowpass=f=400,volume=0.10,tremolo=f=0.1:d=0.6[w];"
                     "[3:a]volume=0.035,tremolo=f=0.1:d=0.5[d1];[4:a]volume=0.025,tremolo=f=0.13:d=0.5[d2];"
-                    "[w][d1][d2]amix=inputs=3:normalize=0[amb];"
-                    "[v][amb]amix=inputs=2:normalize=0:duration=first,alimiter=limit=0.95[a]",
+                    "[w][d1][d2]amix=inputs=3:normalize=0[amb];" + sfx_mix,
                     "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
                     "-movflags", "+faststart", out], check=True)
 
