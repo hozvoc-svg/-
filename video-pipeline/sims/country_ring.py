@@ -188,8 +188,11 @@ def draw(c, S, fi):
         else:
             draw_ball(c, x, y, BALL, code)
     # header
-    E.text(c, "WHICH COUNTRY", W / 2, 250, 86, (1, 1, 1), max_w=W * 0.86)
-    E.text(c, "WINS?", W / 2, 360, 112, (0.3, 0.93, 1.0), glow=(0.3, 0.93, 1.0))
+    pop = 1 + 0.45 * (1 - min(1, t / 0.25)) ** 2  # the hook pops in on the first frames
+    c.save(); c.translate(W / 2, 300); c.scale(pop, pop)
+    E.text(c, "WHICH COUNTRY", 0, -50, 86, (1, 1, 1), max_w=W * 0.86)
+    E.text(c, "WINS?", 0, 60, 112, (0.3, 0.93, 1.0), glow=(0.3, 0.93, 1.0))
+    c.restore()
     if not done:
         E.text(c, f"{left} LEFT", W / 2, 445, 52, (1.0, 0.8, 0.3), outline=0.12)
         if left == 2:
@@ -285,6 +288,8 @@ def audio(S, path):
     out = np.zeros(int(total * SR) + 3 * SR, np.float32)
     ni = 0
     ck = click()
+    s0 = E.tone(E.hz(MELODY[0] - 12), 1.2) * 0.6  # sound from the very first frame
+    out[:len(s0)] += s0
     for t, kind, k in S["events"]:
         i0 = int(t * SR)
         if kind == "wall":
