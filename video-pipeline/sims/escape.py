@@ -18,7 +18,8 @@ _A = [59, 61, 62, 64, 66, 62, 66, 65, 61, 65, 64, 60, 64, 59, 61, 62, 64, 66, 62
 MELODY = _A + [n + 7 for n in _A] + [n + 12 for n in _A] + [n + 19 for n in _A]
 
 
-def simulate(seed=1, rings=15, gap_deg=30.0, gap_grow=24.0, r_min=118.0, r_max=470.0, ball_r=16.0, g=1500.0, vmin=900.0):
+def simulate(seed=1, rings=15, gap_deg=30.0, gap_grow=24.0, r_min=118.0, r_max=470.0, ball_r=16.0, g=1500.0, vmin=900.0,
+             fast_start=False, tail=3.0):
     rng = np.random.default_rng(seed)
     radii = np.linspace(r_min, r_max, rings)
     omega = np.array([(1.0 + 0.07 * i) * (1 if i % 2 == 0 else -1) for i in range(rings)]) * rng.uniform(0.85, 1.15)
@@ -26,6 +27,8 @@ def simulate(seed=1, rings=15, gap_deg=30.0, gap_grow=24.0, r_min=118.0, r_max=4
     gaps = np.radians(gap_deg + gap_grow * np.linspace(0, 1, rings))  # outer rings get wider gaps
     p = np.array([rng.uniform(-30, 30), -20.0])
     v = np.array([rng.uniform(-500, 500), rng.uniform(-300, 0)])
+    if fast_start:  # already flying at the first frame, so the first ring goes within a fraction of a second
+        v = np.array([rng.uniform(-1100, 1100), rng.uniform(-900, -500)])
     broken = [None] * rings
     events, frames = [], []
     dt = 1.0 / FPS / SUB
@@ -59,12 +62,12 @@ def simulate(seed=1, rings=15, gap_deg=30.0, gap_grow=24.0, r_min=118.0, r_max=4
                         events.append((t, "bounce", k))
                         last_bounce = t
         frames.append(dict(t=t, p=p.copy(), angles=theta0 + omega * t))
-        if done_at is not None and t > done_at + 3.0:
+        if done_at is not None and t > done_at + tail:
             break
         if t > 75:
             break
     return dict(frames=frames, events=events, radii=radii, gaps=gaps, broken=broken, ball_r=ball_r,
-                rings=rings, done_at=done_at, seed=seed)
+                rings=rings, done_at=done_at, seed=seed, punch=fast_start)
 
 
 # ---------------- drawing ----------------
@@ -111,6 +114,14 @@ def draw(c, S, fi, hud=True):
     c.set_source(g)
     c.paint()
     left = sum(1 for b in S["broken"] if b is None or b > t)
+    c.save()
+    if S.get("punch"):  # a small zoom kick and shake whenever a ring breaks
+        kick = max([0.0] + [1 - (t - b) / 0.15 for b in S["broken"] if b is not None and 0 <= t - b < 0.15])
+        if kick:
+            z = 1 + 0.035 * kick
+            c.translate(CX + 9 * kick * math.sin(t * 90), CY + 9 * kick * math.cos(t * 70))
+            c.scale(z, z)
+            c.translate(-CX, -CY)
     # rings
     c.set_line_cap(cairo.LINE_CAP_ROUND)
     for i in range(n):
@@ -161,11 +172,16 @@ def draw(c, S, fi, hud=True):
     c.set_source_rgb(1, 1, 1)
     c.arc(CX + p[0], CY + p[1], br, 0, 2 * math.pi)
     c.fill()
+    c.restore()
     if not hud:
         return
-    # text
-    text(c, "CAN THE BALL", W / 2, 250, 92, (1, 1, 1))
-    text(c, "ESCAPE?", W / 2, 360, 110, (0.3, 0.93, 1.0), glow=(0.3, 0.93, 1.0))
+    # text: the hook pops in on the very first frames
+    l1, l2 = S.get("title", ("CAN THE BALL", "ESCAPE?"))
+    pop = 1 + 0.45 * (1 - min(1, t / 0.25)) ** 2 if S.get("punch") else 1
+    c.save(); c.translate(W / 2, 300); c.scale(pop, pop)
+    text(c, l1, 0, -50, 92, (1, 1, 1), max_w=W * 0.9)
+    text(c, l2, 0, 60, 110, (0.3, 0.93, 1.0), glow=(0.3, 0.93, 1.0), max_w=W * 0.9)
+    c.restore()
     done = S["done_at"] is not None and t >= S["done_at"]
     if done:
         a = min(1, (t - S["done_at"]) / 0.3)
@@ -185,9 +201,16 @@ def _render(args):
     ff = subprocess.Popen(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra",
                            "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium",
                            "-crf", "17", "-pix_fmt", "yuv420p", path], stdin=subprocess.PIPE)
+    nf = len(S["frames"])
+    loop = int(0.5 * FPS) if S.get("punch") else 0
     for fi in range(a, b):
         c = cairo.Context(surf)
         draw(c, S, fi)
+        if fi >= nf - loop:  # dissolve into the first frame so the Short loops seamlessly
+            c.push_group()
+            draw(c, S, 0)
+            c.pop_group_to_source()
+            c.paint_with_alpha((fi - (nf - loop)) / loop)
         surf.flush()
         ff.stdin.write(bytes(surf.get_data()))
     ff.stdin.close()
@@ -251,6 +274,9 @@ def audio(S, path):
     total = S["frames"][-1]["t"] + 0.5
     out = np.zeros(int(total * SR) + SR, np.float32)
     ni = 0
+    if S.get("punch"):  # sound from the very first frame
+        s = tone(hz(MELODY[0] - 12), 1.2) * 0.6
+        out[:len(s)] += s
     for t, kind, k in S["events"]:
         i0 = int(t * SR)
         if kind == "bounce":
@@ -271,8 +297,10 @@ def audio(S, path):
         w.writeframes((st * 32767 * 0.9).astype(np.int16).tobytes())
 
 
-def build(out, seed=1, rings=15, gap_deg=30.0, gap_grow=24.0):
-    S = simulate(seed, rings, gap_deg=gap_deg, gap_grow=gap_grow)
+def build(out, seed=1, rings=15, gap_deg=30.0, gap_grow=24.0, title=None, **kw):
+    S = simulate(seed, rings, gap_deg=gap_deg, gap_grow=gap_grow, **kw)
+    if title:
+        S["title"] = title
     tmp = os.path.join(os.path.dirname(os.path.abspath(out)), f".escape_{seed}")
     os.makedirs(tmp, exist_ok=True)
     nf = len(S["frames"])
