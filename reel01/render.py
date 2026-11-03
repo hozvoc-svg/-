@@ -82,6 +82,6 @@ for f in range(N):
             y+=105
     # progress bar + handle
     d.rectangle([0,H-10,int(W*t/dur),H],fill=ACC)
-    center(d,'@yourhandle  •  daily psychology',fSm,H-230,(150,150,160))
+    center(d,'@psych.unlocked  •  daily psychology',fSm,H-230,(150,150,160))
     img.save(f'frames/{f:05d}.jpg',quality=90)
 print(N,dur)
