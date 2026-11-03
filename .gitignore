@@ -2,3 +2,9 @@ node_modules/
 .vercel/
 .env*
 tests/.output/
+
+# Reel render intermediates
+reel01/frames/
+*.wav
+reel01/music.mp3
+reel01/bed.mp3
