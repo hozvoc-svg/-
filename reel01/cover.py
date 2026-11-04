@@ -22,8 +22,8 @@ d=ImageDraw.Draw(img); F='/usr/share/fonts/opentype/inter/'
 def ct(txt,y,size,fill,font='Inter-Black.otf'):
     f=ImageFont.truetype(F+font,size); w=d.textlength(txt,font=f)
     d.text(((W-w)/2,y),txt,font=f,fill=fill,stroke_width=max(6,size//12),stroke_fill=(20,16,40))
-ct('4 PSYCHOLOGY',330,128,(255,255,255))
-ct('TRICKS',470,200,(255,210,63))
-ct('that work almost too well',700,58,(255,255,255),'Inter-ExtraBold.otf')
+ct('4 PSYCHOLOGY',420,96,(255,255,255))
+ct('TRICKS',530,165,(255,210,63))
+ct('that work almost too well',720,48,(255,255,255),'Inter-ExtraBold.otf')
 img.save('cover_reel01.png')
 img.resize((540,960)).save('/tmp/claude-0/-home-user--/eedeb946-f1d8-5985-8482-23b174c808ae/scratchpad/cover_prev.png')
