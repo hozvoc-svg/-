@@ -310,7 +310,7 @@ def scene5(c, t):
     c.save(); c.translate(W / 2, 900); c.scale(s, s)
     rrect(c, -330, -560, 660, 1120, 80); fill(c, C['ink']); rrect(c, -305, -535, 610, 1070, 62); fill(c, C['white'])
     circle(c, 0, -360, 110, C['violet']); person_mini = None
-    text_c(c, '@psych.unlocked', 0, -200, 52, C['ink'])
+    text_c(c, '@neuronbites', 0, -200, 52, C['ink'])
     for k, (num, lbl) in enumerate([('120', 'posts'), ('48K', 'followers'), ('1M', 'likes')]):
         text_c(c, num, -200 + k * 200, -100, 44, C['ink']); text_c(c, lbl, -200 + k * 200, -55, 28, C['ink'], False, 0.6)
     tapped = lt > 1.2

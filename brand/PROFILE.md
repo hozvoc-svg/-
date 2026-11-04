@@ -1,7 +1,7 @@
-# Оформлення профілю: Psych Unlocked
+# Оформлення профілю: Neuron Bites
 
 ## Нікнейм
-**@psych.unlocked**
+**@neuronbites**
 
 Якщо цей нікнейм зайнятий, бери запасні (у такому порядку):
 1. @psychunlocked
@@ -11,7 +11,7 @@
 
 ## Ім'я профілю (поле «Ім'я», за ним тебе знаходять у пошуку)
 ```
-Psych Unlocked | Psychology
+Neuron Bites | Psychology
 ```
 
 ## Опис профілю (137 із 150 символів)
