@@ -1661,6 +1661,552 @@ def sc_kh_grave(c, t, d, T, a):
     big(c, "VICTIM OR LIAR?", CW / 2, 760, 46, RED, prog(t, d * 0.7, d * 0.8))
 
 
+# ================= Amelia Earhart =================
+
+def radio(c, x, y, s=1.0, T=0.0, on=True):
+    c.save(); c.translate(x, y); c.scale(s, s)
+    rgba(c, (0.28, 0.24, 0.20)); rrect(c, -140, -90, 280, 180, 16); c.fill()
+    rgba(c, (0.85, 0.75, 0.5) if on else (0.3, 0.3, 0.3)); c.rectangle(-110, -60, 150, 50); c.fill()
+    line(c, -100 + 130 * (0.5 + 0.5 * math.sin(T * 0.7)), -60, -100 + 130 * (0.5 + 0.5 * math.sin(T * 0.7)), -10, 3, RED)
+    for k, kx in enumerate((80, 80)):
+        rgba(c, (0.15, 0.12, 0.10)); c.arc(80, -35 + k * 70, 26, 0, 2 * math.pi); c.fill()
+    for k in range(5):
+        line(c, -110, 20 + k * 12, 40, 20 + k * 12, 3, (0.18, 0.15, 0.12))
+    c.restore()
+
+
+def sc_ae_pilot(c, t, d, T, a):
+    col(c)
+    bg(c, (0.55, 0.70, 0.85), (0.95, 0.85, 0.65))
+    glow(c, 470, 260, 200, (1, 0.9, 0.6), 0.7)
+    rgba(c, (0.45, 0.42, 0.40)); c.rectangle(-400, 640, CW + 800, H + 600); c.fill()
+    plane(c, 300, 560, 1.8, 0.0, colr=(0.82, 0.82, 0.86))
+    stick(c, 130, 720, 1.3, col=AMBER, arms=(0.35, -2.3))
+    big(c, "1937", CW / 2, 230, 72, AMBER, prog(t, 0.1, 0.4))
+    big(c, "AROUND THE WORLD", CW / 2, 300, 40, INK, prog(t, 0.5, 0.9))
+
+
+def sc_ae_ocean(c, t, d, T, a):
+    col(c)
+    bg(c, (0.40, 0.60, 0.80), (0.75, 0.85, 0.92))
+    sea(c, T, 560, (0.12, 0.38, 0.55), (0.03, 0.15, 0.28), amp=8)
+    x = 40 + 420 * prog(t, 0, d)
+    plane(c, x, 320 + 10 * math.sin(T), 0.9, -0.03, colr=(0.82, 0.82, 0.86), prop_T=T)
+    rgba(c, (0.80, 0.72, 0.50)); c.save(); c.translate(500, 590); c.scale(1, 0.25); c.arc(0, 0, 30, 0, 2 * math.pi); c.restore(); c.fill()
+    big(c, "HOWLAND ISLAND", 470, 660, 30, AMBER, prog(t, d * 0.4, d * 0.5))
+    big(c, "2,500 MILES OF OCEAN", CW / 2, 230, 38, INK, prog(t, 0.2, 0.6))
+
+
+def sc_ae_radio(c, t, d, T, a):
+    col(c)
+    bg(c, (0.12, 0.10, 0.10), (0.20, 0.16, 0.14))
+    glow(c, CW / 2, 450, 300, AMBER, 0.4)
+    radio(c, CW / 2, 450, 1.4, T)
+    for k in range(3):
+        r = 60 + 90 * ((T * 0.8 + k / 3) % 1)
+        c.set_line_width(4); rgba(c, CYAN, 0.6 * (1 - ((T * 0.8 + k / 3) % 1)))
+        c.arc(CW / 2 + 60, 300, r, -2.4, -0.7); c.stroke()
+    big(c, "“WE MUST BE ON YOU", CW / 2, 680, 34, INK, prog(t, d * 0.2, d * 0.3))
+    big(c, "BUT CANNOT SEE YOU”", CW / 2, 730, 34, INK, prog(t, d * 0.25, d * 0.35))
+
+
+def sc_ae_silence(c, t, d, T, a):
+    col(c)
+    bg(c, (0.25, 0.30, 0.38), (0.45, 0.50, 0.55))
+    sea(c, T, 520, (0.10, 0.25, 0.35), (0.02, 0.08, 0.14), amp=12)
+    for k in range(3):
+        x = (T * 40 + k * 230) % (CW + 300) - 150
+        c.save(); c.translate(x, 470 + 10 * math.sin(T + k)); c.scale(0.5, 0.5)
+        rgba(c, (0.25, 0.25, 0.28)); c.move_to(-120, 0); c.line_to(120, 0); c.line_to(90, 40); c.line_to(-90, 40); c.close_path(); c.fill()
+        line(c, 0, 0, 0, -90, 8, (0.25, 0.25, 0.28)); c.restore()
+    s_ = pop(t, d * 0.3)
+    if s_:
+        c.save(); c.translate(CW / 2, 280); c.scale(s_, s_); big(c, "NOTHING FOUND", 0, 0, 58, RED); c.restore()
+
+
+def sc_ae_island(c, t, d, T, a):
+    col(c)
+    bg(c, (0.55, 0.75, 0.90), (0.95, 0.88, 0.70))
+    sea(c, T, 600, (0.15, 0.55, 0.65), (0.05, 0.25, 0.38), amp=6)
+    rgba(c, (0.92, 0.85, 0.62)); c.save(); c.translate(CW / 2, 610); c.scale(1, 0.22); c.arc(0, 0, 220, 0, 2 * math.pi); c.restore(); c.fill()
+    for k, x in enumerate((220, 400)):
+        line(c, x, 600, x + 20, 430, 10, (0.45, 0.32, 0.20))
+        for j in range(5):
+            ang = -math.pi + j * 0.6 + 0.1 * math.sin(T + j)
+            line(c, x + 20, 430, x + 20 + 90 * math.cos(ang), 430 + 40 * math.sin(ang) + 30, 9, (0.2, 0.5, 0.25))
+    stick(c, 300, 620, 0.9, col=AMBER, arms=(0.35, -2.4 + 0.3 * math.sin(T * 4)))
+    big(c, "CASTAWAYS?", CW / 2, 250, 60, AMBER, prog(t, d * 0.2, d * 0.3))
+
+
+def sc_ae_mystery(c, t, d, T, a):
+    col(c)
+    bg(c, (0.02, 0.05, 0.10), (0.04, 0.10, 0.18), stars=True, T=T)
+    sea(c, T, 560, (0.04, 0.10, 0.18), (0.01, 0.03, 0.06), amp=8)
+    y = 640 + 60 * prog(t, 0, d)
+    plane(c, CW / 2, y, 1.4, 0.25, colr=(0.35, 0.38, 0.42), a=1 - 0.6 * prog(t, 0, d))
+    big(c, "NEVER FOUND", CW / 2, 280, 66, RED, prog(t, d * 0.3, d * 0.4))
+
+
+# ================= Jimmy Hoffa =================
+
+def parking(c, T, top=(0.55, 0.62, 0.72), bot=(0.85, 0.80, 0.72)):
+    bg(c, top, bot)
+    rgba(c, (0.62, 0.40, 0.30)); c.rectangle(-400, 330, CW + 800, 260); c.fill()
+    rgba(c, (0.95, 0.85, 0.40)); c.rectangle(80, 360, 440, 60); c.fill()
+    text(c, "RESTAURANT", CW / 2, 405, 36, (0.4, 0.15, 0.10))
+    for k in range(4):
+        rgba(c, (0.25, 0.20, 0.18)); c.rectangle(60 + k * 130, 460, 80, 80); c.fill()
+    rgba(c, (0.32, 0.32, 0.34)); c.rectangle(-400, 590, CW + 800, H + 600); c.fill()
+    for k in range(-3, 10):
+        line(c, k * 110, 600, k * 110 + 60, 780, 4, (0.85, 0.85, 0.80))
+
+
+def sc_hof_lot(c, t, d, T, a):
+    col(c)
+    parking(c, T)
+    car(c, 420, 720, 1.0, colr=(0.20, 0.30, 0.55))
+    stick(c, 200, 720, 1.35, col=AMBER, arms=(0.35, -0.35))
+    big(c, "JULY 30, 1975", CW / 2, 230, 44, AMBER, prog(t, 0.1, 0.4))
+    big(c, "DETROIT", CW / 2, 295, 40, INK, prog(t, 0.4, 0.8))
+
+
+def sc_hof_wait(c, t, d, T, a):
+    col(c)
+    parking(c, T)
+    car(c, 420, 720, 1.0, colr=(0.20, 0.30, 0.55))
+    stick(c, 200, 720, 1.35, col=AMBER, head_hold=1.0 if t > d * 0.5 else 0.0)
+    c.save(); c.translate(CW / 2, 250); c.scale(0.8, 0.8)
+    rgba(c, (0.95, 0.95, 0.92)); c.arc(0, 0, 70, 0, 2 * math.pi); c.fill()
+    c.set_line_width(5); rgba(c, (0.15, 0.15, 0.18)); c.arc(0, 0, 70, 0, 2 * math.pi); c.stroke()
+    ang = -math.pi / 2 + T * 0.8
+    line(c, 0, 0, 50 * math.cos(ang), 50 * math.sin(ang), 5, (0.15, 0.15, 0.18))
+    line(c, 0, 0, 35 * math.cos(ang / 12), 35 * math.sin(ang / 12), 7, (0.15, 0.15, 0.18))
+    c.restore()
+    big(c, "THEY NEVER CAME", CW / 2, 610, 44, RED, prog(t, d * 0.5, d * 0.6))
+
+
+def sc_hof_phone(c, t, d, T, a):
+    col(c)
+    parking(c, T, (0.40, 0.42, 0.50), (0.65, 0.58, 0.52))
+    rgba(c, (0.70, 0.70, 0.72)); c.rectangle(80, 470, 100, 250); c.fill()
+    rgba(c, (0.15, 0.15, 0.18)); c.rectangle(95, 500, 70, 90); c.fill()
+    stick(c, 230, 720, 1.35, col=AMBER, arms=(0.35, -1.9))
+    big(c, "2:15 PM", CW / 2, 230, 60, AMBER, prog(t, 0.1, 0.4))
+    big(c, "“I'VE BEEN STOOD UP”", CW / 2, 300, 34, INK, prog(t, d * 0.4, d * 0.5))
+
+
+def sc_hof_empty(c, t, d, T, a):
+    col(c)
+    parking(c, T, (0.25, 0.25, 0.35), (0.45, 0.38, 0.40))
+    car(c, 420, 720, 1.0, colr=(0.20, 0.30, 0.55))
+    stick(c, 200, 720, 1.35, col=(0.0, 0.0, 0.0), a=1 - prog(t, 0.3, 1.5))
+    s_ = pop(t, d * 0.4)
+    if s_:
+        c.save(); c.translate(CW / 2, 280); c.scale(s_, s_); big(c, "GONE", 0, 0, 90, RED); c.restore()
+    big(c, "CAR UNLOCKED", CW / 2, 360, 40, INK, prog(t, d * 0.6, d * 0.7))
+
+
+def sc_hof_dig(c, t, d, T, a):
+    col(c)
+    bg(c, (0.60, 0.68, 0.75), (0.85, 0.80, 0.70))
+    rgba(c, (0.45, 0.35, 0.22)); c.rectangle(-400, 560, CW + 800, H + 600); c.fill()
+    rgba(c, (0.25, 0.18, 0.12)); c.save(); c.translate(CW / 2, 640); c.scale(1, 0.3); c.arc(0, 0, 200, 0, 2 * math.pi); c.restore(); c.fill()
+    for i, x in enumerate((140, 300, 460)):
+        stick(c, x, 640, 1.05, col=(0.55, 0.65, 0.85), arms=(0.9 + 0.5 * math.sin(T * 5 + i), -1.0))
+    rgba(c, (0.95, 0.85, 0.2)); c.rectangle(-400, 520, CW + 800, 14); c.fill()
+    text(c, "FBI · DO NOT CROSS", CW / 2, 532, 14, (0.1, 0.1, 0.1))
+    big(c, "FBI DIGS. NOTHING.", CW / 2, 250, 46, RED, prog(t, d * 0.4, d * 0.5))
+
+
+def sc_hof_file(c, t, d, T, a):
+    col(c)
+    bg(c, (0.10, 0.10, 0.12), (0.16, 0.16, 0.18))
+    paper(c, CW / 2, 450, 440, 520, -0.03, colr=(0.82, 0.72, 0.52))
+    text(c, "MISSING", CW / 2, 300, 54, (0.15, 0.12, 0.1))
+    stick(c, CW / 2, 560, 1.1, col=(0.25, 0.22, 0.2))
+    text(c, "J. R. HOFFA", CW / 2, 620, 34, (0.2, 0.15, 0.1))
+    s_ = pop(t, d * 0.4)
+    if s_:
+        c.save(); c.translate(CW / 2, 450); c.rotate(-0.2); c.scale(s_, s_)
+        rgba(c, RED); c.set_line_width(8); rrect(c, -200, -55, 400, 100, 10); c.stroke()
+        big(c, "UNSOLVED", 0, 20, 64, RED); c.restore()
+
+
+# ================= Oak Island =================
+
+def oak(c, x, y, s=1.0):
+    line(c, x, y, x, y - 220 * s, 26 * s, (0.30, 0.20, 0.12))
+    rgba(c, (0.18, 0.38, 0.18))
+    for dx, dy, r in ((-70, -230, 90), (60, -250, 100), (0, -300, 100), (-20, -200, 80)):
+        c.arc(x + dx * s, y + dy * s, r * s, 0, 2 * math.pi); c.fill()
+
+
+def sc_oak_find(c, t, d, T, a):
+    col(c)
+    bg(c, (0.55, 0.70, 0.85), (0.90, 0.85, 0.70))
+    sea(c, T, 500, (0.20, 0.40, 0.55), (0.10, 0.25, 0.38), amp=5)
+    rgba(c, (0.35, 0.50, 0.25)); c.rectangle(-400, 560, CW + 800, H + 600); c.fill()
+    oak(c, 360, 640, 1.0)
+    rgba(c, (0.22, 0.30, 0.15)); c.save(); c.translate(250, 660); c.scale(1, 0.3); c.arc(0, 0, 70, 0, 2 * math.pi); c.restore(); c.fill()
+    child(c, 140, 700, 1.4, AMBER, arms=(0.35, -1.0))
+    big(c, "1795 · NOVA SCOTIA", CW / 2, 230, 40, AMBER, prog(t, 0.1, 0.4))
+
+
+def shaft(c, T, depth_p, flood=0.0):
+    bg(c, (0.25, 0.18, 0.12), (0.12, 0.08, 0.05))
+    rgba(c, (0.45, 0.33, 0.22)); c.rectangle(CW / 2 - 140, 200, 280, 600); c.fill()
+    n = int(8 * depth_p)
+    for k in range(n):
+        y = 260 + k * 70
+        for j in range(5):
+            line(c, CW / 2 - 130, y + j * 6, CW / 2 + 130, y + j * 6, 5, (0.35, 0.22, 0.12))
+    if flood:
+        g = cairo.LinearGradient(0, 800, 0, 800 - 500 * flood)
+        g.add_color_stop_rgba(0, 0.1, 0.3, 0.45, 0.95)
+        g.add_color_stop_rgba(1, 0.2, 0.45, 0.6, 0.85)
+        c.set_source(g)
+        c.rectangle(CW / 2 - 140, 800 - 500 * flood + 6 * math.sin(T * 3), 280, 500 * flood); c.fill()
+
+
+def sc_oak_logs(c, t, d, T, a):
+    col(c)
+    shaft(c, T, prog(t, 0.2, d * 0.8))
+    stick(c, CW / 2, 300 + 400 * prog(t, 0.2, d * 0.8), 0.9, col=AMBER, arms=(0.9 + 0.4 * math.sin(T * 6), -1.0))
+    big(c, "LOGS EVERY 3 METERS", CW / 2, 160 + 60, 34, AMBER, prog(t, d * 0.3, d * 0.4))
+
+
+def sc_oak_flood(c, t, d, T, a):
+    col(c)
+    shaft(c, T, 1.0, flood=prog(t, 0.3, d * 0.8))
+    stick(c, CW / 2, 330 - 60 * prog(t, 0.3, d), 0.9, col=AMBER, arms=(-2.4, 2.4))
+    big(c, "BOOBY TRAP?", CW / 2, 760, 56, CYAN, prog(t, d * 0.4, d * 0.5))
+
+
+def sc_oak_deaths(c, t, d, T, a):
+    col(c)
+    bg(c, (0.30, 0.32, 0.36), (0.50, 0.50, 0.50))
+    rgba(c, (0.28, 0.35, 0.22)); c.rectangle(-400, 620, CW + 800, H + 600); c.fill()
+    n = int(6 * prog(t, 0.3, d * 0.7))
+    for k in range(n):
+        x = 80 + k * 90
+        line(c, x, 640, x, 520, 10, (0.55, 0.55, 0.55)); line(c, x - 30, 560, x + 30, 560, 10, (0.55, 0.55, 0.55))
+    big(c, f"{n} DEAD", CW / 2, 280, 70, RED)
+    big(c, "SEARCHING FOR IT", CW / 2, 350, 36, INK, prog(t, d * 0.5, d * 0.6))
+
+
+def sc_oak_question(c, t, d, T, a):
+    col(c)
+    bg(c, (0.06, 0.05, 0.04), (0.14, 0.10, 0.06))
+    glow(c, CW / 2, 460, 280, (1.0, 0.8, 0.3), 0.6)
+    rgba(c, (0.45, 0.28, 0.12)); rrect(c, CW / 2 - 150, 400, 300, 160, 14); c.fill()
+    rgba(c, (1.0, 0.8, 0.25)); c.rectangle(CW / 2 - 150, 380, 300, 30); c.fill()
+    big(c, "?", CW / 2, 520, 120, RED, prog(t, 0.3, 0.6))
+    for i, (s_, k) in enumerate((("PIRATE GOLD?", 0.15), ("LOST BOOKS?", 0.35), ("SINKHOLE?", 0.55))):
+        big(c, s_, CW / 2, 640 + i * 55, 34, (AMBER, INK, CYAN)[i], prog(t, d * k, d * k + 0.4))
+
+
+# ================= Hessdalen lights =================
+
+def valley(c, T):
+    bg(c, (0.02, 0.03, 0.08), (0.06, 0.08, 0.16), stars=True, T=T)
+    rgba(c, (0.05, 0.07, 0.09))
+    c.move_to(-400, 700); c.line_to(-100, 380); c.line_to(150, 560); c.line_to(300, 480); c.line_to(480, 360)
+    c.line_to(CW + 400, 640); c.line_to(CW + 400, H + 600); c.line_to(-400, H + 600); c.close_path(); c.fill()
+    rgba(c, (0.80, 0.85, 0.92)); c.rectangle(-400, 720, CW + 800, H + 600); c.fill()
+    for x in (90, 470):
+        rgba(c, (0.35, 0.22, 0.18)); c.rectangle(x - 40, 660, 80, 60); c.fill()
+        rgba(c, (1.0, 0.75, 0.35)); c.rectangle(x - 12, 680, 22, 18); c.fill()
+
+
+def orb(c, x, y, r, colr, a=1.0):
+    glow(c, x, y, r * 5, colr, a)
+    rgba(c, (1, 1, 1), a); c.arc(x, y, r, 0, 2 * math.pi); c.fill()
+
+
+def sc_hes_valley(c, t, d, T, a):
+    col(c)
+    valley(c, T)
+    orb(c, 380 + 30 * math.sin(T * 0.4), 360 + 15 * math.sin(T * 0.7), 14, (1.0, 0.95, 0.7), 0.5 + 0.5 * prog(t, 0.2, 1.0))
+    big(c, "HESSDALEN · NORWAY", CW / 2, 230, 40, AMBER, prog(t, 0.1, 0.4))
+
+
+def sc_hes_colors(c, t, d, T, a):
+    col(c)
+    valley(c, T)
+    for k, (colr, sp) in enumerate((((1, 1, 1), 0.3), ((1.0, 0.85, 0.3), 1.2), ((1.0, 0.3, 0.25), 0.6))):
+        x = CW / 2 + 200 * math.sin(T * sp + k * 2)
+        y = 340 + 80 * k + 30 * math.sin(T * sp * 1.3 + k)
+        orb(c, x, y, 12, colr, 0.9)
+    big(c, "WHITE · YELLOW · RED", CW / 2, 230, 38, INK, prog(t, 0.2, 0.6))
+
+
+def sc_hes_count(c, t, d, T, a):
+    col(c)
+    valley(c, T)
+    n = int(20 * prog(t, 0.2, d * 0.7))
+    r = random.Random(4)
+    for k in range(n):
+        orb(c, r.uniform(60, CW - 60), r.uniform(280, 600), 6, (1.0, 0.9, 0.6), 0.7)
+    big(c, f"{n}× A WEEK", CW / 2, 230, 58, AMBER)
+
+
+def sc_hes_station(c, t, d, T, a):
+    col(c)
+    valley(c, T)
+    rgba(c, (0.70, 0.72, 0.75)); c.rectangle(250, 600, 110, 120); c.fill()
+    line(c, 305, 600, 305, 480, 6, (0.70, 0.72, 0.75))
+    c.save(); c.translate(305, 470); c.rotate(-0.3 + 0.3 * math.sin(T * 0.5))
+    rgba(c, (0.25, 0.25, 0.28)); c.rectangle(-40, -20, 80, 40); c.fill(); c.restore()
+    orb(c, 200 + 150 * math.sin(T * 0.6), 330, 12, (1.0, 0.95, 0.7), 0.9)
+    if (T % 1.2) < 0.15:
+        rgba(c, (1, 1, 1), 0.25); c.paint()
+    big(c, "RECORDED", CW / 2, 230, 58, CYAN, prog(t, d * 0.2, d * 0.3))
+    big(c, "NOT EXPLAINED", CW / 2, 300, 46, RED, prog(t, d * 0.5, d * 0.6))
+
+
+# ================= Babushka Lady =================
+
+def plaza(c, T):
+    bg(c, (0.55, 0.70, 0.85), (0.90, 0.88, 0.80))
+    rgba(c, (0.72, 0.55, 0.40)); c.rectangle(-60, 260, 260, 200); c.fill()
+    for r_ in range(3):
+        for k in range(4):
+            rgba(c, (0.2, 0.2, 0.25)); c.rectangle(-30 + k * 60, 290 + r_ * 55, 30, 30); c.fill()
+    rgba(c, (0.40, 0.60, 0.30)); c.rectangle(-400, 560, CW + 800, H + 600); c.fill()
+    rgba(c, (0.45, 0.45, 0.47)); c.rectangle(-400, 640, CW + 800, 60); c.fill()
+
+
+def lady(c, x, y, s, a=1.0, T=0.0):
+    stick(c, x, y, s, col=(0.55, 0.35, 0.22), a=a, arms=(-1.2, -1.6))
+    rgba(c, (0.55, 0.35, 0.22), a)
+    c.move_to(x - 30 * s, y - 120 * s); c.curve_to(x - 30 * s, y - 160 * s, x + 30 * s, y - 160 * s, x + 30 * s, y - 120 * s)
+    c.line_to(x + 22 * s, y - 100 * s); c.line_to(x - 22 * s, y - 100 * s); c.close_path(); c.fill()
+    rgba(c, (0.15, 0.15, 0.15), a); c.rectangle(x - 45 * s, y - 115 * s, 26 * s, 18 * s); c.fill()
+
+
+def sc_bab_plaza(c, t, d, T, a):
+    col(c)
+    plaza(c, T)
+    x = 650 - 500 * prog(t, 0, d)
+    car(c, x, 690, 0.9, colr=(0.12, 0.12, 0.18))
+    big(c, "NOV 22, 1963", CW / 2, 230, 46, AMBER, prog(t, 0.1, 0.4))
+    big(c, "DALLAS", CW / 2, 295, 40, INK, prog(t, 0.4, 0.8))
+
+
+def sc_bab_woman(c, t, d, T, a):
+    col(c)
+    plaza(c, T)
+    for k, x in enumerate((60, 140, 540)):
+        stick(c, x, 640, 0.9, col=(0.35, 0.35, 0.40))
+    lady(c, 360, 640, 1.4, T=T)
+    c.set_line_width(5); rgba(c, RED, prog(t, d * 0.3, d * 0.4)); c.arc(345, 520, 110, 0, 2 * math.pi); c.stroke()
+    big(c, "WHO IS SHE?", CW / 2, 250, 56, RED, prog(t, d * 0.4, d * 0.5))
+
+
+def sc_bab_close(c, t, d, T, a):
+    col(c)
+    plaza(c, T)
+    car(c, 380, 690, 0.9, colr=(0.12, 0.12, 0.18))
+    lady(c, 180, 640, 1.2, T=T)
+    c.set_dash([10, 8]); line(c, 220, 520, 360, 650, 4, AMBER); c.set_dash([])
+    big(c, "CLOSER THAN ANYONE", CW / 2, 250, 40, AMBER, prog(t, d * 0.2, d * 0.3))
+
+
+def sc_bab_film(c, t, d, T, a):
+    col(c)
+    bg(c, (0.08, 0.08, 0.10), (0.14, 0.14, 0.16))
+    c.save(); c.translate(CW / 2, 450); c.rotate(T * 0.6)
+    rgba(c, (0.25, 0.25, 0.28)); c.arc(0, 0, 160, 0, 2 * math.pi); c.fill()
+    for k in range(6):
+        ang = k * math.pi / 3
+        rgba(c, (0.08, 0.08, 0.10)); c.arc(95 * math.cos(ang), 95 * math.sin(ang), 34, 0, 2 * math.pi); c.fill()
+    rgba(c, (0.6, 0.6, 0.62)); c.arc(0, 0, 28, 0, 2 * math.pi); c.fill()
+    c.restore()
+    s_ = pop(t, d * 0.35)
+    if s_:
+        c.save(); c.translate(CW / 2, 700); c.scale(s_, s_); big(c, "NEVER SEEN", 0, 0, 62, RED); c.restore()
+
+
+def sc_bab_unknown(c, t, d, T, a):
+    col(c)
+    bg(c, (0.25, 0.20, 0.18), (0.40, 0.32, 0.28))
+    paper(c, CW / 2, 460, 400, 480, 0.03, colr=(0.85, 0.80, 0.70))
+    lady(c, CW / 2, 600, 1.4, T=T)
+    big(c, "IDENTITY: UNKNOWN", CW / 2, 760, 40, RED, prog(t, d * 0.3, d * 0.4))
+
+
+# ================= Bennington Triangle =================
+
+def winter_forest(c, T, dark=0.0):
+    top = tuple(v * (1 - dark) + w * dark for v, w in zip((0.60, 0.66, 0.74), (0.08, 0.10, 0.16)))
+    bot = tuple(v * (1 - dark) + w * dark for v, w in zip((0.86, 0.88, 0.92), (0.20, 0.22, 0.28)))
+    bg(c, top, bot)
+    r = random.Random(5)
+    for k in range(24):
+        x = r.uniform(-300, CW + 300); h = r.uniform(240, 380)
+        rgba(c, (0.08, 0.16, 0.12)); c.move_to(x - 45, 660); c.line_to(x, 660 - h); c.line_to(x + 45, 660); c.close_path(); c.fill()
+        rgba(c, (0.95, 0.96, 0.98), 0.8); c.move_to(x - 16, 660 - h * 0.72); c.line_to(x, 660 - h); c.line_to(x + 16, 660 - h * 0.72); c.close_path(); c.fill()
+    rgba(c, (0.92, 0.94, 0.97)); c.rectangle(-400, 640, CW + 800, H + 600); c.fill()
+    for k in range(40):
+        x = (k * 61 + T * 20) % (CW + 40) - 20; y = (k * 83 + T * 60) % 900
+        rgba(c, (1, 1, 1), 0.7); c.arc(x, y, 2.5, 0, 2 * math.pi); c.fill()
+
+
+def red_walker(c, x, y, s, T, a=1.0, walking=True):
+    stick(c, x, y, s, col=(0.92, 0.22, 0.24), a=a, phase=T * 4 if walking else None)
+
+
+def sc_ben_trail(c, t, d, T, a):
+    col(c)
+    winter_forest(c, T)
+    red_walker(c, 120 + 300 * prog(t, 0, d), 700, 1.3, T)
+    big(c, "DEC 1, 1946", CW / 2, 230, 46, AMBER, prog(t, 0.1, 0.4))
+    big(c, "VERMONT", CW / 2, 295, 40, INK, prog(t, 0.4, 0.8))
+
+
+def sc_ben_vanish(c, t, d, T, a):
+    col(c)
+    winter_forest(c, T, dark=0.3)
+    red_walker(c, 420, 680, 1.0, T, a=1 - prog(t, d * 0.3, d * 0.7))
+    stick(c, 140, 700, 1.1, col=INK)
+    big(c, "LAST SEEN", CW / 2, 250, 56, RED, prog(t, d * 0.4, d * 0.5))
+
+
+def sc_ben_search(c, t, d, T, a):
+    col(c)
+    winter_forest(c, T, dark=0.6)
+    for k in range(5):
+        x = 60 + k * 120
+        stick(c, x, 700, 0.9, col=INK, phase=T * 3 + k)
+        ang = -1.2 + 0.4 * math.sin(T + k)
+        beam(c, x + 15, 600, x + 15 + 300 * math.cos(ang), 600 + 300 * math.sin(ang), 8, 60, (1.0, 0.9, 0.6), 0.3)
+    big(c, "NO TRACE", CW / 2, 250, 66, RED, prog(t, d * 0.4, d * 0.5))
+
+
+def sc_ben_more(c, t, d, T, a):
+    col(c)
+    winter_forest(c, T, dark=0.4)
+    n = int(5 * prog(t, 0.3, d * 0.7))
+    for k in range(5):
+        stick(c, 70 + k * 117, 700, 1.0, col=INK, a=0.25 if k < n else 1.0)
+    big(c, "SHE WASN'T", CW / 2, 230, 50, INK, prog(t, 0.1, 0.4))
+    big(c, "THE ONLY ONE", CW / 2, 295, 50, RED, prog(t, 0.4, 0.7))
+
+
+def sc_ben_bus(c, t, d, T, a):
+    col(c)
+    bg(c, (0.12, 0.12, 0.16), (0.20, 0.20, 0.24))
+    rgba(c, (0.30, 0.30, 0.34)); c.rectangle(-400, 300, CW + 800, 400); c.fill()
+    for k in range(3):
+        rgba(c, (0.45, 0.20, 0.18)); rrect(c, 60 + k * 180, 480, 120, 140, 12); c.fill()
+    rgba(c, (0.55, 0.40, 0.25)); c.rectangle(250, 330, 110, 60); c.fill()
+    line(c, -400, 395, CW + 400, 395, 6, (0.6, 0.6, 0.62))
+    paper(c, 310, 560, 80, 50, 0.2)
+    big(c, "BAGS STILL ON THE RACK", CW / 2, 230, 34, AMBER, prog(t, d * 0.3, d * 0.4))
+    big(c, "1949", CW / 2, 760, 50, INK, prog(t, 0.1, 0.4))
+
+
+def sc_ben_triangle(c, t, d, T, a):
+    col(c)
+    winter_forest(c, T, dark=0.8)
+    ap = prog(t, 0.3, 1.2)
+    c.set_line_width(8); rgba(c, RED, ap)
+    c.move_to(CW / 2, 300); c.line_to(CW / 2 + 220, 620); c.line_to(CW / 2 - 220, 620); c.close_path(); c.stroke()
+    big(c, "THE BENNINGTON", CW / 2, 220, 44, INK, prog(t, d * 0.3, d * 0.4))
+    big(c, "TRIANGLE", CW / 2, 720, 62, RED, prog(t, d * 0.4, d * 0.5))
+
+
+# ================= Phaistos disc =================
+
+GLYPHS = ["head", "fish", "plant", "ship", "hand", "eye", "bird", "comb"]
+
+
+def glyph(c, kind, x, y, s, colr, a=1.0):
+    c.save(); c.translate(x, y); c.scale(s, s); rgba(c, colr, a); c.set_line_width(3)
+    if kind == "head":
+        c.arc(0, 0, 8, 0, 2 * math.pi); c.stroke(); line(c, -8, -6, 8, -10, 3, colr, a)
+    elif kind == "fish":
+        c.move_to(-10, 0); c.curve_to(-4, -7, 6, -7, 10, 0); c.curve_to(6, 7, -4, 7, -10, 0); c.stroke()
+    elif kind == "plant":
+        line(c, 0, 10, 0, -10, 3, colr, a); line(c, 0, -2, -7, -8, 3, colr, a); line(c, 0, 2, 7, -4, 3, colr, a)
+    elif kind == "ship":
+        c.move_to(-10, 2); c.line_to(10, 2); c.line_to(6, 8); c.line_to(-6, 8); c.close_path(); c.stroke(); line(c, 0, 2, 0, -10, 3, colr, a)
+    elif kind == "hand":
+        for k in range(4):
+            line(c, -6 + k * 4, 6, -6 + k * 4, -8, 3, colr, a)
+    elif kind == "eye":
+        c.save(); c.scale(1, 0.5); c.arc(0, 0, 10, 0, 2 * math.pi); c.restore(); c.stroke(); c.arc(0, 0, 3, 0, 2 * math.pi); c.fill()
+    elif kind == "bird":
+        c.move_to(-10, 0); c.curve_to(-5, -8, 0, -2, 0, 0); c.curve_to(0, -2, 5, -8, 10, 0); c.stroke()
+    else:
+        line(c, -9, -4, 9, -4, 3, colr, a)
+        for k in range(5):
+            line(c, -8 + k * 4, -4, -8 + k * 4, 6, 2, colr, a)
+    c.restore()
+
+
+def disc(c, x, y, R, T, spin=0.0, n=None, a=1.0):
+    c.save(); c.translate(x, y); c.rotate(spin)
+    g = cairo.RadialGradient(-R * 0.3, -R * 0.3, R * 0.1, 0, 0, R)
+    g.add_color_stop_rgba(0, 0.85, 0.66, 0.45, a); g.add_color_stop_rgba(1, 0.62, 0.45, 0.28, a)
+    c.set_source(g); c.arc(0, 0, R, 0, 2 * math.pi); c.fill()
+    total = 60 if n is None else n
+    for k in range(total):
+        th = k * 0.55
+        rr = R * 0.88 - k * (R * 0.75 / 60)
+        glyph(c, GLYPHS[(k * 5) % len(GLYPHS)], rr * math.cos(th), rr * math.sin(th), R / 140, (0.30, 0.18, 0.10), a)
+    c.restore()
+
+
+def sc_ph_find(c, t, d, T, a):
+    col(c)
+    bg(c, (0.75, 0.82, 0.90), (0.92, 0.82, 0.62))
+    for k in range(5):
+        rgba(c, (0.80, 0.72, 0.58)); c.rectangle(-60 + k * 150, 380 - (k % 2) * 40, 90, 260 + (k % 2) * 40); c.fill()
+    rgba(c, (0.72, 0.58, 0.40)); c.rectangle(-400, 640, CW + 800, H + 600); c.fill()
+    disc(c, 400, 690, 50, T, a=prog(t, d * 0.3, d * 0.5))
+    stick(c, 220, 720, 1.3, col=AMBER, arms=(0.9, -0.3))
+    big(c, "1908 · CRETE", CW / 2, 230, 50, AMBER, prog(t, 0.1, 0.4))
+
+
+def sc_ph_spiral(c, t, d, T, a):
+    col(c)
+    bg(c, (0.10, 0.08, 0.06), (0.18, 0.14, 0.10))
+    glow(c, CW / 2, 450, 320, AMBER, 0.4)
+    disc(c, CW / 2, 450, 230, T, spin=T * 0.08, n=int(60 * prog(t, 0.2, d * 0.8)))
+    big(c, "A SPIRAL OF SYMBOLS", CW / 2, 760, 38, INK, prog(t, d * 0.3, d * 0.4))
+
+
+def sc_ph_stamp(c, t, d, T, a):
+    col(c)
+    bg(c, (0.20, 0.15, 0.10), (0.30, 0.22, 0.15))
+    rgba(c, (0.70, 0.52, 0.34)); c.rectangle(80, 520, 440, 200); c.fill()
+    f = abs(math.sin(T * 2.2))
+    rgba(c, (0.35, 0.25, 0.18)); c.rectangle(250, 300 + 180 * f, 100, 140); c.fill()
+    for k in range(int(6 * prog(t, 0.3, d))):
+        glyph(c, GLYPHS[k % len(GLYPHS)], 120 + k * 65, 620, 2.4, (0.30, 0.18, 0.10))
+    big(c, "STAMPED, NOT DRAWN", CW / 2, 230, 40, AMBER, prog(t, d * 0.3, d * 0.4))
+
+
+def sc_ph_count(c, t, d, T, a):
+    col(c)
+    bg(c, (0.08, 0.07, 0.06), (0.14, 0.12, 0.10))
+    n = int(241 * prog(t, 0.2, d * 0.6))
+    for k in range(min(n, 60)):
+        glyph(c, GLYPHS[k % len(GLYPHS)], 70 + (k % 10) * 52, 380 + (k // 10) * 50, 1.6, (0.85, 0.66, 0.45))
+    big(c, f"{n} SYMBOLS", CW / 2, 250, 58, AMBER)
+    big(c, "45 DIFFERENT SIGNS", CW / 2, 720, 40, INK, prog(t, d * 0.6, d * 0.7))
+
+
+def sc_ph_unread(c, t, d, T, a):
+    col(c)
+    bg(c, (0.06, 0.05, 0.04), (0.12, 0.10, 0.08))
+    disc(c, CW / 2, 450, 220, T, spin=T * 0.05)
+    for i, (s_, k) in enumerate((("A PRAYER?", 0.1), ("A CALENDAR?", 0.3), ("A HOAX?", 0.5))):
+        big(c, s_, CW / 2, 730 + i * 50, 34, (AMBER, CYAN, RED)[i], prog(t, d * k, d * k + 0.4))
+    big(c, "NOBODY CAN READ IT", CW / 2, 220, 42, RED, prog(t, d * 0.6, d * 0.7))
+
+
 def _scene(fn):
     """Wraps a scene with an optional entrance effect from args["fx"]: zoom, flash, glitch or shake."""
     def run(c, t, d, T, a):
