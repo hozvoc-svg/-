@@ -159,7 +159,11 @@ def captions(img, t):
     parts = [w[0].upper() for w in c]; spoken = [w for w in c if w[1] <= t]
     cur = spoken[-1][0].upper() if spoken else None
     full = ' '.join(parts)
-    lines = [parts] if d.textlength(full, font=fCap) < W - 140 else [parts[:2], parts[2:]]
+    lines = []; curl = []
+    for p_ in parts:
+        if curl and d.textlength(' '.join(curl + [p_]), font=fCap) > W - 140: lines.append(curl); curl = []
+        curl.append(p_)
+    lines.append(curl)
     y = 1610
     age = t - c[0][1]; sc = 1 + 0.08 * max(0, 1 - age / 0.15)
     for ln in lines:
