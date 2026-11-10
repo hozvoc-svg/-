@@ -323,8 +323,8 @@ def shot05():  # launch
     world_color((0.02, 0.03, 0.09), 0.5)
     cube((0, 0, -0.05), (30, 30, 0.1), clay('grass', (0.12, 0.35, 0.12), 0.85, 0.05, 0.6), None, 0)
     cube((0, 8, 1.2), (30, 0.2, 2.4), clay('fence', (0.4, 0.28, 0.18), 0.8), None, 0.05)
-    cube((0, 15, 8), (60, 0.1, 30), clay('sky', (0.03, 0.05, 0.18), 0.9, 0, 0, emit=0.6), None, 0)
-    for _ in range(80): sphere((random.uniform(-14, 14), 14.8, random.uniform(2, 20)), 0.06, (1, 1, 1), clay('star', (1, 0.95, 0.7), 0.5, 0, 0, emit=12), seg=8)
+    cube((0, 15, 25), (90, 0.1, 80), clay('sky', (0.03, 0.05, 0.18), 0.9, 0, 0, emit=0.6), None, 0)
+    for _ in range(160): sphere((random.uniform(-14, 14), 14.8, random.uniform(2, 40)), 0.06, (1, 1, 1), clay('star', (1, 0.95, 0.7), 0.5, 0, 0, emit=12), seg=8)
     rk = rocket((0, 0, 0))
     cat = make_cat((0, -0.2, 0.75), suit=True, helmet=True); cat['root'].scale = (0.38, 0.38, 0.38); cat['root'].parent = rk
     fl = empty('flames', (0, 0, 0), rk)
