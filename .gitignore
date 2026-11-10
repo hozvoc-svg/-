@@ -2,3 +2,10 @@ node_modules/
 .vercel/
 .env*
 tests/.output/
+video/**/*.mp4
+video/**/*.mp3
+video/**/*.wav
+video/**/*.png
+video/**/norm/
+video/**/list.txt
+!video/**/audio/vo*.mp3

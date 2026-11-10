@@ -1,0 +1,74 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,DejaVu Sans,84,&H00FFFFFF,&H00FFFFFF,&H00000000,&H64000000,-1,0,0,0,100,100,1,0,1,7,3,2,80,80,620,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.15,0:00:00.43,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ЦЕЙ{\r} КІТ СЕРЙОЗНО
+Dialogue: 0,0:00:00.43,0:00:00.68,Cap,,0,0,0,,ЦЕЙ {\c&H00D7FF&\fscx112\fscy112}КІТ{\r} СЕРЙОЗНО
+Dialogue: 0,0:00:00.68,0:00:01.12,Cap,,0,0,0,,ЦЕЙ КІТ {\c&H00D7FF&\fscx112\fscy112}СЕРЙОЗНО{\r}
+Dialogue: 0,0:00:01.12,0:00:01.62,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ЗБИРАЄТЬСЯ{\r} НА МІСЯЦЬ.
+Dialogue: 0,0:00:01.62,0:00:01.74,Cap,,0,0,0,,ЗБИРАЄТЬСЯ {\c&H00D7FF&\fscx112\fscy112}НА{\r} МІСЯЦЬ.
+Dialogue: 0,0:00:01.74,0:00:02.72,Cap,,0,0,0,,ЗБИРАЄТЬСЯ НА {\c&H00D7FF&\fscx112\fscy112}МІСЯЦЬ.{\r}
+Dialogue: 0,0:00:03.35,0:00:03.85,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ЩОНОЧІ{\r} ПУШОК ДИВИВСЯ
+Dialogue: 0,0:00:03.85,0:00:04.22,Cap,,0,0,0,,ЩОНОЧІ {\c&H00D7FF&\fscx112\fscy112}ПУШОК{\r} ДИВИВСЯ
+Dialogue: 0,0:00:04.22,0:00:04.67,Cap,,0,0,0,,ЩОНОЧІ ПУШОК {\c&H00D7FF&\fscx112\fscy112}ДИВИВСЯ{\r}
+Dialogue: 0,0:00:04.67,0:00:04.75,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}У{\r} ВІКНО...
+Dialogue: 0,0:00:04.75,0:00:05.58,Cap,,0,0,0,,У {\c&H00D7FF&\fscx112\fscy112}ВІКНО...{\r}
+Dialogue: 0,0:00:05.78,0:00:05.89,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}І{\r} ЗНАВ НАПЕВНО:
+Dialogue: 0,0:00:05.89,0:00:06.15,Cap,,0,0,0,,І {\c&H00D7FF&\fscx112\fscy112}ЗНАВ{\r} НАПЕВНО:
+Dialogue: 0,0:00:06.15,0:00:06.74,Cap,,0,0,0,,І ЗНАВ {\c&H00D7FF&\fscx112\fscy112}НАПЕВНО:{\r}
+Dialogue: 0,0:00:06.74,0:00:07.23,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}МІСЯЦЬ{\r} ЗРОБЛЕНИЙ
+Dialogue: 0,0:00:07.23,0:00:07.77,Cap,,0,0,0,,МІСЯЦЬ {\c&H00D7FF&\fscx112\fscy112}ЗРОБЛЕНИЙ{\r}
+Dialogue: 0,0:00:07.77,0:00:07.95,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ІЗ{\r} СИРУ.
+Dialogue: 0,0:00:07.95,0:00:08.89,Cap,,0,0,0,,ІЗ {\c&H00D7FF&\fscx112\fscy112}СИРУ.{\r}
+Dialogue: 0,0:00:09.30,0:00:09.58,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ТОЖ{\r} ВІН ЗБУДУВАВ
+Dialogue: 0,0:00:09.58,0:00:09.71,Cap,,0,0,0,,ТОЖ {\c&H00D7FF&\fscx112\fscy112}ВІН{\r} ЗБУДУВАВ
+Dialogue: 0,0:00:09.71,0:00:10.15,Cap,,0,0,0,,ТОЖ ВІН {\c&H00D7FF&\fscx112\fscy112}ЗБУДУВАВ{\r}
+Dialogue: 0,0:00:10.15,0:00:10.92,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}РАКЕТУ.{\r}
+Dialogue: 0,0:00:10.95,0:00:11.07,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}З{\r} КОРОБКИ.
+Dialogue: 0,0:00:11.07,0:00:11.94,Cap,,0,0,0,,З {\c&H00D7FF&\fscx112\fscy112}КОРОБКИ.{\r}
+Dialogue: 0,0:00:12.02,0:00:12.13,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}І{\r} СКОТЧУ.
+Dialogue: 0,0:00:12.13,0:00:12.93,Cap,,0,0,0,,І {\c&H00D7FF&\fscx112\fscy112}СКОТЧУ.{\r}
+Dialogue: 0,0:00:12.93,0:00:13.22,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ДУЖЕ{\r} БАГАТО СКОТЧУ.
+Dialogue: 0,0:00:13.22,0:00:13.56,Cap,,0,0,0,,ДУЖЕ {\c&H00D7FF&\fscx112\fscy112}БАГАТО{\r} СКОТЧУ.
+Dialogue: 0,0:00:13.56,0:00:14.61,Cap,,0,0,0,,ДУЖЕ БАГАТО {\c&H00D7FF&\fscx112\fscy112}СКОТЧУ.{\r}
+Dialogue: 0,0:00:15.10,0:00:15.76,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}СКАФАНДР{\r} — З
+Dialogue: 0,0:00:15.76,0:00:15.88,Cap,,0,0,0,,СКАФАНДР {\c&H00D7FF&\fscx112\fscy112}—{\r} З
+Dialogue: 0,0:00:15.88,0:00:15.98,Cap,,0,0,0,,СКАФАНДР — {\c&H00D7FF&\fscx112\fscy112}З{\r}
+Dialogue: 0,0:00:15.98,0:00:16.78,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ФОЛЬГИ.{\r}
+Dialogue: 0,0:00:16.85,0:00:17.27,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ШОЛОМ{\r} — З
+Dialogue: 0,0:00:17.27,0:00:17.35,Cap,,0,0,0,,ШОЛОМ {\c&H00D7FF&\fscx112\fscy112}—{\r} З
+Dialogue: 0,0:00:17.35,0:00:17.46,Cap,,0,0,0,,ШОЛОМ — {\c&H00D7FF&\fscx112\fscy112}З{\r}
+Dialogue: 0,0:00:17.46,0:00:18.35,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}АКВАРІУМА.{\r}
+Dialogue: 0,0:00:18.35,0:00:18.72,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}РИБКИ{\r} БУЛИ ПРОТИ.
+Dialogue: 0,0:00:18.72,0:00:18.97,Cap,,0,0,0,,РИБКИ {\c&H00D7FF&\fscx112\fscy112}БУЛИ{\r} ПРОТИ.
+Dialogue: 0,0:00:18.97,0:00:19.95,Cap,,0,0,0,,РИБКИ БУЛИ {\c&H00D7FF&\fscx112\fscy112}ПРОТИ.{\r}
+Dialogue: 0,0:00:20.55,0:00:21.29,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ТРИ...{\r}
+Dialogue: 0,0:00:21.36,0:00:22.14,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ДВА...{\r}
+Dialogue: 0,0:00:22.21,0:00:22.98,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ОДИН...{\r}
+Dialogue: 0,0:00:23.17,0:00:24.05,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ПУСК!{\r}
+Dialogue: 0,0:00:25.00,0:00:25.14,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}І{\r} ВІН ПОЛЕТІВ!
+Dialogue: 0,0:00:25.14,0:00:25.33,Cap,,0,0,0,,І {\c&H00D7FF&\fscx112\fscy112}ВІН{\r} ПОЛЕТІВ!
+Dialogue: 0,0:00:25.33,0:00:26.37,Cap,,0,0,0,,І ВІН {\c&H00D7FF&\fscx112\fscy112}ПОЛЕТІВ!{\r}
+Dialogue: 0,0:00:28.50,0:00:29.36,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}МІСЯЦЬ...{\r}
+Dialogue: 0,0:00:29.36,0:00:29.81,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}СПРАВДІ{\r} БУВ ІЗ
+Dialogue: 0,0:00:29.81,0:00:30.04,Cap,,0,0,0,,СПРАВДІ {\c&H00D7FF&\fscx112\fscy112}БУВ{\r} ІЗ
+Dialogue: 0,0:00:30.04,0:00:30.15,Cap,,0,0,0,,СПРАВДІ БУВ {\c&H00D7FF&\fscx112\fscy112}ІЗ{\r}
+Dialogue: 0,0:00:30.15,0:00:31.03,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}СИРУ.{\r}
+Dialogue: 0,0:00:32.00,0:00:32.22,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ЦЕ{\r} БУВ ЛИШЕ
+Dialogue: 0,0:00:32.22,0:00:32.41,Cap,,0,0,0,,ЦЕ {\c&H00D7FF&\fscx112\fscy112}БУВ{\r} ЛИШЕ
+Dialogue: 0,0:00:32.41,0:00:32.69,Cap,,0,0,0,,ЦЕ БУВ {\c&H00D7FF&\fscx112\fscy112}ЛИШЕ{\r}
+Dialogue: 0,0:00:32.69,0:00:33.20,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}СОН.{\r}
+Dialogue: 0,0:00:33.20,0:00:33.43,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}АЛЕ{\r} ЗВІДКИ ТОДІ
+Dialogue: 0,0:00:33.43,0:00:33.75,Cap,,0,0,0,,АЛЕ {\c&H00D7FF&\fscx112\fscy112}ЗВІДКИ{\r} ТОДІ
+Dialogue: 0,0:00:33.75,0:00:34.00,Cap,,0,0,0,,АЛЕ ЗВІДКИ {\c&H00D7FF&\fscx112\fscy112}ТОДІ{\r}
+Dialogue: 0,0:00:34.00,0:00:34.23,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}СИР{\r} НА ВУСАХ?
+Dialogue: 0,0:00:34.23,0:00:34.35,Cap,,0,0,0,,СИР {\c&H00D7FF&\fscx112\fscy112}НА{\r} ВУСАХ?
+Dialogue: 0,0:00:34.35,0:00:35.32,Cap,,0,0,0,,СИР НА {\c&H00D7FF&\fscx112\fscy112}ВУСАХ?{\r}

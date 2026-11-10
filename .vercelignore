@@ -7,3 +7,4 @@ supabase/
 plugins/
 .claude-plugin/
 .claude/
+video/
