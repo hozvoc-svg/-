@@ -47,7 +47,7 @@ def strings(c, hx_, hy_, targets, t, a=0.8):
 
 def scene0(c, t):
     bg(c, 6, t)
-    title_pill(c, t, 0, None, '3 PHRASES MANIPULATORS USE', RED)
+    title_pill(c, t, 0, None, TITLE0, RED)
     # puppet master hand at top
     hxp = W / 2 + math.sin(t * 2) * 30; hyp = 560
     s = pop(t, 0.2, 0.5)
@@ -150,8 +150,10 @@ def scene4(c, t):
     if tapped:
         sp = pop(lt, f + 1.0)
         c.save(); c.translate(W / 2 + 280, 1390); c.rotate(0.12); S(c, sp)
-        rrect(c, -150, -60, 300, 120, 60); fill(c, C['yellow']); text_c(c, 'PART 2', 0, 0, 56, C['ink']); c.restore()
+        rrect(c, -150, -60, 300, 120, 60); fill(c, C['yellow']); text_c(c, PART_LABEL, 0, 0, 56, C['ink']); c.restore()
 
+PART_LABEL = 'PART 2'
+TITLE0 = '3 PHRASES MANIPULATORS USE'
 SC = [scene0, scene1, scene2, scene3, scene4]
 SCENES = [0, s1, s2, s3, s4, DUR + 1]
 
