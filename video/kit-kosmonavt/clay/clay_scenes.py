@@ -166,7 +166,7 @@ def make_cat(loc=(0, 0, 0), suit=False, helmet=False, lying=False):
         sphere((0, -0.06, 0), 0.085, (1, 0.4, 1.05), clay('iris', GREEN, 0.15, 0.05, 0.03), eE)
         sphere((0, -0.085, 0), 0.05, (1, 0.35, 1.1), clay('pupil', BLACK, 0.1, 0, 0.02), eE)
         sphere((0.03, -0.105, 0.04), 0.018, (1, 1, 1), clay('hl', (1, 1, 1), 0.1, 0, 0, emit=3), eE)
-        lid = sphere((0, -0.012, 0.0), 0.136, (1.08, 0.95, 0.001), fur, eE)            # eyelid (scale z to blink)
+        lid = sphere((0, -0.012, 0.0), 0.136, (0.001, 0.001, 0.001), fur, eE)            # eyelid (scale z to blink)
         eyes.append(lid)
     for s in (-1, 1):
         for k in range(3):
@@ -185,10 +185,12 @@ def boil(objs, amt=0.012):
         for f in range(1, NF + 1):
             o.rotation_euler = tuple(b + random.uniform(-amt, amt) for b in base_r); o.keyframe_insert('rotation_euler', frame=f)
 
+def LS(z): return (1.08, 0.95, z) if z > 0.01 else (0.001, 0.001, 0.001)
+
 def blink(lids, f0, closed=2):
     for l in lids:
         for f, z in ((f0 - 1, 0.001), (f0, 1.0), (f0 + closed, 1.0), (f0 + closed + 1, 0.001)):
-            l.scale = (1.08, 0.95, z); l.keyframe_insert('scale', frame=f)
+            l.scale = LS(z); l.keyframe_insert('scale', frame=f)
 
 def stars(n=160, rad=30, center=(0, 15, 5), zmin=-5):
     m = clay('star', (1, 0.95, 0.7), 0.5, 0, 0, emit=12)
@@ -408,10 +410,10 @@ def shot08():  # morning, waking up in the box, cheese crumbs, wink
     for p in ((-0.25, -0.75, 0.78), (0.27, -0.73, 0.8), (-0.3, -0.72, 0.72)): sphere(p, 0.03, (1, 1, 1), yel, seg=10)
     lids = cat['lids']
     for l in lids:  # eyes closed at start
-        l.scale = (1.08, 0.95, 1.0); l.keyframe_insert('scale', frame=1); l.keyframe_insert('scale', frame=10)
+        l.scale = LS(1.0); l.keyframe_insert('scale', frame=1); l.keyframe_insert('scale', frame=10)
     # left eye opens, right opens, then wink with right eye
-    for f, z in ((14, 0.001),): lids[0].scale = (1.08, 0.95, z); lids[0].keyframe_insert('scale', frame=f)
-    for f, z in ((16, 0.001), (36, 0.001), (38, 1.0), (44, 1.0), (46, 0.001)): lids[1].scale = (1.08, 0.95, z); lids[1].keyframe_insert('scale', frame=f)
+    for f, z in ((14, 0.001),): lids[0].scale = LS(z); lids[0].keyframe_insert('scale', frame=f)
+    for f, z in ((16, 0.001), (36, 0.001), (38, 1.0), (44, 1.0), (46, 0.001)): lids[1].scale = LS(z); lids[1].keyframe_insert('scale', frame=f)
     h = cat['head']
     for f, r in ((1, (0.2, 0, 0)), (12, (0.2, 0, 0)), (18, (0, 0, 0.1)), (36, (0, 0.18, 0)), (NF, (0, 0.18, 0))):
         h.rotation_euler = r; h.keyframe_insert('rotation_euler', frame=f)
