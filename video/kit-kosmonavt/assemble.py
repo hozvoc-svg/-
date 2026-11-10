@@ -7,7 +7,7 @@ labels = ["1 · Хук: кіт у шоломі-акваріумі, ракета 
           "7 · Місяць із сиру — кусає", "8 · Прокинувся в коробці, сир на вусах"]
 FONT = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 os.makedirs('norm', exist_ok=True)
-VF = "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=30,setsar=1,format=yuv420p"
+VF = "scale=1080:1920:force_original_aspect_ratio=increase:flags=lanczos,crop=1080:1920,fps=30,setsar=1,format=yuv420p"
 parts = []
 for i, d in enumerate(tl['shots']):
     out = f'norm/{i+1:02d}.mp4'; src = f'shots/{i+1:02d}.mp4'
