@@ -1,0 +1,15 @@
+{
+  "name": "hozvoc-video",
+  "owner": { "name": "hozvoc-svg" },
+  "metadata": {
+    "description": "Скіли для монтажу та виробництва відео: хуки, сценарії, стилі, жанри, пайплайн."
+  },
+  "plugins": [
+    {
+      "name": "video-studio",
+      "source": "./plugins/video-studio",
+      "description": "Хуки, сценарії Shorts/Reels/TikTok, бібліотека візуальних стилів для AI-відео, жанрові плейбуки та повний пайплайн монтажу (vidIQ → Higgsfield → ElevenLabs → ffmpeg).",
+      "version": "1.0.0"
+    }
+  ]
+}
