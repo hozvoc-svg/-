@@ -158,3 +158,11 @@ supabase/schema.sql                   — таблиці, захист дани�
 - **GitHub Pages** (`https://hozvoc-svg.github.io/-/`) показує лише статичну версію: без входу й генерації.
   Після запуску на Vercel використовуйте адресу Vercel.
 - Юридичні сторінки — базовий шаблон. Перед активним продажем бажано показати їх юристу.
+
+## Video skills for Claude
+
+This repo also hosts the `video-studio` Claude plugin (hooks, scripts, visual styles, genre playbooks, production pipeline). See `plugins/video-studio/README.md`.
+
+```
+/plugin install video-studio --marketplace hozvoc-svg/-
+```
