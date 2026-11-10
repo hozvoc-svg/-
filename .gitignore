@@ -9,3 +9,4 @@ video/**/*.png
 video/**/norm/
 video/**/list.txt
 !video/**/audio/vo*.mp3
+video/**/*.log
