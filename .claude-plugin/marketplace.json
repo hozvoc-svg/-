@@ -9,7 +9,7 @@
       "name": "video-studio",
       "source": "./plugins/video-studio",
       "description": "Хуки, сценарії Shorts/Reels/TikTok, бібліотека візуальних стилів для AI-відео, жанрові плейбуки та повний пайплайн монтажу (vidIQ → Higgsfield → ElevenLabs → ffmpeg).",
-      "version": "1.0.0"
+      "version": "1.1.0"
     }
   ]
 }

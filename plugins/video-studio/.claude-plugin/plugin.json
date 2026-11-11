@@ -1,6 +1,6 @@
 {
   "name": "video-studio",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Хуки, сценарії, стилі та жанри для відео будь-якого формату: 2D, 3D, кіно, аніме, стоп-моушн, документалка та інші.",
   "author": { "name": "hozvoc-svg" },
   "keywords": ["video", "hooks", "shorts", "reels", "tiktok", "editing", "ai-video"]

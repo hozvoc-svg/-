@@ -21,10 +21,20 @@ Use `video-hooks` then `short-form-script`. Output: shot list + clean voiceover 
 - Alternatives: vidIQ `vidiq_generate_video` / `vidiq_generate_broll`, or user-provided footage.
 - Generate 1–2 spare variants for the hook shot — it matters most.
 
+### 3b. No AI credits? Render the shots in code (Blender)
+Blender is installed as a Python module at `/opt/bpyenv/bin/python` (`import bpy`) by the environment setup script.
+Working example: `video/kit-kosmonavt/clay/clay_scenes.py` in the `hozvoc-svg/-` repo (claymation cat, sets, camera moves).
+- Build characters from primitives + a shared clay material (Principled BSDF, subsurface, noise/wave bump for fingerprints); reuse one character builder for every shot so it stays consistent.
+- Cycles on CPU: 540×960, 16 samples, adaptive sampling, OpenImageDenoise, persistent data → ~15–20 s/frame on 4 cores. Render at 12 fps (stop-motion feel), upscale with lanczos in ffmpeg.
+- Always render a single preview frame per shot first and look at it; fix framing/lighting before the full render.
+- Full renders take long: run them in the background, resumable per shot, and re-render only the frame ranges that changed (`-- <shot> frames=a-b`).
+- Works for claymation, stylized 3D, low-poly, isometric diorama, paper cut-out, neon/synthwave, space scenes. For real-world topics use public-domain archives (NASA, ESA, Wikimedia) with camera moves instead.
+
 ## 4. Voice, music, SFX (ElevenLabs, `api.elevenlabs.io`)
 - List voices (`GET /v1/voices`), pick one matching genre (deep/slow for horror, energetic for gaming).
 - TTS: `POST /v1/text-to-speech/{voice_id}` with `model_id` multilingual for Ukrainian. Save `audio/voice.mp3`.
 - Use the `/with-timestamps` variant when available to get word timings for captions.
+- If the key lacks sound/music permissions (401 missing_permissions), synthesize music/SFX with numpy/scipy (see `video/kit-kosmonavt/build_audio.py`) and tell the user.
 - SFX: `POST /v1/sound-generation` with a short text description ("deep cinematic boom", "whoosh transition").
 - Music: ElevenLabs music or vidIQ `vidiq_generate_music`; otherwise royalty-free.
 
