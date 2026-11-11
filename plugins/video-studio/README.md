@@ -20,3 +20,8 @@
 Або скопіюйте файл `.claude/settings.json` з цього репозиторію в будь-який інший проєкт — плагін підключиться сам.
 
 **Звичайний чат claude.ai:** Settings → Capabilities → Skills → Upload skill, і завантажте по одному ZIP-файлу з папки `zips/`.
+
+## Усі скіли в кожній хмарній сесії
+
+Скрипт `setup/cloud-environment-setup.sh` у корені репозиторію ставить на старті сесії video-studio, ще 11 плагінів (HyperFrames, frontend-design, modern-web-guidance, Vercel, Supabase, Stripe, Expo, Superpowers, Design, Marketing, SearchFit SEO) і Blender (`/opt/bpyenv`).
+Вставте його в налаштування середовища: назва середовища в заголовку сесії → Edit → Setup script. У середовищі «Сібі» він уже стоїть.
