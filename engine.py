@@ -1,4 +1,4 @@
-import cairo, math, json, subprocess, random, sys
+import cairo, math, json, subprocess, random, sys, os
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
@@ -194,7 +194,7 @@ def frame(t, SCENES, SC, DUR):
 def run(SCENES, SC, DUR, out='cartoon_video.mp4', preview=None):
     if preview:
         for s in preview:
-            frame(float(s), SCENES, SC, DUR).resize((540, 960)).save(f'/tmp/claude-0/-home-user--/eedeb946-f1d8-5985-8482-23b174c808ae/scratchpad/c_{s}.png')
+            frame(float(s), SCENES, SC, DUR).resize((540, 960)).save(os.path.join(os.environ.get('PREVIEW_DIR', '/tmp'), f'c_{s}.png'))
         return
     N = int(DUR * FPS)
     p = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-',
