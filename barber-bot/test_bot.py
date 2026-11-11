@@ -125,7 +125,7 @@ class FlowTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_full_booking_flow(self):
         calls = await self.send(CLIENT, "/start")
-        self.assertIn("Aztec", self.texts(calls)[0])
+        self.assertIn("Barber Studio", self.texts(calls)[0])
 
         calls = await self.send(CLIENT, B.BTN_BOOK)
         self.assertIn("svc:cut", self.buttons(calls))

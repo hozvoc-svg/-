@@ -1,4 +1,4 @@
-# Telegram-бот запису для барбершопу Aztec
+# Telegram-бот запису для салонів, барбершопів і студій
 
 Клієнт сам обирає послугу, майстра, день і час. Власник і майстер одразу отримують сповіщення,
 а клієнт — нагадування за 24 і за 2 години до візиту.
@@ -22,9 +22,9 @@
 
 ### 1. Створіть бота в Telegram
 1. Відкрийте [@BotFather](https://t.me/BotFather) → `/newbot`.
-2. Назва: `Aztec Barbershop`. Юзернейм: наприклад `aztec_barber_bot` (має закінчуватися на `bot`).
+2. Назва: назва бізнесу клієнта. Юзернейм: наприклад `studio_booking_bot` (має закінчуватися на `bot`).
 3. Скопіюйте токен вигляду `123456789:AAH...`. **Нікому його не показуйте.**
-4. Необов'язково: `/setuserpic` (логотип), `/setdescription` («Запис у барбершоп Aztec за 30 секунд»).
+4. Необов'язково: `/setuserpic` (логотип), `/setdescription` («Запис у салон за 30 секунд»).
 
 ### 2. Запустіть на комп'ютері (для демо)
 Потрібен Python 3.10+ ([python.org](https://www.python.org/downloads/), на Windows поставте галочку «Add to PATH»).
@@ -61,7 +61,7 @@ nano .env   # вставити BOT_TOKEN і ADMIN_IDS
 ```bash
 sudo tee /etc/systemd/system/aztec-bot.service > /dev/null <<UNIT
 [Unit]
-Description=Aztec barber bot
+Description=Booking bot
 After=network-online.target
 
 [Service]

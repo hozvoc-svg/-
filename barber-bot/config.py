@@ -1,15 +1,15 @@
 """Налаштування бізнесу. Щоб зробити бота для іншого клієнта, змініть тільки цей файл."""
 
-BUSINESS_NAME = "Aztec Barbershop"
+BUSINESS_NAME = "Barber Studio"  # TODO: назва бізнесу клієнта
 
 GREETING = (
-    "Привіт! Це бот барбершопу <b>Aztec</b> 💈\n"
+    "Привіт! Це бот барбершопу <b>Barber Studio</b> 💈\n"
     "Тут можна записатися на стрижку за 30 секунд — без дзвінків."
 )
 
 ADDRESS = "м. Київ, вул. Прикладна, 1"        # TODO: справжня адреса
 PHONE = "+380 00 000 00 00"                    # TODO: справжній телефон
-INSTAGRAM = ""                                 # напр. "https://instagram.com/aztec.barbershop"
+INSTAGRAM = ""                                 # напр. "https://instagram.com/your.salon"
 MAP_URL = ""                                   # посилання на Google Maps
 
 TIMEZONE = "Europe/Kyiv"
