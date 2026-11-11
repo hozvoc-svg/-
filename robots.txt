@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /login.html
+Disallow: /app.html
+Disallow: /reset.html
+Disallow: /api/
+
+# Replace with your domain if you move the site
+Sitemap: https://muse-ai-ivory.vercel.app/sitemap.xml

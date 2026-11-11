@@ -1,0 +1,9 @@
+{
+  "name": "Muse — AI Content Studio",
+  "short_name": "Muse",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0b0d14",
+  "theme_color": "#7c5cff",
+  "icons": [{ "src": "assets/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
