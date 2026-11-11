@@ -483,13 +483,23 @@ def sfx_track(timeline, total):
         s *= (np.arange(len(s)) // 400 % 2).astype(np.float32)
         return s * 0.3
 
+    def hum(sec):
+        """Low droning hum (like a distant idling diesel) that swells in and out."""
+        t = np.arange(int(sec * sr)) / sr
+        env = np.minimum(1, t / 1.0) * np.minimum(1, (t[-1] - t) / 1.0) if len(t) else t
+        s = (np.sin(2 * np.pi * 56 * t) + 0.5 * np.sin(2 * np.pi * 112 * t) + 0.25 * np.sin(2 * np.pi * 168 * t))
+        s *= 0.75 + 0.25 * np.sin(2 * np.pi * 0.4 * t)
+        return (s * env * 0.22).astype(np.float32)
+
     kinds = dict(hit=hit, heartbeat=heartbeat, riser=riser, glitch=glitch)
     for i, seg in enumerate(timeline):
         if i:
             put(whoosh(), seg["start"] - 0.2)
     for idx, kind, off in getattr(_ep, "SFX", ()):
         seg = timeline[idx]
-        if kind == "heartbeat":
+        if kind == "hum":
+            put(hum(seg["frames"] / FPS - off), seg["start"] + off)
+        elif kind == "heartbeat":
             for k in range(int(seg["frames"] / FPS / 0.95)):
                 put(heartbeat(), seg["start"] + off + k * 0.95)
         else:

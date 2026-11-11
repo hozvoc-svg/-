@@ -2207,6 +2207,113 @@ def sc_ph_unread(c, t, d, T, a):
     big(c, "NOBODY CAN READ IT", CW / 2, 220, 42, RED, prog(t, d * 0.6, d * 0.7))
 
 
+# ================= Taos Hum =================
+
+def desert_town(c, T, lights=True):
+    bg(c, (0.03, 0.03, 0.10), (0.20, 0.12, 0.20), stars=True, T=T)
+    rgba(c, (0.10, 0.07, 0.10))
+    c.move_to(-400, 560); c.line_to(-100, 440); c.line_to(80, 440); c.line_to(140, 500); c.line_to(420, 500)
+    c.line_to(470, 430); c.line_to(CW + 400, 430); c.line_to(CW + 400, H + 600); c.line_to(-400, H + 600); c.close_path(); c.fill()
+    rgba(c, (0.30, 0.20, 0.16)); c.rectangle(-400, 640, CW + 800, H + 600); c.fill()
+    for k, (x, w, h) in enumerate(((40, 130, 90), (200, 110, 120), (340, 150, 80), (500, 120, 100))):
+        rgba(c, (0.42, 0.28, 0.20)); rrect(c, x, 640 - h, w, h, 10); c.fill()
+        for j in range(3):
+            rgba(c, (0.28, 0.18, 0.12)); c.arc(x + 15 + j * 22, 640 - h + 12, 5, 0, 2 * math.pi); c.fill()
+        if lights:
+            rgba(c, (1.0, 0.75, 0.35)); c.rectangle(x + w / 2 - 12, 640 - h / 2, 24, 24); c.fill()
+
+
+def wave_rings(c, x, y, T, a=1.0, colr=CYAN, n=4, spd=0.6):
+    for k in range(n):
+        u = (T * spd + k / n) % 1
+        c.set_line_width(4)
+        rgba(c, colr, a * (1 - u) * 0.8)
+        c.arc(x, y, 30 + u * 360, 0, 2 * math.pi)
+        c.stroke()
+
+
+def waveform(c, y, T, amp, colr=CYAN, a=1.0):
+    c.set_line_width(5)
+    rgba(c, colr, a)
+    c.move_to(-60, y)
+    for x in range(-60, CW + 70, 6):
+        c.line_to(x, y + amp * math.sin(x * 0.06 + T * 9) * (0.6 + 0.4 * math.sin(x * 0.011 + T)))
+    c.stroke()
+
+
+def sc_th_town(c, t, d, T, a):
+    col(c)
+    desert_town(c, T)
+    wave_rings(c, CW / 2, 400, T, 0.8)
+    s_ = max(0.05, pop(t, 0.0, 0.2))
+    c.save(); c.translate(CW / 2, 250); c.scale(s_, s_); big(c, "CAN YOU HEAR IT?", 0, 0, 52, CYAN); c.restore()
+
+
+def sc_th_wave(c, t, d, T, a):
+    col(c)
+    desert_town(c, T)
+    waveform(c, 330, T, 30 * prog(t, 0.2, 1.0))
+    big(c, "TAOS, NEW MEXICO", CW / 2, 230, 44, AMBER, prog(t, 0.1, 0.4))
+    big(c, "A LOW, CONSTANT HUM", CW / 2, 760, 38, INK, prog(t, d * 0.4, d * 0.5))
+
+
+def sc_th_sleep(c, t, d, T, a):
+    col(c)
+    bg(c, (0.05, 0.05, 0.10), (0.10, 0.10, 0.16))
+    rgba(c, (0.20, 0.30, 0.55)); c.rectangle(380, 230, 140, 120); c.fill()
+    for k in range(10):
+        rgba(c, INK, 0.6); c.arc(390 + (k * 37) % 120, 240 + (k * 53) % 100, 1.5, 0, 2 * math.pi); c.fill()
+    rgba(c, (0.35, 0.25, 0.20)); c.rectangle(60, 600, 420, 60); c.fill()
+    line(c, 70, 660, 70, 720, 10, (0.30, 0.20, 0.16)); line(c, 470, 660, 470, 720, 10, (0.30, 0.20, 0.16))
+    rgba(c, (0.85, 0.85, 0.88)); rrect(c, 70, 570, 100, 36, 10); c.fill()
+    stick(c, 250, 600, 1.3, col=INK, head_hold=1.0)
+    rgba(c, (0.15, 0.10, 0.08)); c.rectangle(-400, 720, CW + 800, H + 600); c.fill()
+    wave_rings(c, 250, 440, T, 0.6, colr=RED)
+    big(c, "DAY AND NIGHT", CW / 2, 230, 50, RED, prog(t, d * 0.2, d * 0.3))
+
+
+def sc_th_neighbors(c, t, d, T, a):
+    col(c)
+    desert_town(c, T, lights=False)
+    stick(c, 190, 720, 1.4, col=AMBER, head_hold=1.0)
+    wave_rings(c, 190, 520, T, 0.7, colr=AMBER, n=3)
+    stick(c, 420, 720, 1.4, col=INK, arms=(1.2, -1.2))
+    text(c, "?", 420, 480 - 10 * math.sin(T * 3), 70, INK, prog(t, d * 0.3, d * 0.4))
+    big(c, "THEY HEAR NOTHING", CW / 2, 250, 44, RED, prog(t, d * 0.3, d * 0.4))
+
+
+def sc_th_science(c, t, d, T, a):
+    col(c)
+    desert_town(c, T, lights=False)
+    line(c, 420, 720, 420, 560, 8, (0.6, 0.6, 0.62))
+    c.save(); c.translate(420, 540); c.rotate(-0.5 + 0.3 * math.sin(T * 0.7))
+    rgba(c, (0.75, 0.75, 0.78)); c.arc(0, 0, 60, math.pi, 2 * math.pi); c.fill(); c.restore()
+    for i, x in enumerate((140, 270)):
+        stick(c, x, 720, 1.2, col=(0.55, 0.65, 0.85), arms=(0.9, -0.6 + 0.3 * math.sin(T * 3 + i)))
+    rgba(c, (0.15, 0.15, 0.18)); rrect(c, 60, 300, 480, 150, 12); c.fill()
+    waveform(c, 375, T * 0.2, 2, colr=(0.35, 1.0, 0.5))
+    big(c, "1993", CW / 2, 230, 60, AMBER, prog(t, 0.1, 0.4))
+    big(c, "~2% HEAR IT", CW / 2, 500, 46, CYAN, prog(t, d * 0.35, d * 0.45))
+    big(c, "SOURCE: NONE", CW / 2, 790, 44, RED, prog(t, d * 0.65, d * 0.75))
+
+
+def sc_th_world(c, t, d, T, a):
+    col(c)
+    bg(c, (0.02, 0.03, 0.08), (0.05, 0.06, 0.14), stars=True, T=T)
+    cx, cy, R = CW / 2, 470, 220
+    rgba(c, (0.10, 0.25, 0.45)); c.arc(cx, cy, R, 0, 2 * math.pi); c.fill()
+    rgba(c, (0.20, 0.45, 0.25))
+    for dx, dy, rx, ry in ((-80, -60, 90, 60), (60, 30, 70, 90), (-40, 110, 50, 40), (120, -110, 40, 30)):
+        c.save(); c.translate(cx + dx, cy + dy); c.scale(rx, ry); c.arc(0, 0, 1, 0, 2 * math.pi); c.restore(); c.fill()
+    for k, (dx, dy) in enumerate(((-110, -40), (40, -90), (90, 60), (-30, 120))):
+        if t > 0.4 + k * 0.6:
+            wave_rings(c, cx + dx, cy + dy, T + k, 0.6, n=2, spd=0.8)
+            rgba(c, CYAN); c.arc(cx + dx, cy + dy, 7, 0, 2 * math.pi); c.fill()
+    s_ = pop(t, d * 0.55)
+    if s_:
+        c.save(); c.translate(CW / 2, 790); c.scale(s_, s_); big(c, "CAN YOU HEAR IT?", 0, 0, 50, CYAN); c.restore()
+
+
 def _scene(fn):
     """Wraps a scene with an optional entrance effect from args["fx"]: zoom, flash, glitch or shake."""
     def run(c, t, d, T, a):
