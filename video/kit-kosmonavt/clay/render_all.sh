@@ -1,7 +1,7 @@
 #!/bin/bash
 # Render every clay shot (skips finished ones) and turn frames into shots/NN.mp4 at 12 fps.
 cd "$(dirname "$0")/.."
-PY=${BLENDER_PY:-python3}
+PY=${BLENDER_PY:-/opt/bpyenv/bin/python}
 mkdir -p shots
 for s in 01 02 03 04 05 06 07 08; do
   [ -f shots/$s.mp4 ] && { echo "$s done"; continue; }
