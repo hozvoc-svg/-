@@ -62,7 +62,7 @@ else:
     bg=(f'gradients=s={W}x{H}:c0=0x2a0845:c1=0xff2d95:c2=0x00e5ff:c3=0x120024:n=4:speed=0.02:r={FPS}:d={DUR},'
         f"drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf:text='GTA VI FOOTAGE':fontsize=70:fontcolor=white@0.35:x=(w-tw)/2:y=700[bg]")
 flash='+'.join(f'between(t,{c:.2f},{c+0.07:.2f})' for c in CUTS[1:])
-fc=(f'{bg};[0:v]scale=600:-1,format=rgba[mas];[bg][mas]overlay=x=W-w+10:y=H-h-120:shortest=0,'
+fc=(f'{bg};[0:v]scale={460 if os.path.exists(src) and not GREEN else 600}:-1,format=rgba[mas];[bg][mas]overlay=x=W-w+10:y=H-h-120:shortest=0,'
     + ('' if GREEN else f"eq=brightness='0.35*({flash})':eval=frame,")
     + f"ass={tmp}/cap.ass,format=yuv420p[v]")
 out=f'out/{ID}_greenscreen.mp4' if GREEN else f'out/{ID}.mp4'

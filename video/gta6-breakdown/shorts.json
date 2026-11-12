@@ -1,14 +1,47 @@
 {
  "voice": "TX3LPaxmHKxFdv7VOQHJ",
  "shorts": [
-  {"id":"chase","range":[835,895],
-   "hook":"Rockstar just broke car physics.",
-   "vo":"Rockstar just broke car physics. Look at this cop car. The hood folds, the bumper rips off, and the glass shatters into real pieces, not a texture swap. Now watch the tires. Shoot them and they actually deflate, so the car starts sliding. And those red and blue sirens? They bounce off every shop window in real time. This is a four star chase with this much traffic, and the game doesn't even drop a frame. GTA Five never looked like this. Would you survive this chase? Tell me in the comments."},
-  {"id":"rooftop","range":[580,640],
-   "hook":"Count the people on this rooftop.",
-   "vo":"Count the people on this rooftop. Every single one is doing something different. Drinking, talking, leaning on the railing. None of them are copies. Now look past them. That's the whole Vice City skyline, cruise ships in the bay, planes in the sky, and it's all loaded at once. No fog hiding the distance. And look at the skin. You can see pores and tan lines in sunlight. This is a cutscene level of detail, but it's gameplay. Follow for more GTA Six details you missed."},
-  {"id":"water","range":[1025,1085],
-   "hook":"GTA Six water is unreal.",
-   "vo":"GTA Six water is unreal. Watch the airboat cut through the swamp. The wake splashes and the plants move with it. Now we go underwater. See the light patterns on the cave floor? Those are real caustics, and the water gets darker the deeper you dive. Then kayaking downtown. Every paddle stroke makes its own ripples. Old GTA water was a flat blue plane. This is a simulation. Would you rather explore the swamp or the city? Comment below."}
+  {
+   "id": "chase",
+   "range": [
+    835,
+    895
+   ],
+   "hook": "Rockstar just broke car physics.",
+   "vo": "Rockstar just broke car physics. Look at this cop car. The hood folds, the bumper rips off, and the glass shatters into real pieces, not a texture swap. Now watch the tires. Shoot them and they actually deflate, so the car starts sliding. And those red and blue sirens? They bounce off every shop window in real time. This is a four star chase with this much traffic, and the game doesn't even drop a frame. GTA Five never looked like this. Would you survive this chase? Tell me in the comments."
+  },
+  {
+   "id": "rooftop",
+   "range": [
+    580,
+    640
+   ],
+   "hook": "Count the people on this rooftop.",
+   "vo": "Count the people on this rooftop. Every single one is doing something different. Drinking, talking, leaning on the railing. None of them are copies. Now look past them. That's the whole Vice City skyline, cruise ships in the bay, planes in the sky, and it's all loaded at once. No fog hiding the distance. And look at the skin. You can see pores and tan lines in sunlight. This is a cutscene level of detail, but it's gameplay. Follow for more GTA Six details you missed."
+  },
+  {
+   "id": "water",
+   "range": [
+    1025,
+    1085
+   ],
+   "hook": "GTA Six water is unreal.",
+   "vo": "GTA Six water is unreal. Watch the airboat cut through the swamp. The wake splashes and the plants move with it. Now we go underwater. See the light patterns on the cave floor? Those are real caustics, and the water gets darker the deeper you dive. Then kayaking downtown. Every paddle stroke makes its own ripples. Old GTA water was a flat blue plane. This is a simulation. Would you rather explore the swamp or the city? Comment below."
+  },
+  {
+   "id": "characters",
+   "clip": "t2_1",
+   "vo": "These are not real people. This is GTA Six. Look at this guy's shirt. Every wrinkle moves when he breathes. Now look at Jason. Sweat on the skin, veins in the arms, tattoos that bend with the muscle. And when we hit the highway, every sign is readable and the skyline goes on forever. The beach is full of people, and none of them look copy pasted. Rockstar spent ten years on this, and it shows. Which character do you want to play as? Comment below."
+  },
+  {
+   "id": "lighting",
+   "clip": "t2_2",
+   "vo": "The lighting in GTA Six is insane. Look at this red light on the mask. It bleeds onto the gun, the hands, the wall behind him. Now this sunset. The sun actually scatters through the clouds and lights up the water. Inside the bar, every lamp casts its own shadow on every single person. And at night, the club glows purple on the crowd. This is real time lighting, not a movie. Rockstar is playing a different game. Day or night, which looks better? Tell me."
+  },
+  {
+   "id": "vicecity",
+   "clip": "t2_3",
+   "vo": "Vice City is alive again. Neon clubs that glow all night. Ammu-Nation is back, and look how many guns are on that wall. Then you go home, crash on the couch, and someone walks in on you. Grab a bike, ride down the coast with the sun in your face. This is not a city you visit. It's a city you live in. One week left, guys. Follow so you don't miss the next one."
+  }
  ]
 }
