@@ -17,6 +17,9 @@ ot=np.arange(len(on))*hop/SR; peaks=[ot[i] for i in range(1,len(on)-1) if on[i]>
 # ---- sentence-driven edit plan (edits.json: shot indices from shots_good.json per sentence)
 G=json.load(open('shots_good.json')); plan=json.load(open('edits.json'))[ID]
 sc=ev['cuts']+[DUR]
+WC=json.load(open('edit_wordcounts.json')).get(ID)
+if WC:
+    idx=[sum(WC[:i]) for i in range(len(WC))]; sc=[0.0]+[WORDS[i][1] for i in idx[1:]]+[DUR]
 cuts=[];best=[];SENT=[]
 for i,shots in enumerate(plan):
     a0,b0=sc[i],(sc[i+1] if i+1<len(sc) else DUR)
@@ -33,7 +36,7 @@ def band(src,t):
     r=subprocess.run(['ffmpeg','-loglevel','error','-ss',str(t),'-i',src,'-frames:v','1','-f','rawvideo','-pix_fmt','gray','-'],capture_output=True)
     a=np.frombuffer(r.stdout,np.uint8).reshape(1920,1080).astype(float); m=a.mean(1)
     up=[y for y in range(400,960) if m[y]<5]; dn=[y for y in range(960,1550) if m[y]<5]
-    if not up or not dn: return 700,525
+    if not up or not dn: return 672,596
     y0=max(up)+4; y1=min(dn)-4; return y0,(y1-y0)//2*2
 XT=0.25
 GRADE=("colorbalance=rs=0.04:gs=-0.01:bs=-0.06:rm=0.03:bm=-0.03:rh=0.02:bh=0.05,"
