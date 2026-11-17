@@ -491,7 +491,21 @@ def sfx_track(timeline, total):
         s *= 0.75 + 0.25 * np.sin(2 * np.pi * 0.4 * t)
         return (s * env * 0.22).astype(np.float32)
 
-    kinds = dict(hit=hit, heartbeat=heartbeat, riser=riser, glitch=glitch)
+    def pop():
+        """Short soft UI blip for numbers and cards appearing."""
+        t = np.arange(int(0.18 * sr)) / sr
+        f = 900 * np.exp(-t * 9) + 500
+        return (np.sin(2 * np.pi * np.cumsum(f) / sr) * np.exp(-t * 28) * 0.35).astype(np.float32)
+
+    def ching():
+        """Bright cash-register style ring: a few inharmonic partials with a fast attack."""
+        t = np.arange(int(1.1 * sr)) / sr
+        s = sum(a * np.sin(2 * np.pi * f * t) * np.exp(-t * d) for f, a, d in
+                ((2093, 0.5, 5), (2637, 0.35, 6), (3136, 0.3, 7), (4186, 0.2, 9), (5274, 0.12, 11)))
+        click = noise(1.1) * np.exp(-t * 60) * 0.15
+        return ((s + click) * 0.32).astype(np.float32)
+
+    kinds = dict(hit=hit, heartbeat=heartbeat, riser=riser, glitch=glitch, pop=pop, ching=ching)
     for i, seg in enumerate(timeline):
         if i:
             put(whoosh(), seg["start"] - 0.2)
@@ -513,6 +527,26 @@ def sfx_track(timeline, total):
 
 
 def mix(voice, video_list, out, total, timeline=None):
+    if AMBIENT == "finance":  # voice + soft lo-fi beat ducked under the voice + sound design
+        import finance_music
+        mus = os.path.join(TMP, f"{EPISODE}_fmusic.wav")
+        finance_music.render(mus, total + 2, seed=getattr(_ep, "MUSIC_SEED", 1))
+        sfx = sfx_track(timeline, total)
+        lst = os.path.join(TMP, os.path.basename(out) + ".txt")
+        with open(lst, "w") as fh:
+            fh.writelines(f"file '{p}'\n" for p in video_list)
+        mv = getattr(_ep, "MUSIC_VOL", 0.30)
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", lst,
+                        "-i", voice, "-i", mus, "-i", sfx, "-filter_complex",
+                        "[1:a]aresample=44100,highpass=f=70,acompressor=threshold=0.12:ratio=3:attack=5:release=120,"
+                        "loudnorm=I=-15:TP=-1.5,pan=stereo|c0=c0|c1=c0,asplit=2[v][vk];"
+                        f"[2:a]volume={mv},afade=t=in:d=2,afade=t=out:st={max(0, total - 4)}:d=4[m0];"
+                        "[m0][vk]sidechaincompress=threshold=0.04:ratio=4:attack=20:release=400[m];"
+                        "[3:a]volume=0.8,pan=stereo|c0=c0|c1=c0[s];"
+                        "[v][m][s]amix=inputs=3:normalize=0:duration=first,alimiter=limit=0.95[a]",
+                        "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
+                        "-movflags", "+faststart", out], check=True)
+        return
     if AMBIENT == "music":
         import music
         mus = os.path.join(TMP, f"{EPISODE}_music.wav")
@@ -612,6 +646,13 @@ def build(kind):
     chap = [(s["start"], s["chapter"]) for s in timeline if s.get("chapter")]
     with open(os.path.join(TMP, f"{kind}_timeline.json"), "w") as fh:
         json.dump(dict(total=total, chapters=chap), fh)
+    with open(os.path.join(OUT, f"{EPISODE}_{kind}.srt"), "w") as fh:  # subtitles file for YouTube upload
+        n = 0
+        ts = lambda x: f"{int(x // 3600):02d}:{int(x % 3600 // 60):02d}:{int(x % 60):02d},{int(x * 1000 % 1000):03d}"
+        for sg in timeline:
+            for a_, b_, s_ in chunks([(sg["start"] + a, sg["start"] + b, s) for a, b, s in sg["sents"]], 9):
+                n += 1
+                fh.write(f"{n}\n{ts(a_)} --> {ts(b_)}\n{s_}\n\n")
     print(out, round(total, 1), "s")
     for st, n in chap:
         print(f"{int(st // 60)}:{int(st % 60):02d} {n}")
