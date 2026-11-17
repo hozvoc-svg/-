@@ -159,3 +159,105 @@ if __name__ == "__main__":
         fn(cairo.Context(s))
         s.write_to_png(os.path.join(OUT, name + ".png"))
         print(name)
+
+
+# ---------- 6. Blueprint / technical schematic ----------
+def style_blueprint(c):
+    rgba(c, (0.07, 0.22, 0.45)); c.paint()
+    for i in range(0, W, 40):
+        line(c, i, 0, i, H, 1 if i % 200 else 2, (0.6, 0.8, 1.0), 0.12 if i % 200 else 0.25)
+    for j in range(0, H, 40):
+        line(c, 0, j, W, j, 1 if j % 200 else 2, (0.6, 0.8, 1.0), 0.12 if j % 200 else 0.25)
+    wh = (0.9, 0.95, 1.0)
+    for k, (lab, x) in enumerate((("BUY", 380), ("BORROW", 960), ("DIE", 1540))):
+        c.set_line_width(4); rgba(c, wh); rrect(c, x - 200, 420, 400, 240, 8); c.stroke()
+        bold(c, f"STEP {k + 1}", x, 480, 34, (0.6, 0.85, 1.0), family="Inter")
+        bold(c, lab, x, 590, 90 if len(lab) < 5 else 70, wh)
+        if k < 2:
+            line(c, x + 210, 540, x + 370, 540, 4, wh); c.move_to(x + 370, 540); c.line_to(x + 345, 525); c.line_to(x + 345, 555); c.close_path(); rgba(c, wh); c.fill()
+    c.set_dash([12, 8]); line(c, 180, 760, 1740, 760, 2, wh, 0.7); c.set_dash([])
+    text(c, "FIG. 1 — THE BILLIONAIRE TAX PLAYBOOK", 180, 820, 34, wh, align="left", bold=False)
+    bold(c, "TAX PAID: ~0", W / 2, 260, 90, (1.0, 0.85, 0.4))
+
+
+# ---------- 7. Chalkboard ----------
+def style_chalk(c):
+    rgba(c, (0.12, 0.20, 0.17)); c.paint()
+    r = random.Random(5)
+    for k in range(5000):
+        rgba(c, (1, 1, 1), r.uniform(0.01, 0.04)); c.rectangle(r.uniform(0, W), r.uniform(0, H), 3, 1); c.fill()
+    ch = (0.94, 0.94, 0.90)
+    bold(c, "Salary  =  taxed up to 37%", 200, 330, 90, ch, family="Caveat", align="left")
+    bold(c, "Stock growth  =  taxed 0%", 200, 500, 90, (1.0, 0.85, 0.45), family="Caveat", align="left")
+    bold(c, "(until you sell)", 260, 590, 60, ch, family="Caveat", align="left")
+    c.set_line_width(6); rgba(c, (1.0, 0.55, 0.55)); c.arc(1500, 470, 170, 0, 2 * math.pi); c.stroke()
+    bold(c, "?!", 1500, 520, 150, (1.0, 0.55, 0.55), family="Caveat")
+    rgba(c, (0.35, 0.25, 0.18)); c.rectangle(0, 1010, W, 70); c.fill()
+
+
+# ---------- 8. Modern dashboard / glass UI ----------
+def style_dashboard(c):
+    g = cairo.LinearGradient(0, 0, W, H); g.add_color_stop_rgb(0, 0.10, 0.08, 0.22); g.add_color_stop_rgb(1, 0.02, 0.10, 0.18)
+    c.set_source(g); c.paint()
+    F.glow(c, 400, 250, 500, (0.6, 0.3, 1.0), 0.35); F.glow(c, 1500, 850, 500, (0.1, 0.8, 0.9), 0.3)
+
+    def card(x, y, w, h):
+        rgba(c, (1, 1, 1), 0.08); rrect(c, x, y, w, h, 28); c.fill()
+        c.set_line_width(2); rgba(c, (1, 1, 1), 0.2); rrect(c, x, y, w, h, 28); c.stroke()
+    card(140, 160, 760, 760); card(980, 160, 800, 360); card(980, 560, 800, 360)
+    text(c, "Net worth", 200, 240, 38, (0.75, 0.75, 0.85), align="left", bold=False)
+    bold(c, "$182.4B", 200, 340, 100, (1, 1, 1), align="left")
+    pts = [(200, 820), (300, 780), (400, 800), (500, 690), (600, 640), (700, 560), (840, 430)]
+    c.set_line_width(8); rgba(c, (0.35, 1.0, 0.65)); c.move_to(*pts[0])
+    for p in pts[1:]:
+        c.line_to(*p)
+    c.stroke()
+    text(c, "Taxable income", 1040, 240, 38, (0.75, 0.75, 0.85), align="left", bold=False)
+    bold(c, "$0", 1040, 370, 120, (1.0, 0.45, 0.5), align="left")
+    text(c, "Loans against stock", 1040, 640, 38, (0.75, 0.75, 0.85), align="left", bold=False)
+    bold(c, "$2.1B", 1040, 770, 110, (0.4, 0.85, 1.0), align="left")
+
+
+# ---------- 9. Retro pixel art ----------
+def style_pixel(c):
+    rgba(c, (0.12, 0.10, 0.25)); c.paint()
+    px = 20
+    r = random.Random(2)
+    for k in range(120):
+        rgba(c, (1, 1, 1), 0.7); c.rectangle(r.randrange(0, W, px), r.randrange(0, 600, px), px // 2, px // 2); c.fill()
+    rgba(c, (0.20, 0.55, 0.30)); c.rectangle(0, 820, W, 260); c.fill()
+    for x in range(0, W, px * 2):
+        rgba(c, (0.15, 0.45, 0.25)); c.rectangle(x, 820, px, px); c.fill()
+    for k in range(10):  # pixel coin pile
+        for j in range(10 - k):
+            rgba(c, (1.0, 0.82, 0.2) if (j + k) % 2 else (0.95, 0.65, 0.1)); c.rectangle(1300 + j * 40 + k * 20, 800 - k * 40, 40, 40); c.fill()
+    rgba(c, (0.95, 0.85, 0.7)); c.rectangle(500, 600, 80, 80); c.fill()
+    rgba(c, (0.2, 0.4, 0.9)); c.rectangle(480, 680, 120, 140); c.fill()
+    bold(c, "TAX: 37%", 540, 560, 64, (1.0, 0.4, 0.4), family="Audiowide")
+    bold(c, "TAX: 3.4%", 1500, 340, 64, (0.4, 1.0, 0.5), family="Audiowide")
+    bold(c, "LEVEL 1: THE RICH", W / 2, 150, 80, (1.0, 0.9, 0.3), family="Audiowide")
+
+
+# ---------- 10. Paper cut-out collage ----------
+def style_cutout(c):
+    rgba(c, (0.93, 0.89, 0.80)); c.paint()
+
+    def paper(x, y, w, h, colr, rot):
+        c.save(); c.translate(x, y); c.rotate(rot)
+        rgba(c, (0, 0, 0), 0.25); c.rectangle(-w / 2 + 10, -h / 2 + 12, w, h); c.fill()
+        rgba(c, colr); c.rectangle(-w / 2, -h / 2, w, h); c.fill(); c.restore()
+    paper(520, 520, 700, 520, (0.85, 0.30, 0.25), -0.05)
+    paper(1350, 560, 760, 560, (0.20, 0.45, 0.55), 0.04)
+    paper(960, 200, 1100, 150, (0.98, 0.96, 0.90), -0.01)
+    bold(c, "TWO TAX SYSTEMS", 960, 235, 90, (0.12, 0.12, 0.14), family="Anton")
+    bold(c, "WORKERS", 520, 470, 90, (0.98, 0.96, 0.90), family="Anton")
+    bold(c, "PAY ON EVERY CHECK", 520, 580, 52, (0.98, 0.96, 0.90), family="Anton")
+    bold(c, "BILLIONAIRES", 1350, 510, 90, (0.98, 0.96, 0.90), family="Anton")
+    bold(c, "PAY WHEN THEY CHOOSE", 1350, 620, 52, (0.98, 0.96, 0.90), family="Anton")
+    for k in range(6):  # torn tape pieces
+        x = [250, 790, 1000, 1700, 640, 1260][k]; y = [270, 270, 290, 300, 790, 850][k]
+        paper(x, y, 140, 40, (0.95, 0.92, 0.70), 0.3 * (1 if k % 2 else -1))
+
+
+STYLES += [("6_blueprint", style_blueprint), ("7_chalkboard", style_chalk), ("8_glass_dashboard", style_dashboard),
+           ("9_pixel_art", style_pixel), ("10_paper_cutout", style_cutout)]
