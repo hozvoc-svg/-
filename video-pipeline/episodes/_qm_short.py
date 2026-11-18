@@ -9,8 +9,9 @@ CAPTION_STYLE = "punch"
 VERTICAL_FILL = True
 CAPTION_Y = 0.75
 CAPTION_PX = 84
-EL_VOICE = "cjVigY5qzO86Huf0OWal"
-EL_SETTINGS = dict(stability=0.42, similarity_boost=0.8, style=0.2, speed=1.06)
+EL_VOICE = "UgBBYS2sOqTuMpoF3BR0"   # Mark: natural, conversational
+EL_MODEL = "eleven_v3"              # most human-sounding model
+EL_SETTINGS = dict(stability=0.5, similarity_boost=0.8)
 PRON = {"IRS": "I R S"}
 LONG = []
 GOLD, WHITE, RED, GREEN = (1.0, 0.78, 0.25), (0.96, 0.97, 1.0), (1.0, 0.36, 0.40), (0.35, 1.0, 0.60)
