@@ -1,0 +1,452 @@
+[
+{
+"w": "Brush",
+"t": 2.5,
+"d": 0.5,
+"part": "chorus"
+},
+{
+"w": "brush",
+"t": 3.0,
+"d": 0.5,
+"part": "chorus"
+},
+{
+"w": "brush",
+"t": 3.5,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "your",
+"t": 3.75,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "teeth",
+"t": 4.0,
+"d": 0.5,
+"part": "chorus"
+},
+{
+"w": "Bopi",
+"t": 4.5,
+"d": 0.5,
+"part": "chorus"
+},
+{
+"w": "brush",
+"t": 5.0,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "your",
+"t": 5.25,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "teeth",
+"t": 5.5,
+"d": 1.0,
+"part": "chorus"
+},
+{
+"w": "Up",
+"t": 6.5,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "and",
+"t": 6.75,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "down",
+"t": 7.0,
+"d": 0.5,
+"part": "chorus"
+},
+{
+"w": "and",
+"t": 7.5,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "round",
+"t": 7.75,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "and",
+"t": 8.0,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "round",
+"t": 8.25,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "make",
+"t": 8.5,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "them",
+"t": 8.75,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "shiny",
+"t": 9.0,
+"d": 0.5,
+"part": "chorus"
+},
+{
+"w": "clean",
+"t": 9.5,
+"d": 1.0,
+"part": "chorus"
+},
+{
+"w": "Sugar",
+"t": 10.5,
+"d": 0.5,
+"part": "verse"
+},
+{
+"w": "bugs",
+"t": 11.0,
+"d": 0.5,
+"part": "verse"
+},
+{
+"w": "go",
+"t": 11.5,
+"d": 0.25,
+"part": "verse"
+},
+{
+"w": "away",
+"t": 11.75,
+"d": 0.75,
+"part": "verse"
+},
+{
+"w": "Scrub",
+"t": 12.5,
+"d": 0.5,
+"part": "verse"
+},
+{
+"w": "scrub",
+"t": 13.0,
+"d": 0.5,
+"part": "verse"
+},
+{
+"w": "scrub",
+"t": 13.5,
+"d": 0.25,
+"part": "verse"
+},
+{
+"w": "hooray",
+"t": 13.75,
+"d": 0.75,
+"part": "verse"
+},
+{
+"w": "Tiny",
+"t": 14.5,
+"d": 0.5,
+"part": "verse"
+},
+{
+"w": "bubbles",
+"t": 15.0,
+"d": 0.5,
+"part": "verse"
+},
+{
+"w": "pop",
+"t": 15.5,
+"d": 0.25,
+"part": "verse"
+},
+{
+"w": "pop",
+"t": 15.75,
+"d": 0.25,
+"part": "verse"
+},
+{
+"w": "pop",
+"t": 16.0,
+"d": 0.5,
+"part": "verse"
+},
+{
+"w": "Brushing",
+"t": 16.5,
+"d": 0.5,
+"part": "verse"
+},
+{
+"w": "is",
+"t": 17.0,
+"d": 0.25,
+"part": "verse"
+},
+{
+"w": "the",
+"t": 17.25,
+"d": 0.25,
+"part": "verse"
+},
+{
+"w": "best",
+"t": 17.5,
+"d": 1.0,
+"part": "verse"
+},
+{
+"w": "Swish",
+"t": 18.5,
+"d": 0.25,
+"part": "bridge"
+},
+{
+"w": "and",
+"t": 18.75,
+"d": 0.25,
+"part": "bridge"
+},
+{
+"w": "swish",
+"t": 19.0,
+"d": 0.25,
+"part": "bridge"
+},
+{
+"w": "and",
+"t": 19.25,
+"d": 0.25,
+"part": "bridge"
+},
+{
+"w": "spit",
+"t": 19.5,
+"d": 0.25,
+"part": "bridge"
+},
+{
+"w": "it",
+"t": 19.75,
+"d": 0.25,
+"part": "bridge"
+},
+{
+"w": "out",
+"t": 20.0,
+"d": 0.5,
+"part": "bridge"
+},
+{
+"w": "one",
+"t": 20.5,
+"d": 0.5,
+"part": "bridge"
+},
+{
+"w": "two",
+"t": 21.0,
+"d": 0.5,
+"part": "bridge"
+},
+{
+"w": "three",
+"t": 21.5,
+"d": 1.0,
+"part": "bridge"
+},
+{
+"w": "Now",
+"t": 22.5,
+"d": 0.25,
+"part": "bridge"
+},
+{
+"w": "give",
+"t": 22.75,
+"d": 0.25,
+"part": "bridge"
+},
+{
+"w": "a",
+"t": 23.0,
+"d": 0.25,
+"part": "bridge"
+},
+{
+"w": "great",
+"t": 23.25,
+"d": 0.25,
+"part": "bridge"
+},
+{
+"w": "big",
+"t": 23.5,
+"d": 0.5,
+"part": "bridge"
+},
+{
+"w": "smile",
+"t": 24.0,
+"d": 0.5,
+"part": "bridge"
+},
+{
+"w": "just",
+"t": 24.5,
+"d": 0.5,
+"part": "bridge"
+},
+{
+"w": "like",
+"t": 25.0,
+"d": 0.5,
+"part": "bridge"
+},
+{
+"w": "me",
+"t": 25.5,
+"d": 1.0,
+"part": "bridge"
+},
+{
+"w": "Brush",
+"t": 26.5,
+"d": 0.5,
+"part": "chorus"
+},
+{
+"w": "brush",
+"t": 27.0,
+"d": 0.5,
+"part": "chorus"
+},
+{
+"w": "brush",
+"t": 27.5,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "your",
+"t": 27.75,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "teeth",
+"t": 28.0,
+"d": 0.5,
+"part": "chorus"
+},
+{
+"w": "Bopi",
+"t": 28.5,
+"d": 0.5,
+"part": "chorus"
+},
+{
+"w": "brush",
+"t": 29.0,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "your",
+"t": 29.25,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "teeth",
+"t": 29.5,
+"d": 1.0,
+"part": "chorus"
+},
+{
+"w": "Up",
+"t": 30.5,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "and",
+"t": 30.75,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "down",
+"t": 31.0,
+"d": 0.5,
+"part": "chorus"
+},
+{
+"w": "and",
+"t": 31.5,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "round",
+"t": 31.75,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "and",
+"t": 32.0,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "round",
+"t": 32.25,
+"d": 0.25,
+"part": "chorus"
+},
+{
+"w": "shiny",
+"t": 32.5,
+"d": 0.5,
+"part": "chorus"
+},
+{
+"w": "teeth",
+"t": 33.0,
+"d": 0.5,
+"part": "chorus"
+},
+{
+"w": "yay",
+"t": 33.5,
+"d": 1.0,
+"part": "chorus"
+}
+]

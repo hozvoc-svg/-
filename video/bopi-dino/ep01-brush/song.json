@@ -1,0 +1,20 @@
+{"bpm":120,"start":2.5,"transpose":-5,"voice":"cgSgspJ2msm6clMCkdW9",
+ "_doc":"each line: text + notes; a note is [word, beats, midi or list of midi for syllables]. Lines follow each other bar by bar (4 beats).",
+ "lines":[
+  {"part":"chorus","notes":[["Brush",1,67],["brush",1,67],["brush",0.5,67],["your",0.5,69],["teeth",1,72]]},
+  {"part":"chorus","notes":[["Bopi",1,[71,69]],["brush",0.5,67],["your",0.5,65],["teeth",2,64]]},
+  {"part":"chorus","notes":[["Up",0.5,64],["and",0.5,64],["down",1,67],["and",0.5,65],["round",0.5,65],["and",0.5,64],["round",0.5,62]]},
+  {"part":"chorus","notes":[["make",0.5,60],["them",0.5,62],["shiny",1,[64,67]],["clean",2,72]]},
+  {"part":"verse","notes":[["Sugar",1,[72,72]],["bugs",1,69],["go",0.5,67],["away",1.5,[69,67]]]},
+  {"part":"verse","notes":[["Scrub",1,65],["scrub",1,65],["scrub",0.5,65],["hooray",1.5,[67,72]]]},
+  {"part":"verse","notes":[["Tiny",1,[64,64]],["bubbles",1,[67,64]],["pop",0.5,72],["pop",0.5,72],["pop",1,72]]},
+  {"part":"verse","notes":[["Brushing",1,[71,69]],["is",0.5,67],["the",0.5,65],["best",2,67]]},
+  {"part":"bridge","notes":[["Swish",0.5,60],["and",0.5,64],["swish",0.5,67],["and",0.5,64],["spit",0.5,60],["it",0.5,64],["out",1,67]]},
+  {"part":"bridge","notes":[["one",1,67],["two",1,69],["three",2,71]]},
+  {"part":"bridge","notes":[["Now",0.5,72],["give",0.5,71],["a",0.5,69],["great",0.5,67],["big",1,69],["smile",1,72]]},
+  {"part":"bridge","notes":[["just",1,74],["like",1,72],["me",2,72]]},
+  {"part":"chorus","notes":[["Brush",1,67],["brush",1,67],["brush",0.5,67],["your",0.5,69],["teeth",1,72]]},
+  {"part":"chorus","notes":[["Bopi",1,[71,69]],["brush",0.5,67],["your",0.5,65],["teeth",2,64]]},
+  {"part":"chorus","notes":[["Up",0.5,64],["and",0.5,64],["down",1,67],["and",0.5,65],["round",0.5,65],["and",0.5,64],["round",0.5,62]]},
+  {"part":"chorus","notes":[["shiny",1,[64,67]],["teeth",1,72],["yay",2,76]]}
+ ]}
