@@ -13,20 +13,20 @@ Style: End,Fredoka,120,&H0032D7FF,&H00FFFFFF,&H00602A4A,&H64000000,-1,0,0,0,100,
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 Dialogue: 1,0:00:00.15,0:00:02.45,Hook,,0,0,0,,{\fad(60,0)\t(0,180,\fscx112\fscy112)\t(180,320,\fscx100\fscy100)}BOPI FORGOT\NTO BRUSH!
-Dialogue: 0,0:00:02.35,0:00:04.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Brush, {\k50}brush, {\k25}brush, {\k25}your, {\k50}teeth!
-Dialogue: 0,0:00:04.35,0:00:06.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Bopi, {\k25}brush, {\k25}your, {\k100}teeth!
-Dialogue: 0,0:00:06.35,0:00:08.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k25}Up, {\k25}and, {\k50}down, {\k25}and, {\k25}round, {\k25}and, {\k25}round!
-Dialogue: 0,0:00:08.35,0:00:10.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k25}make, {\k25}them, {\k50}shiny, {\k100}clean!
-Dialogue: 0,0:00:10.35,0:00:12.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Sugar, {\k50}bugs, {\k25}go, {\k75}away!
-Dialogue: 0,0:00:12.35,0:00:14.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Scrub, {\k50}scrub, {\k25}scrub, {\k75}hooray!
-Dialogue: 0,0:00:14.35,0:00:16.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Tiny, {\k50}bubbles, {\k25}pop, {\k25}pop, {\k50}pop!
-Dialogue: 0,0:00:16.35,0:00:18.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Brushing, {\k25}is, {\k25}the, {\k100}best!
-Dialogue: 0,0:00:18.35,0:00:20.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k25}Swish, {\k25}and, {\k25}swish, {\k25}and, {\k25}spit, {\k25}it, {\k50}out!
-Dialogue: 0,0:00:20.35,0:00:22.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}one, {\k50}two, {\k100}three!
-Dialogue: 0,0:00:22.35,0:00:24.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k25}Now, {\k25}give, {\k25}a, {\k25}great, {\k50}big, {\k50}smile!
-Dialogue: 0,0:00:24.35,0:00:26.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}just, {\k50}like, {\k100}me!
-Dialogue: 0,0:00:26.35,0:00:28.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Brush, {\k50}brush, {\k25}brush, {\k25}your, {\k50}teeth!
-Dialogue: 0,0:00:28.35,0:00:30.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Bopi, {\k25}brush, {\k25}your, {\k100}teeth!
-Dialogue: 0,0:00:30.35,0:00:32.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k25}Up, {\k25}and, {\k50}down, {\k25}and, {\k25}round, {\k25}and, {\k25}round!
-Dialogue: 0,0:00:32.35,0:00:34.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}shiny, {\k50}teeth, {\k100}yay!
+Dialogue: 0,0:00:02.35,0:00:04.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Brush {\k50}brush {\k25}brush {\k25}your {\k50}teeth!
+Dialogue: 0,0:00:04.35,0:00:06.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Bopi {\k25}brush {\k25}your {\k100}teeth!
+Dialogue: 0,0:00:06.35,0:00:08.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k25}Up {\k25}and {\k50}down {\k25}and {\k25}round {\k25}and {\k25}round!
+Dialogue: 0,0:00:08.35,0:00:10.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k25}make {\k25}them {\k50}shiny {\k100}clean!
+Dialogue: 0,0:00:10.35,0:00:12.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Sugar {\k50}bugs {\k25}go {\k75}away!
+Dialogue: 0,0:00:12.35,0:00:14.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Scrub {\k50}scrub {\k25}scrub {\k75}hooray!
+Dialogue: 0,0:00:14.35,0:00:16.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Tiny {\k50}bubbles {\k25}pop {\k25}pop {\k50}pop!
+Dialogue: 0,0:00:16.35,0:00:18.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Brushing {\k25}is {\k25}the {\k100}best!
+Dialogue: 0,0:00:18.35,0:00:20.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k25}Swish {\k25}and {\k25}swish {\k25}and {\k25}spit {\k25}it {\k50}out!
+Dialogue: 0,0:00:20.35,0:00:22.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}one {\k50}two {\k100}three!
+Dialogue: 0,0:00:22.35,0:00:24.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k25}Now {\k25}give {\k25}a {\k25}great {\k50}big {\k50}smile!
+Dialogue: 0,0:00:24.35,0:00:26.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}just {\k50}like {\k100}me!
+Dialogue: 0,0:00:26.35,0:00:28.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Brush {\k50}brush {\k25}brush {\k25}your {\k50}teeth!
+Dialogue: 0,0:00:28.35,0:00:30.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}Bopi {\k25}brush {\k25}your {\k100}teeth!
+Dialogue: 0,0:00:30.35,0:00:32.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k25}Up {\k25}and {\k50}down {\k25}and {\k25}round {\k25}and {\k25}round!
+Dialogue: 0,0:00:32.35,0:00:34.45,Lyric,,0,0,0,,{\fad(80,60)}{\k15}{\k50}shiny {\k50}teeth {\k100}yay!
 Dialogue: 1,0:00:34.30,0:00:36.40,End,,0,0,0,,{\fad(100,0)\t(0,200,\fscx115\fscy115)\t(200,350,\fscx100\fscy100)}SHINY TEETH!
