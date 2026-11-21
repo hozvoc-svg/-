@@ -42,15 +42,63 @@ YouTube не монетизує канали з **«неавтентичним»
 | level_06.mp4 | `Level 6: 360 Balls. Which Bin Wins? 🎯 #shorts` |
 | level_07.mp4 | `Level 7: 30 Rings. INSANE Mode 💀 #shorts` |
 
-**Опис (однаковий шаблон, змінюй номер рівня):**
-```
-Level 4 of the Bounce Lab challenge series 🎮 Every level is a new physics challenge — harder each time.
-Music: public-domain classics, played by the collisions.
-Guess the result before it ends 👇
-#shorts #satisfying #physics #simulation
-```
+**Описи (кожному рівню свій) і теги:**
 
-**Теги:** `satisfying, physics simulation, bouncing ball, oddly satisfying, simulation, bounce lab, level challenge, satisfying video, asmr`. Для конкретних рівнів додай свої: `plinko`, `galton board`, `red vs blue`, `brick breaker`, `hexagon escape`.
+### Level 1: 8 Rings
+```
+Level 1 — the warm-up. One ball, 8 spinning rings, each with a gap. Every bounce plays the next note of Beethoven's "Ode to Joy", and every gap it finds shatters a ring.
+Easy mode… or is it? How many seconds do you think it takes? 👇
+#shorts #satisfying #physics #ballescape
+```
+Теги: `ball escape, rings, satisfying, physics simulation, bouncing ball, ode to joy, easy level, bounce lab`
+
+### Level 2: Every Bounce It Grows
+```
+Level 2: the ball grows a little with every bounce — until it fills the whole circle. Each bounce is the next note of "Für Elise", so the music speeds up as it gets bigger.
+Stay until 100% 🔥 How many bounces did it take?
+#shorts #satisfying #oddlysatisfying #physics
+```
+Теги: `growing ball, every bounce it grows, satisfying, physics simulation, fur elise, oddly satisfying, bounce lab`
+
+### Level 3: Spinning Hexagons
+```
+Level 3 swaps circles for hexagons. 11 spinning hexagons, each with one open side — and corners make the bounces way less predictable. Soundtrack: Grieg's "Morning Mood", one note per hit.
+Did you expect it to be faster or slower? 👇
+#shorts #satisfying #hexagon #physics
+```
+Теги: `hexagon escape, spinning hexagons, satisfying, physics simulation, morning mood, grieg, bounce lab`
+
+### Level 4: 1 Red vs 3 Blue
+```
+Level 4 is a battle. One fast red ball against three blue ones — every tile a ball touches switches to its color. 30 seconds on the clock, the bigger territory wins.
+Pick your side before the timer ends 🔴🔵 Music: Offenbach's "Can-Can".
+#shorts #redvsblue #satisfying #simulation
+```
+Теги: `red vs blue, territory battle, color battle, satisfying, simulation, who wins, can can, bounce lab`
+
+### Level 5: 90 Bricks
+```
+Level 5 — hard mode. The ball is trapped behind 3 rotating walls of bricks. Every brick has lives (1, 2 or 3 hits), and it needs a full tunnel to get out. Music: Pachelbel's "Canon", played by the hits.
+Count the bricks it had to break 🧱👇
+#shorts #brickbreaker #satisfying #physics
+```
+Теги: `brick breaker, ball escape, breakout, satisfying, physics simulation, canon in d, hard level, bounce lab`
+
+### Level 6: Plinko, 360 Balls
+```
+Level 6: 360 balls drop through 13 rows of pegs into 14 bins. Every ball that lands plays a note, every peg ticks. Pure chance — or is it? (Math says the middle bins should win.)
+Comment your bin number BEFORE it ends 🎯
+#shorts #plinko #galtonboard #satisfying
+```
+Теги: `plinko, galton board, 360 balls, probability, satisfying, physics simulation, which bin wins, bounce lab`
+
+### Level 7: 30 Rings, INSANE
+```
+Level 7 — INSANE. 30 rings, narrow gaps, tiny ball, almost a minute of pure chaos to Grieg's "In the Hall of the Mountain King". The hardest level so far.
+Did you watch until the last ring? 💀 What should Level 8 be?
+#shorts #satisfying #insane #ballescape
+```
+Теги: `30 rings, insane level, ball escape, satisfying, physics simulation, hall of the mountain king, impossible challenge, bounce lab`
 
 **Закріплений коментар:**
 - Рівні 4 і 6: `Which one did you pick? 🔴 or 🔵 / which bin? 👇`
