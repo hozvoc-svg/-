@@ -164,13 +164,17 @@ class Bopi:
             self.eyes.append(e)
         for x, rz in ((-0.19, 12), (0.19, -12)):   # eyebrows
             self.brow = cube((x, -0.36, 0.8), (0.12, 0.03, 0.025), toon('brow', (0.12, 0.45, 0.25)), h, bevel=0.012, rot=(0, math.radians(rz), 0))
-        # mouth (open/close by scaling the mouth empty in Z)
-        self.mouth = empty('mouth', (0, -0.6, 0.16), h)
-        sphere((0, 0, 0), 0.17, (1.25, 0.3, 0.5), mouthm, self.mouth)
-        sphere((0, -0.02, -0.04), 0.1, (1.2, 0.3, 0.35), tongue, self.mouth)
+        # mouth: the empty sits on the upper lip line, so scaling it in Z opens the mouth downwards like a jaw
+        self.mouth = empty('mouth', (0, -0.6, 0.2), h)
+        sphere((0, 0, -0.085), 0.17, (1.25, 0.3, 0.5), mouthm, self.mouth)
+        sphere((0, -0.02, -0.125), 0.1, (1.2, 0.3, 0.35), tongue, self.mouth)
+        # upper teeth: small rounded teeth hanging from the lip line along the curve of the mouth (parented to the head, never stretched)
         self.teeth = []
-        for k, x in enumerate((-0.13, -0.045, 0.045, 0.13)):
-            t = cube((x, -0.045, 0.055), (0.07, 0.03, 0.05), white, self.mouth, bevel=0.012); self.teeth.append(t)
+        for k in range(6):
+            x = -0.13 + k * 0.052; big = 1.12 if k in (2, 3) else 1.0
+            y = -0.6 - 0.051 * math.sqrt(max(0.0, 1 - (x / 0.2125) ** 2)) - 0.006
+            t = sphere((x, y, 0.166), 0.027 * big, (1.0, 0.42, 1.3), toon('tooth', (0.98, 0.97, 0.92), rough=0.4, sss=0.1, coat=0.25), h, seg=24, rot=(0, 0, -math.asin(x / 0.2125) * 0.6))
+            self.teeth.append(t)
         self.mouth.scale = (1, 1, 0.35)
         self.sparkle_pt = (0.0, -0.7, 0.2)
 
@@ -254,10 +258,10 @@ if SHOT == 'S1':   # HOOK: extreme close-up, mouth wide open, purple sugar bugs 
     K(bopi.head, 'rotation_euler', 0, (math.radians(-8), 0, 0)); K(bopi.head, 'rotation_euler', 0.4, (math.radians(-12), 0, math.radians(4)))
     K(bopi.head, 'rotation_euler', 1.2, (math.radians(-10), 0, math.radians(-4))); K(bopi.head, 'rotation_euler', 2.5, (math.radians(-12), 0, 0))
     for k, x in enumerate((-0.12, -0.04, 0.05, 0.13)):
-        g = germ((x, -0.07, 0.0), bopi.mouth, 0.8)
+        g = germ((x, -0.07, -0.1), bopi.mouth, 0.8)
         for j in range(6):
             t = j * 0.42 + k * 0.1
-            K(g, 'location', t, (x, -0.07, -0.02)); K(g, 'location', t + 0.2, (x, -0.07, 0.06))
+            K(g, 'location', t, (x, -0.07, -0.12)); K(g, 'location', t + 0.2, (x, -0.07, -0.05))
             K(g, 'rotation_euler', t, (0, 0, math.radians(15 * (1 if j % 2 else -1))))
 
 elif SHOT == 'S2':  # toothbrush boings into Bopi's hand, he starts dancing. "Brush, brush, brush your teeth, Bopi brush your teeth!"
@@ -300,11 +304,11 @@ elif SHOT == 'S4':  # sugar bugs pop away one by one. "Sugar bugs, go away! Scru
     br = toothbrush(None, (0.75, -0.72, 1.2), (0, math.radians(90), math.radians(180)))
     xs = (-0.12, -0.04, 0.05, 0.13, 0.0)
     for k, x in enumerate(xs):
-        g = germ((x, -0.07, 0.0), bopi.mouth, 0.8)
+        g = germ((x, -0.07, -0.1), bopi.mouth, 0.8)
         tp = 0.25 + k * 0.35 + (0.4 if k == 4 else 0)
         for j in range(8):
             t = j * 0.25
-            if t < tp: K(g, 'location', t, (x, -0.07, -0.02 + (0.06 if j % 2 else 0)))
+            if t < tp: K(g, 'location', t, (x, -0.07, -0.12 + (0.06 if j % 2 else 0)))
         K(g, 'scale', tp - 0.05, (0.9, 0.9, 0.9)); K(g, 'scale', tp + 0.04, (1.4, 1.4, 1.4)); K(g, 'scale', tp + 0.1, (0, 0, 0))
         K(br, 'location', tp - 0.15, (0.38 + x * 1.1, -0.72, 1.24)); K(br, 'location', tp, (0.43 + x * 1.1, -0.72, 1.18))
     K(br, 'location', 2.5, (0.25, -0.72, 1.22)); K(br, 'location', 3.0, (0.5, -0.72, 1.2)); K(br, 'location', 3.5, (0.25, -0.72, 1.22))
@@ -361,7 +365,7 @@ elif SHOT == 'S7':  # big smile, tooth sparkle, wink. "Now give a great big smil
     bopi.sing(0, 1.6, 0.25); bopi.mouth_open(1.7, 0.55); bopi.mouth_open(4.0, 0.55)
     for t in bopi.teeth:
         m = t.data.materials[0]
-    star = empty('star', (0.09, -0.7, 1.26))
+    star = empty('star', (0.07, -0.7, 1.22))
     for k in range(4):
         cone((0, 0, 0), 0.03, 0.0, 0.22, toon('hl', WHITE, emit=6.0), star, rot=(math.radians(90), math.radians(k * 90), 0))
     K(star, 'scale', 0, (0, 0, 0)); K(star, 'scale', 1.75, (0, 0, 0)); K(star, 'scale', 1.9, (1.4, 1.4, 1.4)); K(star, 'scale', 2.3, (0.8, 0.8, 0.8)); K(star, 'scale', 2.5, (0, 0, 0))
