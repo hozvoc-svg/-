@@ -1,0 +1,65 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,DejaVu Sans,84,&H00FFFFFF,&H00FFFFFF,&H00000000,&H64000000,-1,0,0,0,100,100,1,0,1,7,3,2,80,80,620,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.30,0:00:00.62,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ЦЕЙ{\r} РОБОТ ПРОЛЕЖАВ
+Dialogue: 0,0:00:00.62,0:00:00.95,Cap,,0,0,0,,ЦЕЙ {\c&H00D7FF&\fscx112\fscy112}РОБОТ{\r} ПРОЛЕЖАВ
+Dialogue: 0,0:00:00.95,0:00:01.47,Cap,,0,0,0,,ЦЕЙ РОБОТ {\c&H00D7FF&\fscx112\fscy112}ПРОЛЕЖАВ{\r}
+Dialogue: 0,0:00:01.47,0:00:01.58,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}НА{\r} ЗВАЛИЩІ СТО
+Dialogue: 0,0:00:01.58,0:00:02.12,Cap,,0,0,0,,НА {\c&H00D7FF&\fscx112\fscy112}ЗВАЛИЩІ{\r} СТО
+Dialogue: 0,0:00:02.12,0:00:02.34,Cap,,0,0,0,,НА ЗВАЛИЩІ {\c&H00D7FF&\fscx112\fscy112}СТО{\r}
+Dialogue: 0,0:00:02.34,0:00:02.99,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}РОКІВ...{\r}
+Dialogue: 0,0:00:02.99,0:00:03.27,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ПОКИ{\r} ЙОГО НЕ
+Dialogue: 0,0:00:03.27,0:00:03.46,Cap,,0,0,0,,ПОКИ {\c&H00D7FF&\fscx112\fscy112}ЙОГО{\r} НЕ
+Dialogue: 0,0:00:03.46,0:00:03.55,Cap,,0,0,0,,ПОКИ ЙОГО {\c&H00D7FF&\fscx112\fscy112}НЕ{\r}
+Dialogue: 0,0:00:03.55,0:00:03.98,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ЗНАЙШОВ{\r} ТИМКО.
+Dialogue: 0,0:00:03.98,0:00:04.96,Cap,,0,0,0,,ЗНАЙШОВ {\c&H00D7FF&\fscx112\fscy112}ТИМКО.{\r}
+Dialogue: 0,0:00:05.40,0:00:05.67,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ВІН{\r} БУВ ІРЖАВИЙ,
+Dialogue: 0,0:00:05.67,0:00:05.86,Cap,,0,0,0,,ВІН {\c&H00D7FF&\fscx112\fscy112}БУВ{\r} ІРЖАВИЙ,
+Dialogue: 0,0:00:05.86,0:00:06.57,Cap,,0,0,0,,ВІН БУВ {\c&H00D7FF&\fscx112\fscy112}ІРЖАВИЙ,{\r}
+Dialogue: 0,0:00:06.57,0:00:07.68,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}МОВЧАЗНИЙ...{\r}
+Dialogue: 0,0:00:07.71,0:00:07.82,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}І{\r} ЗОВСІМ ОДИН.
+Dialogue: 0,0:00:07.82,0:00:08.22,Cap,,0,0,0,,І {\c&H00D7FF&\fscx112\fscy112}ЗОВСІМ{\r} ОДИН.
+Dialogue: 0,0:00:08.22,0:00:09.09,Cap,,0,0,0,,І ЗОВСІМ {\c&H00D7FF&\fscx112\fscy112}ОДИН.{\r}
+Dialogue: 0,0:00:09.70,0:00:10.13,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ТИМКО{\r} ЛАГОДИВ ЙОГО
+Dialogue: 0,0:00:10.13,0:00:10.58,Cap,,0,0,0,,ТИМКО {\c&H00D7FF&\fscx112\fscy112}ЛАГОДИВ{\r} ЙОГО
+Dialogue: 0,0:00:10.58,0:00:10.79,Cap,,0,0,0,,ТИМКО ЛАГОДИВ {\c&H00D7FF&\fscx112\fscy112}ЙОГО{\r}
+Dialogue: 0,0:00:10.79,0:00:11.06,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ЦІЛУ{\r} НІЧ.
+Dialogue: 0,0:00:11.06,0:00:11.95,Cap,,0,0,0,,ЦІЛУ {\c&H00D7FF&\fscx112\fscy112}НІЧ.{\r}
+Dialogue: 0,0:00:13.20,0:00:13.35,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}А{\r} ВРАНЦІ РОБОТ...
+Dialogue: 0,0:00:13.35,0:00:13.75,Cap,,0,0,0,,А {\c&H00D7FF&\fscx112\fscy112}ВРАНЦІ{\r} РОБОТ...
+Dialogue: 0,0:00:13.75,0:00:14.23,Cap,,0,0,0,,А ВРАНЦІ {\c&H00D7FF&\fscx112\fscy112}РОБОТ...{\r}
+Dialogue: 0,0:00:14.23,0:00:15.22,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}КЛІПНУВ.{\r}
+Dialogue: 0,0:00:16.30,0:00:16.59,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ЙОГО{\r} ЗВАЛИ БІП.
+Dialogue: 0,0:00:16.59,0:00:16.91,Cap,,0,0,0,,ЙОГО {\c&H00D7FF&\fscx112\fscy112}ЗВАЛИ{\r} БІП.
+Dialogue: 0,0:00:16.91,0:00:17.51,Cap,,0,0,0,,ЙОГО ЗВАЛИ {\c&H00D7FF&\fscx112\fscy112}БІП.{\r}
+Dialogue: 0,0:00:17.51,0:00:17.61,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}І{\r} ВІН УМІВ
+Dialogue: 0,0:00:17.61,0:00:17.81,Cap,,0,0,0,,І {\c&H00D7FF&\fscx112\fscy112}ВІН{\r} УМІВ
+Dialogue: 0,0:00:17.81,0:00:18.04,Cap,,0,0,0,,І ВІН {\c&H00D7FF&\fscx112\fscy112}УМІВ{\r}
+Dialogue: 0,0:00:18.04,0:00:19.10,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ЛІТАТИ!{\r}
+Dialogue: 0,0:00:20.10,0:00:20.66,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ЩОПРАВДА,{\r}
+Dialogue: 0,0:00:20.66,0:00:21.13,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ГОТУВАТИ{\r} БІП НЕ
+Dialogue: 0,0:00:21.13,0:00:21.38,Cap,,0,0,0,,ГОТУВАТИ {\c&H00D7FF&\fscx112\fscy112}БІП{\r} НЕ
+Dialogue: 0,0:00:21.38,0:00:21.48,Cap,,0,0,0,,ГОТУВАТИ БІП {\c&H00D7FF&\fscx112\fscy112}НЕ{\r}
+Dialogue: 0,0:00:21.48,0:00:22.39,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ВМІВ.{\r}
+Dialogue: 0,0:00:23.60,0:00:23.93,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}ЗАТЕ{\r} НАЙКРАЩЕ ВІН
+Dialogue: 0,0:00:23.93,0:00:24.41,Cap,,0,0,0,,ЗАТЕ {\c&H00D7FF&\fscx112\fscy112}НАЙКРАЩЕ{\r} ВІН
+Dialogue: 0,0:00:24.41,0:00:24.61,Cap,,0,0,0,,ЗАТЕ НАЙКРАЩЕ {\c&H00D7FF&\fscx112\fscy112}ВІН{\r}
+Dialogue: 0,0:00:24.61,0:00:24.90,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}УМІВ{\r} ІНШЕ...
+Dialogue: 0,0:00:24.90,0:00:25.61,Cap,,0,0,0,,УМІВ {\c&H00D7FF&\fscx112\fscy112}ІНШЕ...{\r}
+Dialogue: 0,0:00:25.61,0:00:25.92,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}БУТИ{\r} ДРУГОМ.
+Dialogue: 0,0:00:25.92,0:00:26.96,Cap,,0,0,0,,БУТИ {\c&H00D7FF&\fscx112\fscy112}ДРУГОМ.{\r}
+Dialogue: 0,0:00:28.10,0:00:28.26,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}А{\r} ТИ ЗНАЙШОВ
+Dialogue: 0,0:00:28.26,0:00:28.38,Cap,,0,0,0,,А {\c&H00D7FF&\fscx112\fscy112}ТИ{\r} ЗНАЙШОВ
+Dialogue: 0,0:00:28.38,0:00:28.81,Cap,,0,0,0,,А ТИ {\c&H00D7FF&\fscx112\fscy112}ЗНАЙШОВ{\r}
+Dialogue: 0,0:00:28.81,0:00:28.92,Cap,,0,0,0,,{\c&H00D7FF&\fscx112\fscy112}БИ{\r} СВОГО БІПА?
+Dialogue: 0,0:00:28.92,0:00:29.23,Cap,,0,0,0,,БИ {\c&H00D7FF&\fscx112\fscy112}СВОГО{\r} БІПА?
+Dialogue: 0,0:00:29.23,0:00:30.16,Cap,,0,0,0,,БИ СВОГО {\c&H00D7FF&\fscx112\fscy112}БІПА?{\r}
