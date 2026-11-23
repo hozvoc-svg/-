@@ -1,8 +1,17 @@
-# Video skills for every session, in any project
+# Skills for every session, in any project: video, design, web/apps, marketing
 export PATH="$HOME/.local/bin:$PATH"
 if command -v claude >/dev/null 2>&1; then
   claude plugin marketplace add hozvoc-svg/- || true
-  claude plugin install video-studio@hozvoc-video || true
+  claude plugin marketplace add anthropics/claude-plugins-official || true
+  claude plugin marketplace add anthropics/knowledge-work-plugins || true
+  for p in video-studio@hozvoc-video \
+           hyperframes@claude-plugins-official frontend-design@claude-plugins-official \
+           modern-web-guidance@claude-plugins-official vercel@claude-plugins-official \
+           supabase@claude-plugins-official stripe@claude-plugins-official \
+           expo@claude-plugins-official superpowers@claude-plugins-official \
+           design@knowledge-work-plugins marketing@knowledge-work-plugins; do
+    claude plugin install "$p" || true
+  done
 fi
 # Code-rendered video: Blender as a Python module (+ numpy/scipy) in /opt/bpyenv
 if [ ! -x /opt/bpyenv/bin/python ]; then
