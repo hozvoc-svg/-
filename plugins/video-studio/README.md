@@ -23,5 +23,5 @@
 
 ## Усі скіли в кожній хмарній сесії
 
-Скрипт `setup/cloud-environment-setup.sh` у корені репозиторію ставить на старті сесії video-studio, ще 11 плагінів (HyperFrames, frontend-design, modern-web-guidance, Vercel, Supabase, Stripe, Expo, Superpowers, Design, Marketing, SearchFit SEO) Blender (`/opt/bpyenv`) і 15 скілів промптів для Higgsfield (AKCodez/higgsfield-claude-skills, зафіксована версія).
-Вставте його в налаштування середовища: назва середовища в заголовку сесії → Edit → Setup script. У середовищі «Сібі» він уже стоїть.
+Скрипт `setup/cloud-environment-setup.sh` у корені репозиторію ставить на старті сесії video-studio, Blender (`/opt/bpyenv`) і 15 скілів промптів для Higgsfield (AKCodez/higgsfield-claude-skills, зафіксована версія).
+Вставте його в налаштування середовища: назва середовища в заголовку сесії → Edit → Setup script.
