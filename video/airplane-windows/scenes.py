@@ -140,9 +140,9 @@ def rrect(name, w, h, depth, r_round, rgb, loc=(0, 0, 0), n=10, r_square=0.004):
     for i, v in enumerate(verts(r_round)): k.data[i].co = v
     return setmat(ob, rgb)
 
-def cut(target, cutter, hide=True):
+def cut(target, cutter, hide=True, solver='MANIFOLD'):
     mod = target.modifiers.new('cut', 'BOOLEAN'); mod.operation = 'DIFFERENCE'
-    mod.solver = 'MANIFOLD'; mod.object = cutter
+    mod.solver = solver; mod.object = cutter
     if hide: cutter.hide_render = True; cutter.display_type = 'WIRE'
     return mod
 
@@ -375,7 +375,7 @@ def panel_with_hole(loc, shape, rgb=SILVER, size=(3.0, 0.08, 3.0), hw=1.0, hh=1.
         h = cyl(loc, hw / 2, 0.6, rgb, rot=(90, 0, 0), verts=96)
     else:
         h = rrect('sq', hw, hh, 0.6, 0.2, rgb, loc=loc)
-    cut(p, h)
+    cut(p, h, solver='EXACT')
     # rivets
     for i in range(8):
         for sx, sz in ((1, 0), (0, 1)):

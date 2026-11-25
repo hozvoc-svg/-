@@ -124,7 +124,7 @@ add(sfx, ding(), 52.2 + 40 / FPS, 0.35)
 add(sfx, ding(), 57.2 + 55 / FPS, 0.25)
 def pop():
     x = t(0.12); return np.sin(2 * np.pi * (900 + 1400 * np.exp(-x * 60)) * x) * np.exp(-x * 45)
-for p_at in (0.15, 2.9, 7.42, 8.99, 10.87, 15.9, 21.0, 28.75, 39.6, 42.4, 58.55):
+for p_at in (0.15, 3.45, 7.42, 8.99, 10.87, 15.9, 21.0, 28.75, 39.6, 42.4, 58.55):
     add(sfx, pop(), p_at, 0.35)
 sfx /= np.max(np.abs(sfx)) + 1e-9
 
@@ -177,7 +177,7 @@ for gi, g in enumerate(groups):
 def title(a, b, text, y=330, style='Title', fade=(120, 120)):
     ev.append(f'Dialogue: 2,{ts(a)},{ts(b)},{style},,0,0,0,,{{\\pos(540,{y})\\fad({fade[0]},{fade[1]})}}{text}')
 title(0.15, 2.55, 'NOTICED THIS?', 330)
-title(2.9, 7.0, 'THIS SHAPE KILLED 56 PEOPLE', 330, 'Red')
+title(3.45, 7.0, 'THIS SHAPE KILLED 56 PEOPLE', 330, 'Red')
 title(7.42, 15.5, '1954', 300, 'Big')
 title(8.99, 15.5, 'DE HAVILLAND COMET', 430)
 title(10.87, 15.5, "WORLD'S FIRST JET AIRLINER", 500, 'Small')
