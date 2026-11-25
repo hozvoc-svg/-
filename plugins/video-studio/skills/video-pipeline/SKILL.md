@@ -1,16 +1,16 @@
 ---
 name: video-pipeline
-description: End-to-end video production pipeline with the tools available in Claude sessions — research trends/outliers (vidIQ), script and hooks, generate shots (Higgsfield API or other AI video), voiceover and SFX (ElevenLabs API), then assemble, caption, mix and export with ffmpeg in 9:16/16:9 with platform-correct loudness. Use when the user asks to make/зробити/змонтувати a full video, batch several videos, automate production, add subtitles, mix audio, or export for TikTok/Reels/Shorts/YouTube.
+description: End-to-end video production pipeline with the tools available in Claude sessions — research trends/outliers (YouTube search, manual analysis), script and hooks, generate shots (Higgsfield API or other AI video), voiceover and SFX (ElevenLabs API), then assemble, caption, mix and export with ffmpeg in 9:16/16:9 with platform-correct loudness. Use when the user asks to make/зробити/змонтувати a full video, batch several videos, automate production, add subtitles, mix audio, or export for TikTok/Reels/Shorts/YouTube.
 ---
 
 # Video production pipeline / Повний пайплайн
 
 Run the steps in order. Save every intermediate file in a project folder (`video/<slug>/`) so steps can be re-run. Tell the user which step you're on in one short line.
 
-## 1. Research (vidIQ MCP, if connected)
-- `vidiq_outliers` / `vidiq_instagram_tiktok_outlier_search` for the topic → 5 outlier videos.
-- `vidiq_video_transcript` on the top 2 → extract their hook, structure, length.
-- `vidiq_keyword_research` → title keywords. Summarise: what to copy (structure), what to do differently (angle, style).
+## 1. Research (YouTube search, autocomplete, Google Trends)
+- Find 5 outlier videos on the topic: YouTube search filtered by upload date, channels with few subscribers but views ≫ subscribers.
+- For the top 2: note the hook (first 3 s), structure, length, title and thumbnail pattern.
+- Title keywords: YouTube search autocomplete + Google Trends. Summarise: what to copy (structure), what to do differently (angle, style).
 
 ## 2. Hook + script
 Use `video-hooks` then `short-form-script`. Output: shot list + clean voiceover text + asset list.
@@ -18,7 +18,7 @@ Use `video-hooks` then `short-form-script`. Output: shot list + clean voiceover 
 ## 3. Visuals
 - Write prompts with `video-styles` (one locked style suffix + character sheet).
 - **Higgsfield** (`platform.higgsfield.ai` / `api.higgsfield.ai`, auth injected by the proxy in cloud sessions): generate a reference image first, then image→video per shot. Poll the job until done, download to `shots/NN.mp4`. Check the current API docs before calling — endpoints change.
-- Alternatives: vidIQ `vidiq_generate_video` / `vidiq_generate_broll`, or user-provided footage.
+- Alternatives: public-domain footage (NASA, Wikimedia), or user-provided footage.
 - Generate 1–2 spare variants for the hook shot — it matters most.
 
 ### 3b. No AI credits? Render the shots in code (Blender)
@@ -36,7 +36,7 @@ Working example: `video/kit-kosmonavt/clay/clay_scenes.py` in the `hozvoc-svg/-`
 - Use the `/with-timestamps` variant when available to get word timings for captions.
 - If the key lacks sound/music permissions (401 missing_permissions), synthesize music/SFX with numpy/scipy (see `video/kit-kosmonavt/build_audio.py`) and tell the user.
 - SFX: `POST /v1/sound-generation` with a short text description ("deep cinematic boom", "whoosh transition").
-- Music: ElevenLabs music or vidIQ `vidiq_generate_music`; otherwise royalty-free.
+- Music: ElevenLabs music; otherwise royalty-free.
 
 ## 5. Assembly with ffmpeg (check `ffmpeg -version`; install with apt if missing)
 

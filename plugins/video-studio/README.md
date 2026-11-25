@@ -8,7 +8,7 @@
 | `short-form-script` | Сценарій і розкадровка Shorts / Reels / TikTok / YouTube з таймінгами |
 | `video-styles` | 17 візуальних стилів (кіно, 3D, аніме, клеймейшн, нуар, VHS, кіберпанк…) + промпти для AI-відео |
 | `genre-playbooks` | Як монтувати 13 жанрів: хорор, комедія, освіта, реклама, сторітелінг, ASMR, геймінг… |
-| `video-pipeline` | Повний цикл: vidIQ → сценарій → Higgsfield → ElevenLabs → ffmpeg (субтитри, звук, експорт) |
+| `video-pipeline` | Повний цикл: дослідження трендів → сценарій → Higgsfield → ElevenLabs → ffmpeg (субтитри, звук, експорт) |
 
 ## Як увімкнути в інших проєктах
 
