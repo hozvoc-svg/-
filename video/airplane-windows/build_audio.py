@@ -122,6 +122,10 @@ add(sfx, thump(), 42.45, 0.6)
 for i in range(9): add(sfx, crack_snd(0.3, 0.7), 46.1 + (6 + i * 14) / FPS, 0.45)
 add(sfx, ding(), 52.2 + 40 / FPS, 0.35)
 add(sfx, ding(), 57.2 + 55 / FPS, 0.25)
+def pop():
+    x = t(0.12); return np.sin(2 * np.pi * (900 + 1400 * np.exp(-x * 60)) * x) * np.exp(-x * 45)
+for p_at in (0.15, 2.9, 7.42, 8.99, 10.87, 15.9, 21.0, 28.75, 39.6, 42.4, 58.55):
+    add(sfx, pop(), p_at, 0.35)
 sfx /= np.max(np.abs(sfx)) + 1e-9
 
 # ---------- VOICE + MIX ----------
@@ -136,12 +140,21 @@ duck = np.convolve(duck, np.ones(4410) / 4410, 'same')
 mix = 1.0 * voice + 0.30 * music * duck + 0.40 * sfx
 mix[-int(0.4 * SR):] *= np.linspace(1, 0, int(0.4 * SR))
 mix /= np.max(np.abs(mix)) + 1e-9
+# hook pre-roll (result first): crack + impact before the first word
+PRE = 0.6
+pre = np.zeros(int(PRE * SR) + int(0.5 * SR))
+for i in range(4): add(pre, crack_snd(0.4), 0.0 + i * 0.07, 0.8)
+add(pre, hit(1.1) * env(int(1.1 * SR), 0.001, 0.4), 0.0, 0.9)
+pre /= np.max(np.abs(pre)) + 1e-9
+mix = np.concatenate([np.zeros(int(PRE * SR)), mix])
+mix[:len(pre)] += 0.55 * pre
+mix /= np.max(np.abs(mix)) + 1e-9
 wavfile.write('audio/mix_raw.wav', SR, (mix * 0.9).astype(np.float32))
 
 # ---------- CAPTIONS + TITLES (ASS) ----------
 words = json.load(open('vo_words.json'))   # [word, start, end]
 def ts(x):
-    x = max(0, x); h = int(x // 3600); m = int(x % 3600 // 60); s = x % 60; return f'{h}:{m:02d}:{s:05.2f}'
+    x = max(0, x + PRE); h = int(x // 3600); m = int(x % 3600 // 60); s = x % 60; return f'{h}:{m:02d}:{s:05.2f}'
 groups, g = [], []
 for w in words:
     g.append(w)
@@ -163,6 +176,8 @@ for gi, g in enumerate(groups):
 
 def title(a, b, text, y=330, style='Title', fade=(120, 120)):
     ev.append(f'Dialogue: 2,{ts(a)},{ts(b)},{style},,0,0,0,,{{\\pos(540,{y})\\fad({fade[0]},{fade[1]})}}{text}')
+title(0.15, 2.55, 'NOTICED THIS?', 330)
+title(2.9, 7.0, 'THIS SHAPE KILLED 56 PEOPLE', 330, 'Red')
 title(7.42, 15.5, '1954', 300, 'Big')
 title(8.99, 15.5, 'DE HAVILLAND COMET', 430)
 title(10.87, 15.5, "WORLD'S FIRST JET AIRLINER", 500, 'Small')
